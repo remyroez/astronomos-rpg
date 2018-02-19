@@ -11,7 +11,7 @@ return {
   nextobjectid = 1,
   properties = {
     ["background_tile"] = 19,
-    ["bgm"] = "field"
+    ["bgm"] = "town"
   },
   tilesets = {
     {
