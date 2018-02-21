@@ -10,7 +10,7 @@ return {
   tileheight = 16,
   nextobjectid = 1,
   properties = {
-    ["background_tile"] = 83,
+    ["background_tile"] = 84,
     ["bgm"] = "space",
     ["encounter_table"] = 2
   },
