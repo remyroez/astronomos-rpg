@@ -78,7 +78,7 @@ return {
       y = 0,
       width = 14,
       height = 14,
-      visible = true,
+      visible = false,
       opacity = 1,
       offsetx = 0,
       offsety = 0,
