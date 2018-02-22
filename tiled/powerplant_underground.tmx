@@ -23,7 +23,7 @@
 20,20,20,20,20,20,20,20,20,20,20,20,20,20
 </data>
  </layer>
- <layer name="collision" width="14" height="14">
+ <layer name="collision" width="14" height="14" visible="0">
   <data encoding="csv">
 256,256,256,256,256,256,256,256,256,256,256,256,256,256,
 256,0,0,0,0,0,0,0,0,0,0,0,0,256,

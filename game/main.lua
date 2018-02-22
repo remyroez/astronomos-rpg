@@ -13,6 +13,7 @@ local object = rx.BehaviorSubject.create(0, 0)
 
 local spritesheet = require 'spritesheet'
 local BgmPlayer = require 'BgmPlayer'
+local MapManager = require 'MapManager'
 
 local chars
 
@@ -22,6 +23,58 @@ local ofsy = 0
 
 local context = {}
 
+local maps = {
+    "administrative_area",
+    "arkcity",
+    "brain_room",
+    "cave",
+    "cockpit",
+    "control_room",
+    "deusu",
+    "field1",
+    "hospital",
+    "institute",
+    "laboratory",
+    "mamusu",
+    "powerplant",
+    "powerplant_underground",
+    "residential_area",
+    "road_to_arkcity",
+    "road_to_arkcity_underground",
+    "road_to_brain_room",
+    "road_to_cockpit_1",
+    "road_to_cockpit_2",
+    "road_to_cockpit_3",
+    "road_to_cockpit_4",
+    "road_to_laboratory_1",
+    "road_to_laboratory_2",
+    "road_to_laboratory_3",
+    "road_to_laboratory_4",
+    "security_room",
+    "space_tower",
+    "underground_passage"
+}
+
+local map_index = 0
+
+function next_map()
+    if map_index < 1 then
+        map_index = 1
+    elseif map_index >= #maps then
+        map_index = 1
+    else
+        map_index = map_index + 1
+    end
+    load_map(maps[map_index])
+end
+
+function load_map(path)
+    context.mapManager:setMap(path)
+    if context.mapManager:properties().bgm then
+        context.bgmPlayer:play(context.mapManager:properties().bgm)
+    end
+end
+
 function love.load(arg)
     assets = cargo.init("assets")
 
@@ -30,14 +83,11 @@ function love.load(arg)
 
     --chars = spritesheet(assets.images.spritesheet)
     --chars:newWalkAnimations(1 / 60 * 10)
-    map = sti("assets/maps/deusu.lua")
-    map:resize(love.graphics.getDimensions())
 
     context.bgmPlayer = BgmPlayer(assets.bgm)
     context.bgmPlayer:setVolume(0.1)
-    if map.properties.bgm then
-        context.bgmPlayer:play(map.properties.bgm)
-    end
+
+    context.mapManager = MapManager("assets/maps", love.graphics.getDimensions())
 
     context.input = baton.new {
         controls = {
@@ -57,6 +107,7 @@ function love.load(arg)
         },
         joystick = love.joystick.getJoysticks()[1],
     }
+    next_map()
 end
 
 love.update
@@ -72,14 +123,15 @@ love.update
                 --print("x = " ..  map.offsetx .. ", y = " .. map.offsety)
             end
             --]]
-            map:update(dt)
+            context.mapManager:setOffset(-ofsx, -ofsy)
+            context.mapManager:update(dt)
         end
     )
 
 love.draw
     :subscribe(
         function ()
-            map:draw(-ofsx, -ofsy)
+            context.mapManager:draw()
             --love.graphics.print("Hello World", object:getValue())
             --chars:draw(3, 'left', object:getValue())
         end
@@ -113,6 +165,9 @@ love.mousepressed
     :filter(function (x, y, button) return button == 1 end)
     :subscribe(
         function (x, y, button)
+            next_map()
+            ofsx = 0
+            ofsy = 0
             --scheduler:update(love.update:getValue())
             --print(love.update:getValue())
         end
