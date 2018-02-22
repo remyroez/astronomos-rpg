@@ -14,13 +14,44 @@ function MapManager:initialize(basepath, width, height)
     self.y = 0
 end
 
+function MapManager:addBackgroundLayer(map, tile_gid)
+    local layer = map:addCustomLayer("background", 1)
+    layer.tile = map.tiles[tile_gid]
+    layer.image = map.tilesets[layer.tile.tileset].image
+    layer.width = math.ceil(self.width / layer.tile.width)
+    layer.height = math.ceil(self.height / layer.tile.height)
+    layer.batch = love.graphics.newSpriteBatch(
+        layer.image,
+        (layer.width + 2) * (layer.height + 2)
+    )
+    for i in range(-1, layer.height, 1) do
+        for j in range(-1, layer.width, 1) do
+            layer.batch:add(
+                layer.tile.quad,
+                layer.tile.width * j,
+                layer.tile.height * i
+            )
+        end
+    end
+    layer.mapManager = self
+    function layer:draw()
+        love.graphics.draw(
+            self.batch, 
+            math.ceil(-self.mapManager.x + self.mapManager.x % 16),
+            math.ceil(-self.mapManager.y + self.mapManager.y % 16)
+        )
+    end
+end
+
 function MapManager:load(name)
     if self.maps[name] then
         -- map loaded
     else
         local map = sti(self.basepath .. "/" .. name .. ".lua")
-        print(map)
         map:resize(love.graphics.getDimensions())
+        if map.properties.background_tile then
+            self:addBackgroundLayer(map, map.properties.background_tile + 1)
+        end
         self.maps[name] = map
     end
 end
