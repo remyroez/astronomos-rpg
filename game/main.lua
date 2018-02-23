@@ -15,6 +15,8 @@ local spritesheet = require 'spritesheet'
 local BgmPlayer = require 'BgmPlayer'
 local MapManager = require 'MapManager'
 
+local SpriteManager = require 'SpriteManager'
+
 local chars
 
 local baton = require 'baton'
@@ -89,6 +91,26 @@ function love.load(arg)
 
     context.mapManager = MapManager("assets/maps", love.graphics.getDimensions())
 
+    context.spriteManager = SpriteManager(
+        assets.images.spritesheet, 
+        16, 16,
+        love.graphics.getDimensions()
+    )
+    context.spriteManager:newSprite("minami")
+    do
+        local index = 2
+        local x = (index % 2) * 8 + 1
+        local y = math.floor(index / 2) + 1
+        context.spriteManager:newSpriteAnimation(
+            "minami",
+            "down",
+            (1 / 60 * 10),
+            (x) .. "-" .. (x + 1), y
+        )
+    end
+    context.minami = context.spriteManager:newSpriteInstance("minami")
+    context.minami:set("down")
+
     context.input = baton.new {
         controls = {
             -- move
@@ -125,6 +147,7 @@ love.update
             --]]
             context.mapManager:setOffset(-ofsx, -ofsy)
             context.mapManager:update(dt)
+            context.spriteManager:update(dt)
         end
     )
 
@@ -134,6 +157,7 @@ love.draw
             context.mapManager:draw()
             --love.graphics.print("Hello World", object:getValue())
             --chars:draw(3, 'left', object:getValue())
+            context.spriteManager:draw()
         end
     )
 
