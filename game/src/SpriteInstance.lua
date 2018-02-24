@@ -64,6 +64,11 @@ function SpriteInstance:updateSpriteBatch()
     end
 end
 
+function SpriteInstance:resetSpriteBatch()
+    self.id = nil
+    self:updateSpriteBatch()
+end
+
 function SpriteInstance:set(name)
     if not self.animations[name] then
         self.current_animation = nil

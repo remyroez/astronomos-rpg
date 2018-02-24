@@ -14,8 +14,7 @@ function SpriteManager:initialize(image, sprite_width, sprite_height, width, hei
 
     self.x = 0
     self.y = 0
-    self.width = width or -1
-    self.height = height or -1
+    self:resize(width, height)
 
     self.sprites = {}
     self.spriteInstances = {}
@@ -64,9 +63,17 @@ function SpriteManager:updateSpriteBatch()
     end
 end
 
+function SpriteManager:resetSpriteBatch()
+    for _, instance in ipairs(self.spriteInstances) do
+        instance:resetSpriteBatch()
+    end
+end
+
 function SpriteManager:resize(width, height)
-    self.width = width
-    self.height = height
+    self.width = width or love.graphics.getWidth()
+    self.height = height or love.graphics.getHeight()
+    self.canvas = love.graphics.newCanvas(self.width, self.height)
+    self.canvas:setFilter("nearest", "nearest")
 end
 
 function SpriteManager:setOffset(x, y)
@@ -81,7 +88,29 @@ function SpriteManager:update(dt)
 end
 
 function SpriteManager:draw()
-    love.graphics.draw(self.batch, self.x, self.y)
+    local current_canvas = love.graphics.getCanvas()
+
+    love.graphics.setCanvas(self.canvas)
+    love.graphics.clear()
+
+    love.graphics.push()
+    do
+        love.graphics.origin()
+        love.graphics.translate(math.floor(self.x or 0), math.floor(self.y or 0))
+        love.graphics.draw(self.batch)
+    end
+    love.graphics.pop()
+
+    love.graphics.setCanvas(current_canvas)
+
+    love.graphics.push()
+    do
+        love.graphics.origin()
+        --love.graphics.scale(1, 1)
+        love.graphics.setCanvas(current_canvas)
+        love.graphics.draw(self.canvas)
+    end
+    love.graphics.pop()
 end
 
 return SpriteManager
