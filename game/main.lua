@@ -82,8 +82,6 @@ function love.load(arg)
 
     local w, h = love.graphics.getDimensions()
 
-    context.mapManager = MapManager("assets/maps", w, h)
-
     context.spriteManager = SpriteManager(
         assets.images.spritesheet, 
         16, 16,
@@ -111,8 +109,28 @@ function love.load(arg)
         { name = "orca", index = 19 },
     }
 
-    context.minami = context.spriteManager:newSpriteInstance("minami")
-    context.minami:set("left")
+    context.mapManager = MapManager("assets/maps", w, h)
+
+    context.npcs = {}
+    context.mapManager.onLoad = function (map)
+        context.spriteManager:clearSpriteInstances()
+        if map.layers["object"] then
+            local layer = map.layers["object"]
+            for _, object in ipairs(layer.objects) do
+                local properties = object.properties
+                if object.type == "npc" then
+                    local sprite = context.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
+                    sprite:set(properties["animation"] or "down")
+                    sprite.x = object.x
+                    sprite.y = object.y - sprite:getHeight() -- bottom -> top
+                    table.insert(context.npcs, sprite)
+                end
+            end
+        end
+        context.minami = context.spriteManager:newSpriteInstance("minami")
+        context.minami:set("left")
+        context.spriteManager:updateSpriteBatch()
+    end
 
     context.input = baton.new {
         controls = {
