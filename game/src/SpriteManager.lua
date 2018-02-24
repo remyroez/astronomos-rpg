@@ -64,6 +64,7 @@ function SpriteManager:updateSpriteBatch()
 end
 
 function SpriteManager:resetSpriteBatch()
+    self.batch:clear()
     for _, instance in ipairs(self.spriteInstances) do
         instance:resetSpriteBatch()
     end
