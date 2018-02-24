@@ -8,10 +8,11 @@ return {
   height = 30,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 1,
+  nextobjectid = 16,
   properties = {
     ["background_tile"] = 45,
-    ["bgm"] = "town"
+    ["bgm"] = "town",
+    ["outer_map"] = "arkcity"
   },
   tilesets = {
     {
@@ -131,6 +132,188 @@ return {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "object",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 1,
+          name = "shoper",
+          type = "npc",
+          shape = "rectangle",
+          x = 112,
+          y = 80,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "citizen"
+          }
+        },
+        {
+          id = 4,
+          name = "shoper",
+          type = "npc",
+          shape = "rectangle",
+          x = 112,
+          y = 80,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "citizen"
+          }
+        },
+        {
+          id = 5,
+          name = "informer",
+          type = "npc",
+          shape = "rectangle",
+          x = 48,
+          y = 192,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "citizen"
+          }
+        },
+        {
+          id = 8,
+          name = "informer",
+          type = "npc",
+          shape = "rectangle",
+          x = 48,
+          y = 192,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "citizen"
+          }
+        },
+        {
+          id = 9,
+          name = "katsuma",
+          type = "npc",
+          shape = "rectangle",
+          x = 16,
+          y = 272,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "guard"
+          }
+        },
+        {
+          id = 11,
+          name = "robot",
+          type = "npc",
+          shape = "rectangle",
+          x = 176,
+          y = 144,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "robot"
+          }
+        },
+        {
+          id = 12,
+          name = "thief_1",
+          type = "npc",
+          shape = "rectangle",
+          x = 176,
+          y = 336,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "citizen"
+          }
+        },
+        {
+          id = 13,
+          name = "kinoshita",
+          type = "npc",
+          shape = "rectangle",
+          x = 64,
+          y = 464,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "guy"
+          }
+        },
+        {
+          id = 14,
+          name = "thief_2",
+          type = "npc",
+          shape = "rectangle",
+          x = 384,
+          y = 64,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "citizen"
+          }
+        },
+        {
+          id = 15,
+          name = "keyman",
+          type = "npc",
+          shape = "rectangle",
+          x = 272,
+          y = 176,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "guy"
+          }
+        }
       }
     }
   }
