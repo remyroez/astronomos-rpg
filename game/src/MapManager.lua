@@ -8,10 +8,13 @@ function MapManager:initialize(basepath, width, height)
     --self.files = files
     self.maps = {}
     self.current_map = nil
-    self.width = width or 800
-    self.height = height or 600
+
+    self.width = width or love.graphics.getWidth()
+    self.height = height or love.graphics.getHeight()
     self.x = 0
     self.y = 0
+
+    self.onLoad = function (map) end
 end
 
 function MapManager:addBackgroundLayer(map, tile_gid)
@@ -48,7 +51,18 @@ function MapManager:load(name)
         -- map loaded
     else
         local map = sti(self.basepath .. "/" .. name .. ".lua")
-        map:resize(love.graphics.getDimensions())
+        map:resize(self:getDimensions())
+        for name, layer in pairs(map.layers) do
+            if name == "collision" then
+                layer.visible = false
+            elseif name == "object" then
+                layer.visible = false
+            elseif name == "tilemap" then
+                layer.visible = true
+            else
+                layer.visible = false
+            end
+        end
         if map.properties.background_tile then
             self:addBackgroundLayer(map, map.properties.background_tile + 1)
         end
@@ -69,11 +83,29 @@ function MapManager:setMap(name)
     else
         self.current_map = self.maps[name]
     end
+    if self.current_map and self.onLoad then
+        self.onLoad(self.current_map)
+    end
 end
 
 function MapManager:setOffset(x, y)
     self.x = x
     self.y = y
+end
+
+function MapManager:resize(width, height)
+    self.width = width or love.graphics.getWidth()
+    self.height = height or love.graphics.getHeight()
+    
+    if not self.current_map then
+        -- invalid map
+    else
+        self.current_map:resize(self:getDimensions())
+    end
+end
+
+function MapManager:getDimensions()
+    return self.width, self.height
 end
 
 function MapManager:properties()
