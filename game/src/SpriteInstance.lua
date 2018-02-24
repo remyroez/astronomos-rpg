@@ -168,4 +168,14 @@ function SpriteInstance:getDimensions()
     end
 end
 
+function SpriteInstance:getWidth()
+    local value, _ = self:getDimensions()
+    return value
+end
+
+function SpriteInstance:getHeight()
+    local _, value = self:getDimensions()
+    return value
+end
+
 return SpriteInstance
