@@ -111,7 +111,7 @@ function love.load(arg)
         { name = "orca", index = 19 },
     }
 
-    context.minami = context.spriteManager:newSpriteInstance("skeleton")
+    context.minami = context.spriteManager:newSpriteInstance("minami")
     context.minami:set("left")
 
     context.input = baton.new {
@@ -165,13 +165,34 @@ love.update
         function (dt)
             context.input:update()
             local x, y = context.input:get 'move'
+            local anim = "down"
             if x > 0.1 or x < 0.1 or y > 0.1 or y < 0.1 then
                 ofsx = ofsx + x
                 ofsy = ofsy + y
+                if x > 0 then
+                    anim = "right"
+                elseif x < 0 then
+                    anim = "left"
+                elseif y > 0 then
+                    anim = "down"
+                elseif y < 0 then
+                    anim = "up"
+                else
+                    anim = nil
+                end
             end
-            context.mapManager:setOffset(-ofsx, -ofsy)
+            context.minami.x = ofsx
+            context.minami.y = ofsy
+            if anim then
+                context.minami:set(anim)
+            end
+            local w, h = context.minami:getDimensions()
+            local ox = -(ofsx - context.mapManager.width / 2 + w / 2)
+            local oy = -(ofsy - context.mapManager.height / 2 + h / 2)
+            context.minami:updateSpriteBatch()
+            context.mapManager:setOffset(ox, oy)
             context.mapManager:update(dt)
-            context.spriteManager:setOffset(-ofsx, -ofsy)
+            context.spriteManager:setOffset(ox, oy)
             context.spriteManager:update(dt)
         end
     )
