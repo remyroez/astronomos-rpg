@@ -13,6 +13,8 @@ function MapManager:initialize(basepath, width, height)
     self.height = height or love.graphics.getHeight()
     self.x = 0
     self.y = 0
+
+    self.onLoad = function (map) end
 end
 
 function MapManager:addBackgroundLayer(map, tile_gid)
@@ -50,6 +52,17 @@ function MapManager:load(name)
     else
         local map = sti(self.basepath .. "/" .. name .. ".lua")
         map:resize(self:getDimensions())
+        for name, layer in pairs(map.layers) do
+            if name == "collision" then
+                layer.visible = false
+            elseif name == "object" then
+                layer.visible = false
+            elseif name == "tilemap" then
+                layer.visible = true
+            else
+                layer.visible = false
+            end
+        end
         if map.properties.background_tile then
             self:addBackgroundLayer(map, map.properties.background_tile + 1)
         end
@@ -69,6 +82,9 @@ function MapManager:setMap(name)
         -- equal current map
     else
         self.current_map = self.maps[name]
+    end
+    if self.current_map and self.onLoad then
+        self.onLoad(self.current_map)
     end
 end
 
