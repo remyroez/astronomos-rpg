@@ -42,10 +42,12 @@ function SpriteInstance:clone()
 end
 
 function SpriteInstance:getCurrentFrameInfo()
-    return self.current_animation and 
-        self.current_animation:getFrameInfo(
-            self.x,
-            self.y, 
+    if not self.current_animation then
+        return nil
+    else
+        return self.current_animation:getFrameInfo(
+            math.ceil(self.x),
+            math.ceil(self.y), 
             self.r, 
             self.sx, 
             self.sy, 
@@ -53,7 +55,8 @@ function SpriteInstance:getCurrentFrameInfo()
             self.oy, 
             self.kx, 
             self.ky
-        ) or 0, 0
+        )
+    end
 end
 
 function SpriteInstance:updateSpriteBatch()
@@ -72,6 +75,8 @@ end
 function SpriteInstance:set(name)
     if not self.animations[name] then
         self.current_animation = nil
+    elseif self.current_animation == self.animations[name] then
+        -- current animation
     else
         self.current_animation = self.animations[name]
         self:gotoFrame(1)
@@ -151,6 +156,15 @@ function SpriteInstance:draw(x,y, angle, sx, sy, ox, oy, kx, ky)
         -- no animation
     else
         self.current_animation:draw(x,y, angle, sx, sy, ox, oy, kx, ky)
+    end
+end
+
+function SpriteInstance:getDimensions()
+    if not self.current_animation then
+        -- no animation
+        return 0, 0
+    else
+        return self.current_animation:getDimensions()
     end
 end
 
