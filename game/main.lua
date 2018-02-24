@@ -4,24 +4,18 @@ require 'util'
 local rx = require 'rx'
 require 'rxlove'
 
-local sti = require 'sti'
-
 local cargo = require "cargo"
 local assets = {}
 
-local object = rx.BehaviorSubject.create(0, 0)
-
-local spritesheet = require 'spritesheet'
 local BgmPlayer = require 'BgmPlayer'
 local MapManager = require 'MapManager'
-
 local SpriteManager = require 'SpriteManager'
-
-local chars
 
 local baton = require 'baton'
 local ofsx = 0
 local ofsy = 0
+
+local object = rx.BehaviorSubject.create(0, 0)
 
 local context = {}
 
@@ -83,33 +77,42 @@ function love.load(arg)
     love.graphics.clear()
     love.graphics.setColor(255, 255, 255)
 
-    --chars = spritesheet(assets.images.spritesheet)
-    --chars:newWalkAnimations(1 / 60 * 10)
-
     context.bgmPlayer = BgmPlayer(assets.bgm)
     context.bgmPlayer:setVolume(0.1)
 
-    context.mapManager = MapManager("assets/maps", love.graphics.getDimensions())
+    local w, h = love.graphics.getDimensions()
+
+    context.mapManager = MapManager("assets/maps", w, h)
 
     context.spriteManager = SpriteManager(
         assets.images.spritesheet, 
         16, 16,
-        love.graphics.getDimensions()
+        w, h
     )
-    context.spriteManager:newSprite("minami")
-    do
-        local index = 2
-        local x = (index % 2) * 8 + 1
-        local y = math.floor(index / 2) + 1
-        context.spriteManager:newSpriteAnimation(
-            "minami",
-            "down",
-            (1 / 60 * 10),
-            (x) .. "-" .. (x + 1), y
-        )
-    end
-    context.minami = context.spriteManager:newSpriteInstance("minami")
-    context.minami:set("down")
+
+    setupSpriteSheet {
+        { name = "minami", index = 2 },
+        { name = "siba", index = 3 },
+        { name = "misa", index = 4 },
+        { name = "aine", index = 5 },
+        { name = "shop", index = 6 },
+        { name = "doctor", index = 7 },
+        { name = "female", index = 8 },
+        { name = "male", index = 9 },
+        { name = "oldman", index = 10 },
+        { name = "citizen", index = 11 },
+        { name = "nurse", index = 12 },
+        { name = "guy", index = 13 },
+        { name = "guard", index = 14 },
+        { name = "robot", index = 15 },
+        { name = "astronaut", index = 16 },
+        { name = "skeleton", index = 17 },
+        { name = "dolphin", index = 18 },
+        { name = "orca", index = 19 },
+    }
+
+    context.minami = context.spriteManager:newSpriteInstance("skeleton")
+    context.minami:set("left")
 
     context.input = baton.new {
         controls = {
@@ -132,21 +135,43 @@ function love.load(arg)
     next_map()
 end
 
+function setupSpriteSheet(settings)
+    for i, sprite in pairs(settings) do
+        local name = sprite.name or ("sprite-" .. tostring(_))
+        context.spriteManager:newSprite(name)
+        do
+            local index = sprite.index or i
+            local speed = sprite.speed or (1 / 60 * 20)
+            local x = (index % 2) * 8 + 1
+            local y = math.floor(index / 2) + 1
+            context.spriteManager:newSpriteAnimation(
+                name,  "down", speed, (x) .. "-" .. (x + 1), y
+            )
+            context.spriteManager:newSpriteAnimation(
+                name,  "left", speed, (x + 2) .. "-" .. (x + 3), y
+            )
+            context.spriteManager:newSpriteAnimation(
+                name,  "up", speed, (x + 4) .. "-" .. (x + 5), y
+            )
+            context.spriteManager:newSpriteAnimation(
+                name,  "right", speed, (x + 6) .. "-" .. (x + 7), y
+            )
+        end
+    end
+end
+
 love.update
     :subscribe(
         function (dt)
-            --chars:update(dt)
-            ---[[
             context.input:update()
             local x, y = context.input:get 'move'
             if x > 0.1 or x < 0.1 or y > 0.1 or y < 0.1 then
                 ofsx = ofsx + x
                 ofsy = ofsy + y
-                --print("x = " ..  map.offsetx .. ", y = " .. map.offsety)
             end
-            --]]
             context.mapManager:setOffset(-ofsx, -ofsy)
             context.mapManager:update(dt)
+            context.spriteManager:setOffset(-ofsx, -ofsy)
             context.spriteManager:update(dt)
         end
     )
@@ -155,8 +180,6 @@ love.draw
     :subscribe(
         function ()
             context.mapManager:draw()
-            --love.graphics.print("Hello World", object:getValue())
-            --chars:draw(3, 'left', object:getValue())
             context.spriteManager:draw()
         end
     )
@@ -192,7 +215,5 @@ love.mousepressed
             next_map()
             ofsx = 0
             ofsy = 0
-            --scheduler:update(love.update:getValue())
-            --print(love.update:getValue())
         end
     )
