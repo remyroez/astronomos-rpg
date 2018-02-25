@@ -202,7 +202,11 @@ love.update
                         direction = nil
                     end
 
-                    context.minami:walk(direction, w, h, 0.5)
+                    local speed = 1 / 60 * 20
+                    if context.input:down 'cancel' then
+                        speed = speed / 2
+                    end
+                    context.minami:walk(direction, w, h, speed)
                 end
                 context.objectManager:update(dt)
                 
