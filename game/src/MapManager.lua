@@ -108,6 +108,15 @@ function MapManager:getDimensions()
     return self.width, self.height
 end
 
+function MapManager:getTileDimensions()
+    if not self.current_map then
+        -- invalid map
+        return 0, 0
+    else
+        return self.current_map.tilewidth, self.current_map.tileheight
+    end
+end
+
 function MapManager:properties()
     return self.current_map and self.current_map.properties or {}
 end
