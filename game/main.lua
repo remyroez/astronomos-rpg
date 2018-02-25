@@ -10,6 +10,7 @@ local assets = {}
 local BgmPlayer = require 'BgmPlayer'
 local MapManager = require 'MapManager'
 local SpriteManager = require 'SpriteManager'
+local ObjectManager = require 'ObjectManager'
 
 local baton = require 'baton'
 local ofsx = 0
@@ -111,34 +112,35 @@ function love.load(arg)
 
     context.mapManager = MapManager("assets/maps", w, h)
 
-    context.npcs = {}
+    context.objectManager = ObjectManager(context.mapManager, context.spriteManager)
+
     context.mapManager.onLoad = function (map)
         context.spriteManager:clearSpriteInstances()
+        context.objectManager:clearObjects()
         if map.layers["object"] then
             local layer = map.layers["object"]
             for _, object in ipairs(layer.objects) do
-                local properties = object.properties
-                if object.type == "npc" then
-                    local sprite = context.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
-                    sprite:set(properties["animation"] or "down")
-                    sprite.x = object.x
-                    sprite.y = object.y - sprite:getHeight() -- bottom -> top
-                    table.insert(context.npcs, sprite)
-                end
+                context.objectManager:newObject(object)
             end
         end
-        context.minami = context.spriteManager:newSpriteInstance("minami")
-        context.minami:set("left")
+        context.minami = context.objectManager:newObject {
+            type = "player",
+            x = 0,
+            y = 0,
+            properties = {
+                sprite = "minami"
+            }
+        }
         context.spriteManager:updateSpriteBatch()
     end
 
     context.input = baton.new {
         controls = {
             -- move
-             left = {'key:left', 'axis:leftx-', 'button:dpleft'},
-            right = {'key:right', 'axis:leftx+', 'button:dpright'},
-               up = {'key:up', 'axis:lefty-', 'button:dpup'},
-             down = {'key:down', 'axis:lefty+', 'button:dpdown'},
+             left = {'key:left',  --[['axis:leftx-',]] 'button:dpleft'},
+            right = {'key:right', --[['axis:leftx+',]] 'button:dpright'},
+               up = {'key:up',    --[['axis:lefty-',]] 'button:dpup'},
+             down = {'key:down',  --[['axis:lefty+',]] 'button:dpdown'},
             -- command
             decide = {'key:z', 'button:a'},
             cancel = {'key:x', 'button:b'},
@@ -182,32 +184,34 @@ love.update
     :subscribe(
         function (dt)
             context.input:update()
-            local x, y = context.input:get 'move'
-            local anim = "down"
-            if x > 0.1 or x < 0.1 or y > 0.1 or y < 0.1 then
-                ofsx = ofsx + x
-                ofsy = ofsy + y
-                if x > 0 then
-                    anim = "right"
-                elseif x < 0 then
-                    anim = "left"
-                elseif y > 0 then
-                    anim = "down"
-                elseif y < 0 then
-                    anim = "up"
-                else
-                    anim = nil
+            local w, h = context.mapManager:getTileDimensions()
+
+            if context.minami then
+                if context.minami:state() == "ready" then
+                    local x, y = context.input:get 'move'
+                    local direction = "down"
+                    if x > 0 then
+                        direction = "right"
+                    elseif x < 0 then
+                        direction = "left"
+                    elseif y > 0 then
+                        direction = "down"
+                    elseif y < 0 then
+                        direction = "up"
+                    else
+                        direction = nil
+                    end
+
+                    context.minami:walk(direction, w, h, 0.5)
                 end
+                context.objectManager:update(dt)
+                
+                ofsx = context.minami.sprite.x
+                ofsy = context.minami.sprite.y
             end
-            context.minami.x = ofsx
-            context.minami.y = ofsy
-            if anim then
-                context.minami:set(anim)
-            end
-            local w, h = context.minami:getDimensions()
+
             local ox = -(ofsx - context.mapManager.width / 2 + w / 2)
             local oy = -(ofsy - context.mapManager.height / 2 + h / 2)
-            context.minami:updateSpriteBatch()
             context.mapManager:setOffset(ox, oy)
             context.mapManager:update(dt)
             context.spriteManager:setOffset(ox, oy)
