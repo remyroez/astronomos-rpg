@@ -162,41 +162,7 @@ return {
           }
         },
         {
-          id = 4,
-          name = "shoper",
-          type = "npc",
-          shape = "rectangle",
-          x = 112,
-          y = 80,
-          width = 16,
-          height = 16,
-          rotation = 0,
-          gid = 241,
-          visible = true,
-          properties = {
-            ["animation"] = "down",
-            ["sprite"] = "citizen"
-          }
-        },
-        {
           id = 5,
-          name = "informer",
-          type = "npc",
-          shape = "rectangle",
-          x = 48,
-          y = 192,
-          width = 16,
-          height = 16,
-          rotation = 0,
-          gid = 241,
-          visible = true,
-          properties = {
-            ["animation"] = "down",
-            ["sprite"] = "citizen"
-          }
-        },
-        {
-          id = 8,
           name = "informer",
           type = "npc",
           shape = "rectangle",
