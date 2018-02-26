@@ -3,6 +3,13 @@ local MapManager = class("MapManager")
 
 local sti = require 'sti'
 
+local LAYER = {
+    OBJECT = "object",
+    TILEMAP = "tilemap",
+    BACKGROUND = "background",
+    COLLISION = "collision"
+}
+
 function MapManager:initialize(basepath, width, height)
     self.basepath = basepath
     --self.files = files
@@ -18,7 +25,7 @@ function MapManager:initialize(basepath, width, height)
 end
 
 function MapManager:addBackgroundLayer(map, tile_gid)
-    local layer = map:addCustomLayer("background", 1)
+    local layer = map:addCustomLayer(LAYER.BACKGROUND, 1)
     layer.tile = map.tiles[tile_gid]
     layer.image = map.tilesets[layer.tile.tileset].image
     layer.width = math.ceil(self.width / layer.tile.width)
@@ -53,11 +60,11 @@ function MapManager:load(name)
         local map = sti(self.basepath .. "/" .. name .. ".lua")
         map:resize(self:getDimensions())
         for name, layer in pairs(map.layers) do
-            if name == "collision" then
+            if name == LAYER.COLLISION then
                 layer.visible = false
-            elseif name == "object" then
+            elseif name == LAYER.OBJECT then
                 layer.visible = false
-            elseif name == "tilemap" then
+            elseif name == LAYER.TILEMAP then
                 layer.visible = true
             else
                 layer.visible = false
@@ -108,6 +115,15 @@ function MapManager:getDimensions()
     return self.width, self.height
 end
 
+function MapManager:getMapDimensions()
+    if not self.current_map then
+        -- invalid map
+        return 0, 0
+    else
+        return self.current_map.width, self.current_map.height
+    end
+end
+
 function MapManager:getTileDimensions()
     if not self.current_map then
         -- invalid map
@@ -115,6 +131,67 @@ function MapManager:getTileDimensions()
     else
         return self.current_map.tilewidth, self.current_map.tileheight
     end
+end
+
+function MapManager:convertPixelToTile(x, y)
+    if not self.current_map then
+        -- invalid map
+        return 0, 0
+    else
+        return self.current_map:convertPixelToTile(x, y)
+    end
+end
+
+function MapManager:convertTileToPixel(x, y)
+    if not self.current_map then
+        -- invalid map
+        return 0, 0
+    else
+        return self.current_map:convertTileToPixel(x, y)
+    end
+end
+
+function MapManager:getTile(layer, x, y)
+    if not self.current_map then
+        -- invalid map
+        return nil
+    elseif not self.current_map.layers[layer] then
+        -- invalid layer
+        return nil
+    elseif not self.current_map.layers[layer].data[y + 1] then
+        -- invalid y
+        return nil
+    else
+        return self.current_map.layers[layer].data[y + 1][x + 1]
+    end
+end
+
+function MapManager:getTileFromPixel(layer, x, y)
+    return self:getTile(layer, self:convertPixelToTile(x, y))
+end
+
+function MapManager:canPassThrough(x, y)
+    local tile = self:getTileFromPixel(LAYER.COLLISION, x, y)
+    if not tile then
+        return true
+    else
+        return tile.id ~= 255
+    end
+end
+
+function MapManager:inMap(x, y)
+    local w, h = self:getMapDimensions()
+    if x < 0 or y < 0 then
+        return false
+    elseif x >= w or y >= h then
+        return false
+    else
+        return true
+    end
+end
+
+function MapManager:inMapFromPixel(x, y)
+    return self:inMap(self:convertPixelToTile(x, y))
 end
 
 function MapManager:properties()
