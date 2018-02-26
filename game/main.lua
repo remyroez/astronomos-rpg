@@ -202,16 +202,22 @@ love.update
                         direction = nil
                     end
 
-                    local speed = 1 / 60 * 20
-                    if context.input:down 'cancel' then
-                        speed = speed / 2
+                    if direction then
+                        local speed = 1 / 60 * 20
+                        if context.input:down 'cancel' then
+                            speed = speed / 2
+                        end
+                        context.objectManager:walkObject(
+                            context.minami,
+                            direction,
+                            speed,
+                            true
+                        )
                     end
-                    context.minami:walk(direction, w, h, speed)
                 end
                 context.objectManager:update(dt)
                 
-                ofsx = context.minami.sprite.x
-                ofsy = context.minami.sprite.y
+                ofsx, ofsy = context.minami:getPosition()
             end
 
             local ox = -(ofsx - context.mapManager.width / 2 + w / 2)

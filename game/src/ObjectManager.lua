@@ -40,14 +40,47 @@ function ObjectManager:clearObjects()
     self.objects = {}
 end
 
+function ObjectManager:walkObject(object, direction, speed, can_move_out)
+    can_move_out = can_move_out or false
+    local x, y = object:getPosition()
+    local tilewidth, tileheight = self.mapManager:getTileDimensions()
+    if direction == 'right' then
+        x = x + tilewidth
+    elseif direction == 'left' then
+        x = x - tilewidth
+    elseif direction == 'down' then
+        y = y + tileheight
+    elseif direction == 'up' then
+        y = y - tileheight
+    end
+    self:setObjectDirection(object, direction)
+    if not can_move_out and not self.mapManager:inMapFromPixel(x, y) then
+        -- can not move out
+    elseif self.mapManager:canPassThrough(x, y) then
+        object:move(x, y, speed or 1)
+    end
+end
+
+function ObjectManager:setObjectDirection(object, direction)
+    if object.type == 'npc' or object.type == 'player' then
+        if not direction then
+            -- no direction
+        elseif direction == "stay" then
+            -- invalid direction
+        else
+            object:setAnimation(direction)
+        end
+    end
+end
+
 function ObjectManager:update(dt)
     for _, object in ipairs(self.objects) do
         local event = object:update(dt)
         if event == "random_walk" then
-            local w, h = self.mapManager:getTileDimensions()
-            object:walk(
+            self:walkObject(
+                object,
                 self.random_walk_table[math.random(#self.random_walk_table)],
-                w, h, self.random_walk_speed
+                self.random_walk_speed
             )
         end
     end

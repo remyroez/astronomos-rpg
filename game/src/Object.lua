@@ -34,38 +34,8 @@ function Object:move(x, y, seconds)
         self.tween = tween.new(
             seconds or 1,
             self.sprite,
-            { x = (self.sprite.x + x), y = self.sprite.y + y }
+            { x = x, y = y }
         )
-        if self.type == 'npc' or self.type == 'player' then
-            local anim = "down"
-            if x > 0 then
-                anim = "right"
-            elseif x < 0 then
-                anim = "left"
-            elseif y > 0 then
-                anim = "down"
-            elseif y < 0 then
-                anim = "up"
-            else
-                anim = nil
-            end
-            if anim then
-                self:setAnimation(anim)
-            end
-        end
-    end
-end
-
-function Object:walk(direction, tilewidth, tileheight, speed)
-    local sp = speed or 1
-    if direction == 'right' then
-        self:move(tilewidth, 0, sp) -- right
-    elseif direction == 'left' then
-        self:move(-tilewidth, 0, sp) -- left
-    elseif direction == 'down' then
-        self:move(0, tileheight, sp) -- down
-    elseif direction == 'up' then
-        self:move(0, -tileheight, sp) -- up
     end
 end
 
@@ -76,6 +46,15 @@ function Object:setPosition(x, y)
         self.sprite.x = x
         self.sprite.y = y
         self.sprite:updateSpriteBatch()
+    end
+end
+
+function Object:getPosition(x, y)
+    if not self.sprite then
+        -- no sprite
+        return 0, 0
+    else
+        return self.sprite.x, self.sprite.y
     end
 end
 
