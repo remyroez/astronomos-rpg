@@ -13,8 +13,10 @@ local SpriteManager = require 'SpriteManager'
 local ObjectManager = require 'ObjectManager'
 
 local baton = require 'baton'
-local ofsx = 0
-local ofsy = 0
+local startx = 0
+local starty = 0
+local ofsx = startx
+local ofsy = starty
 
 local object = rx.BehaviorSubject.create(0, 0)
 
@@ -123,14 +125,7 @@ function love.load(arg)
                 context.objectManager:newObject(object)
             end
         end
-        context.minami = context.objectManager:newObject {
-            type = "player",
-            x = 0,
-            y = 0,
-            properties = {
-                sprite = "minami"
-            }
-        }
+        createPlayer(startx, starty, "minami")
         context.spriteManager:updateSpriteBatch()
     end
 
@@ -153,6 +148,34 @@ function love.load(arg)
         joystick = love.joystick.getJoysticks()[1],
     }
     next_map()
+end
+
+function createPlayer(x, y, sprite)
+    context.minami = context.objectManager:newObject {
+        type = "player",
+        x = x or 0,
+        y = y or 0,
+        properties = {
+            sprite = sprite or "minami"
+        }
+    }
+    context.minami.onArrival
+        :subscribe(
+            function (x, y)
+                if context.mapManager:inMapFromPixel(x, y) then
+                    -- in map
+                elseif not context.mapManager:properties()["outer_map"] then
+                    -- no map
+                else
+                    local properties = context.mapManager:properties()
+                    startx, starty = context.mapManager:convertTileToPixel(
+                        properties["outer_map_x"] or 0,
+                        properties["outer_map_y"] or 0
+                    )
+                    load_map(properties["outer_map"])
+                end
+            end
+        )
 end
 
 function setupSpriteSheet(settings)
@@ -211,7 +234,7 @@ love.update
                             context.minami,
                             direction,
                             speed,
-                            true
+                            context.mapManager:properties()["outer_map"]
                         )
                     end
                 end

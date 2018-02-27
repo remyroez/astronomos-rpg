@@ -26,7 +26,7 @@ function Object:initialize(type)
                     self.tween = nil
                     self.target = nil
                     self.resetDelta()
-                    self.onArrival()
+                    self.onArrival(self:getPosition())
                 end
                 self.sprite:updateSpriteBatch()
             end
