@@ -23,6 +23,7 @@ function love.conf(t)
 	t.window.minheight = 240
 
 	t.dependencies = {
+		"tween",
 		"rxlove",
 		"middleclass",
 		"lovetoys"

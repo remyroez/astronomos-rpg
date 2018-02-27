@@ -81,19 +81,7 @@
     <property name="sprite" value="citizen"/>
    </properties>
   </object>
-  <object id="4" name="shoper" type="npc" gid="241" x="112" y="80" width="16" height="16">
-   <properties>
-    <property name="animation" value="down"/>
-    <property name="sprite" value="citizen"/>
-   </properties>
-  </object>
   <object id="5" name="informer" type="npc" gid="241" x="48" y="192" width="16" height="16">
-   <properties>
-    <property name="animation" value="down"/>
-    <property name="sprite" value="citizen"/>
-   </properties>
-  </object>
-  <object id="8" name="informer" type="npc" gid="241" x="48" y="192" width="16" height="16">
    <properties>
     <property name="animation" value="down"/>
     <property name="sprite" value="citizen"/>
