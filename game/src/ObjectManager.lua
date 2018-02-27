@@ -1,6 +1,8 @@
 local class = require 'middleclass'
 local ObjectManager = class("ObjectManager")
 
+local rx = require 'rx'
+
 local Object = require("Object")
 
 function ObjectManager:initialize(mapManager, spriteManager)
@@ -21,8 +23,13 @@ function ObjectManager:newObject(template)
         sprite.x = template.x
         sprite.y = template.y - sprite:getHeight() -- bottom -> top
         object.sprite = sprite
-        object.event = properties["walk_type"] or "random_walk"
-        object.duration = properties["walk_duration"] or (1 / 60 * 20 * 10)
+        self:subscribeWalk(
+            object,
+            properties["walk_type"] or "random_walk",
+            properties["walk_duration"] or (1 / 60 * 20 * 10)
+        )
+        --object.event = properties["walk_type"] or "random_walk"
+        --object.duration = properties["walk_duration"] or (1 / 60 * 20 * 10)
     elseif object.type == "player" then
         local sprite = self.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
         sprite:set(properties["animation"] or "down")
@@ -38,6 +45,31 @@ end
 
 function ObjectManager:clearObjects()
     self.objects = {}
+end
+
+function ObjectManager:subscribeWalk(object, walk_type, walk_duration)
+    local subscribe = nil
+
+    if walk_type == "random_walk" then
+        subscribe = object.waitStream
+            :filter(function (time) return time > walk_duration end)
+            :subscribe(
+                function (...)
+                    self:walkObject(
+                        object,
+                        self.random_walk_table[math.random(#self.random_walk_table)],
+                        self.random_walk_speed
+                    )
+                    object.resetDelta()
+                end
+            )
+    end
+
+    if not subscribe then
+        -- no subscribe
+    else
+        object:registerSubscribe("walk", subscribe)
+    end
 end
 
 function ObjectManager:walkObject(object, direction, speed, can_move_out)
