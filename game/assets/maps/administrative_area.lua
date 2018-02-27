@@ -12,7 +12,9 @@ return {
   properties = {
     ["background_tile"] = 45,
     ["bgm"] = "town",
-    ["outer_map"] = "arkcity"
+    ["outer_map"] = "arkcity",
+    ["outer_map_x"] = 34,
+    ["outer_map_y"] = 55
   },
   tilesets = {
     {
