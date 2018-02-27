@@ -12,6 +12,8 @@ function Object:initialize(type)
     self.timer = 0
     self.tween = nil
     self.commands = {}
+
+    self.target = nil
 end
 
 function Object:state()
@@ -31,10 +33,14 @@ function Object:move(x, y, seconds)
     if not self.sprite then
         -- no sprite
     else
+        self.target = {
+            x = x,
+            y = y
+        }
         self.tween = tween.new(
             seconds or 1,
             self.sprite,
-            { x = x, y = y }
+            self.target
         )
     end
 end
@@ -42,6 +48,7 @@ end
 function Object:setPosition(x, y)
     self.timer = 0
     self.tween = nil
+    self.target = nil
     if self.sprite then
         self.sprite.x = x
         self.sprite.y = y
@@ -49,12 +56,21 @@ function Object:setPosition(x, y)
     end
 end
 
-function Object:getPosition(x, y)
+function Object:getPosition()
     if not self.sprite then
         -- no sprite
         return 0, 0
     else
         return self.sprite.x, self.sprite.y
+    end
+end
+
+function Object:getTargetPosition()
+    if not self.target then
+        -- no target
+        return self:getPosition()
+    else
+        return self.target.x, self.target.y
     end
 end
 
@@ -87,6 +103,7 @@ function Object:update(dt)
             -- complete
             self.tween = nil
             self.timer = 0
+            self.target = nil
             event = "moved"
         end
         self.sprite:updateSpriteBatch()

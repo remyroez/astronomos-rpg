@@ -56,7 +56,7 @@ function ObjectManager:walkObject(object, direction, speed, can_move_out)
     self:setObjectDirection(object, direction)
     if not can_move_out and not self.mapManager:inMapFromPixel(x, y) then
         -- can not move out
-    elseif self.mapManager:canPassThrough(x, y) then
+    elseif self:canPassThrough(x, y) then
         object:move(x, y, speed or 1)
     end
 end
@@ -71,6 +71,36 @@ function ObjectManager:setObjectDirection(object, direction)
             object:setAnimation(direction)
         end
     end
+end
+
+function ObjectManager:canPassThrough(x, y)
+    local result = true
+    if not self.mapManager:canPassThrough(x, y) then
+        -- can not pass through
+        result = false
+    elseif self:getObjectFromPixel(x, y) then
+        -- object
+        result = false
+    end
+    return result
+end
+
+function ObjectManager:getObjectFromTile(x, y)
+    local object = nil
+
+    for _, obj in ipairs(self.objects) do
+        local ox, oy = self.mapManager:convertPixelToTile(obj:getTargetPosition())
+        if ox == x and oy == y then
+            object = obj
+            break
+        end
+    end
+
+    return object
+end
+
+function ObjectManager:getObjectFromPixel(x, y)
+    return self:getObjectFromTile(self.mapManager:convertPixelToTile(x, y))
 end
 
 function ObjectManager:update(dt)
