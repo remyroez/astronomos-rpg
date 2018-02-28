@@ -4,34 +4,57 @@ local Object = class("Object")
 local tween = require 'tween'
 local rx = require 'rx'
 
-function Object:initialize(type)
-    self.type = type
+local function isTweenableType(type)
+    local result = false
+
+    if type == 'npc' then
+        result = true
+    elseif type == 'player' then
+        result = true
+    elseif type == 'transfer' then
+        result = false
+    else
+        result = false
+    end
+
+    return result
+end
+
+function Object:initialize(type, properties)
+    self.type = type or "unknown"
+    self.properties = properties or {}
 
     self.sprite = nil
     self.tween = nil
+
+    self.x = 0
+    self.y = 0
 
     self.target = nil
 
     self.subscribes = {}
 
     self.update = rx.Subject.create()
-    self:registerSubscribe(
-        "tween",
-        self.update
-        :filter(function (dt) return self.tween end)
-        :subscribe(
-            function (self, dt)
-                if self.tween:update(dt) then
-                    -- complete
-                    self.tween = nil
-                    self.target = nil
-                    self.resetDelta()
-                    self.onArrival(self:getPosition())
+
+    if isTweenableType(self.type) then
+        self:registerSubscribe(
+            "tween",
+            self.update
+            :filter(function (dt) return self.tween end)
+            :subscribe(
+                function (self, dt)
+                    if self.tween:update(dt) then
+                        -- complete
+                        self.tween = nil
+                        self.target = nil
+                        self.resetDelta()
+                        self.onArrival(self:getPosition())
+                    end
+                    self.sprite:updateSpriteBatch()
                 end
-                self.sprite:updateSpriteBatch()
-            end
+            )
         )
-    )
+    end
 
     self.onArrival = rx.Subject.create()
 
@@ -82,22 +105,18 @@ function Object:state()
 end
 
 function Object:move(x, y, seconds)
-    if not self.sprite then
-        -- no sprite
-    else
-        if self.target then
-            self:setPosition(self:getTargetPosition())
-        end
-        self.target = {
-            x = x,
-            y = y
-        }
-        self.tween = tween.new(
-            seconds or 1,
-            self.sprite,
-            self.target
-        )
+    if self.target then
+        self:setPosition(self:getTargetPosition())
     end
+    self.target = {
+        x = x,
+        y = y
+    }
+    self.tween = tween.new(
+        seconds or 1,
+        self.sprite or self,
+        self.target
+    )
 end
 
 function Object:setPosition(x, y)
@@ -109,12 +128,14 @@ function Object:setPosition(x, y)
         self.sprite.y = y
         self.sprite:updateSpriteBatch()
     end
+    self.x = x
+    self.y = y
 end
 
 function Object:getPosition()
     if not self.sprite then
         -- no sprite
-        return 0, 0
+        return self.x, self.y
     else
         return self.sprite.x, self.sprite.y
     end

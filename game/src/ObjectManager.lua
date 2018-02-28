@@ -15,7 +15,7 @@ function ObjectManager:initialize(mapManager, spriteManager)
 end
 
 function ObjectManager:newObject(template)
-    local object = Object(template.type)
+    local object = Object(template.type, template.properties)
     local properties = template.properties
     if object.type == "npc" then
         local sprite = self.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
@@ -28,16 +28,17 @@ function ObjectManager:newObject(template)
             properties["walk_type"] or "random_walk",
             properties["walk_duration"] or (1 / 60 * 20 * 10)
         )
-        --object.event = properties["walk_type"] or "random_walk"
-        --object.duration = properties["walk_duration"] or (1 / 60 * 20 * 10)
     elseif object.type == "player" then
         local sprite = self.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
         sprite:set(properties["animation"] or "down")
         sprite.x = template.x
         sprite.y = template.y
         object.sprite = sprite
+    elseif object.type == "transfer" then
+        -- transfer
+        object:setPosition(template.x, template.y - template.height)
     else
-        print("error")
+        print("ObjectManager:newObject", "unknown type")
     end
     table.insert(self.objects, object)
     return object
@@ -72,7 +73,7 @@ function ObjectManager:subscribeWalk(object, walk_type, walk_duration)
     end
 end
 
-function ObjectManager:walkObject(object, direction, speed, can_move_out)
+function ObjectManager:walkObject(object, direction, speed, can_move_out, through)
     can_move_out = can_move_out or false
     local x, y = object:getPosition()
     local tilewidth, tileheight = self.mapManager:getTileDimensions()
@@ -88,7 +89,7 @@ function ObjectManager:walkObject(object, direction, speed, can_move_out)
     self:setObjectDirection(object, direction)
     if not can_move_out and not self.mapManager:inMapFromPixel(x, y) then
         -- can not move out
-    elseif self:canPassThrough(x, y) then
+    elseif through or self:canPassThrough(x, y) then
         object:move(x, y, speed or 1)
     end
 end
@@ -110,19 +111,23 @@ function ObjectManager:canPassThrough(x, y)
     if not self.mapManager:canPassThrough(x, y) then
         -- can not pass through
         result = false
-    elseif self:getObjectFromPixel(x, y) then
+    elseif self:getObjectFromPixel(x, y, "npc") then
         -- object
         result = false
     end
     return result
 end
 
-function ObjectManager:getObjectFromTile(x, y)
+function ObjectManager:getObjectFromTile(x, y, type)
     local object = nil
 
     for _, obj in ipairs(self.objects) do
         local ox, oy = self.mapManager:convertPixelToTile(obj:getTargetPosition())
-        if ox == x and oy == y then
+        if ox ~= x or oy ~= y then
+            -- position not match
+        elseif type and type ~= obj.type then
+            -- type not match
+        else
             object = obj
             break
         end
@@ -131,8 +136,9 @@ function ObjectManager:getObjectFromTile(x, y)
     return object
 end
 
-function ObjectManager:getObjectFromPixel(x, y)
-    return self:getObjectFromTile(self.mapManager:convertPixelToTile(x, y))
+function ObjectManager:getObjectFromPixel(x, y, type)
+    x, y = self.mapManager:convertPixelToTile(x, y)
+    return self:getObjectFromTile(x, y, type)
 end
 
 function ObjectManager:update(dt)
