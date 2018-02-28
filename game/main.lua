@@ -164,6 +164,15 @@ function createPlayer(x, y, sprite)
             function (x, y)
                 if context.mapManager:inMapFromPixel(x, y) then
                     -- in map
+                    local transfer = context.objectManager:getObjectFromPixel(x, y, "transfer")
+                    if transfer then
+                        local properties = transfer.properties
+                        startx, starty = context.mapManager:convertTileToPixel(
+                            properties["transfer_x"] or 0,
+                            properties["transfer_y"] or 0
+                        )
+                        load_map(properties["transfer_map"])
+                    end
                 elseif not context.mapManager:properties()["outer_map"] then
                     -- no map
                 else
@@ -234,7 +243,8 @@ love.update
                             context.minami,
                             direction,
                             speed,
-                            context.mapManager:properties()["outer_map"]
+                            context.mapManager:properties()["outer_map"],
+                            context.input:down 'esp'
                         )
                     end
                 end
