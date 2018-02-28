@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="48" height="58" tilewidth="16" tileheight="16" infinite="0" nextobjectid="7">
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="48" height="58" tilewidth="16" tileheight="16" infinite="0" nextobjectid="12">
  <properties>
   <property name="background_tile" type="int" value="1"/>
   <property name="bgm" value="field"/>
@@ -130,5 +130,41 @@
 256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,1,1,1,1,1,1
 </data>
  </layer>
- <objectgroup name="object"/>
+ <objectgroup name="object">
+  <object id="7" name="mamusu" type="transfer" gid="242" x="160" y="336" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="mamusu"/>
+    <property name="transfer_x" type="int" value="13"/>
+    <property name="transfer_y" type="int" value="0"/>
+   </properties>
+  </object>
+  <object id="8" name="deusu" type="transfer" gid="242" x="208" y="96" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="deusu"/>
+    <property name="transfer_x" type="int" value="9"/>
+    <property name="transfer_y" type="int" value="0"/>
+   </properties>
+  </object>
+  <object id="9" name="powerplant_1" type="transfer" gid="242" x="560" y="688" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="powerplant"/>
+    <property name="transfer_x" type="int" value="26"/>
+    <property name="transfer_y" type="int" value="15"/>
+   </properties>
+  </object>
+  <object id="10" name="powerplant_2" type="transfer" gid="242" x="480" y="736" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="powerplant"/>
+    <property name="transfer_x" type="int" value="3"/>
+    <property name="transfer_y" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="11" name="road_to_arkcity" type="transfer" gid="242" x="112" y="640" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="road_to_arkcity"/>
+    <property name="transfer_x" type="int" value="2"/>
+    <property name="transfer_y" type="int" value="11"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

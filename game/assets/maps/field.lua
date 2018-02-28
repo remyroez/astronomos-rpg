@@ -8,7 +8,7 @@ return {
   height = 58,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 7,
+  nextobjectid = 12,
   properties = {
     ["background_tile"] = 1,
     ["bgm"] = "field",
@@ -199,7 +199,98 @@ return {
       offsety = 0,
       draworder = "topdown",
       properties = {},
-      objects = {}
+      objects = {
+        {
+          id = 7,
+          name = "mamusu",
+          type = "transfer",
+          shape = "rectangle",
+          x = 160,
+          y = 336,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "mamusu",
+            ["transfer_x"] = 13,
+            ["transfer_y"] = 0
+          }
+        },
+        {
+          id = 8,
+          name = "deusu",
+          type = "transfer",
+          shape = "rectangle",
+          x = 208,
+          y = 96,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "deusu",
+            ["transfer_x"] = 9,
+            ["transfer_y"] = 0
+          }
+        },
+        {
+          id = 9,
+          name = "powerplant_1",
+          type = "transfer",
+          shape = "rectangle",
+          x = 560,
+          y = 688,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "powerplant",
+            ["transfer_x"] = 26,
+            ["transfer_y"] = 15
+          }
+        },
+        {
+          id = 10,
+          name = "powerplant_2",
+          type = "transfer",
+          shape = "rectangle",
+          x = 480,
+          y = 736,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "powerplant",
+            ["transfer_x"] = 3,
+            ["transfer_y"] = 2
+          }
+        },
+        {
+          id = 11,
+          name = "road_to_arkcity",
+          type = "transfer",
+          shape = "rectangle",
+          x = 112,
+          y = 640,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "road_to_arkcity",
+            ["transfer_x"] = 2,
+            ["transfer_y"] = 11
+          }
+        }
+      }
     }
   }
 }
