@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="32" height="30" tilewidth="16" tileheight="16" infinite="0" nextobjectid="16">
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="32" height="30" tilewidth="16" tileheight="16" infinite="0" nextobjectid="20">
  <properties>
   <property name="background_tile" type="int" value="45"/>
   <property name="bgm" value="town"/>
@@ -123,6 +123,27 @@
    <properties>
     <property name="animation" value="down"/>
     <property name="sprite" value="guy"/>
+   </properties>
+  </object>
+  <object id="16" name="to_institute" type="transfer" gid="242" x="80" y="320" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="institute"/>
+    <property name="transfer_x" type="int" value="1"/>
+    <property name="transfer_y" type="int" value="7"/>
+   </properties>
+  </object>
+  <object id="18" name="to_hospital" type="transfer" gid="242" x="320" y="80" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="hospital"/>
+    <property name="transfer_x" type="int" value="8"/>
+    <property name="transfer_y" type="int" value="8"/>
+   </properties>
+  </object>
+  <object id="19" name="to_security_room" type="transfer" gid="242" x="384" y="384" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="security_room"/>
+    <property name="transfer_x" type="int" value="8"/>
+    <property name="transfer_y" type="int" value="8"/>
    </properties>
   </object>
  </objectgroup>
