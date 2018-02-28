@@ -13,6 +13,8 @@ local SpriteManager = require 'SpriteManager'
 local ObjectManager = require 'ObjectManager'
 
 local baton = require 'baton'
+local startx = 0
+local starty = 0
 local ofsx = 0
 local ofsy = 0
 
@@ -20,52 +22,9 @@ local object = rx.BehaviorSubject.create(0, 0)
 
 local context = {}
 
-local maps = {
-    "administrative_area",
-    "arkcity",
-    "brain_room",
-    "cave",
-    "cockpit",
-    "control_room",
-    "deusu",
-    "field1",
-    "hospital",
-    "institute",
-    "laboratory",
-    "mamusu",
-    "powerplant",
-    "powerplant_underground",
-    "residential_area",
-    "road_to_arkcity",
-    "road_to_arkcity_underground",
-    "road_to_brain_room",
-    "road_to_cockpit_1",
-    "road_to_cockpit_2",
-    "road_to_cockpit_3",
-    "road_to_cockpit_4",
-    "road_to_laboratory_1",
-    "road_to_laboratory_2",
-    "road_to_laboratory_3",
-    "road_to_laboratory_4",
-    "security_room",
-    "space_tower",
-    "underground_passage"
-}
-
-local map_index = 0
-
-function next_map()
-    if map_index < 1 then
-        map_index = 1
-    elseif map_index >= #maps then
-        map_index = 1
-    else
-        map_index = map_index + 1
-    end
-    load_map(maps[map_index])
-end
-
-function load_map(path)
+function load_map(path, x, y)
+    startx = x or 0
+    starty = y or 0
     context.mapManager:setMap(path)
     if context.mapManager:properties().bgm then
         context.bgmPlayer:play(context.mapManager:properties().bgm)
@@ -123,14 +82,8 @@ function love.load(arg)
                 context.objectManager:newObject(object)
             end
         end
-        context.minami = context.objectManager:newObject {
-            type = "player",
-            x = 0,
-            y = 0,
-            properties = {
-                sprite = "minami"
-            }
-        }
+        local x, y = map:convertTileToPixel(startx, starty)
+        createPlayer(x, y, "minami")
         context.spriteManager:updateSpriteBatch()
     end
 
@@ -152,7 +105,48 @@ function love.load(arg)
         },
         joystick = love.joystick.getJoysticks()[1],
     }
-    next_map()
+    load_map("administrative_area", 0, 24)
+end
+
+function createPlayer(x, y, sprite)
+    context.minami = context.objectManager:newObject {
+        type = "player",
+        x = x or 0,
+        y = y or 0,
+        properties = {
+            sprite = sprite or "minami"
+        }
+    }
+    context.minami.onArrival
+        :subscribe(
+            function (x, y)
+                if context.mapManager:inMapFromPixel(x, y) then
+                    -- in map
+                    local transfer = context.objectManager:getObjectFromPixel(x, y, "transfer")
+                    if not transfer then
+                        -- no transfer
+                    elseif not transfer.properties["transfer_map"] then
+                        -- no map
+                    else
+                        local properties = transfer.properties
+                        load_map(
+                            properties["transfer_map"],
+                            properties["transfer_x"] or 0,
+                            properties["transfer_y"] or 0
+                        )
+                    end
+                elseif not context.mapManager:properties()["outer_map"] then
+                    -- no map
+                else
+                    local properties = context.mapManager:properties()
+                    load_map(
+                        properties["outer_map"],
+                        properties["outer_map_x"] or 0,
+                        properties["outer_map_y"] or 0
+                    )
+                end
+            end
+        )
 end
 
 function setupSpriteSheet(settings)
@@ -211,7 +205,8 @@ love.update
                             context.minami,
                             direction,
                             speed,
-                            true
+                            context.mapManager:properties()["outer_map"],
+                            context.input:down 'esp'
                         )
                     end
                 end
@@ -260,13 +255,4 @@ love.mousemoved
             print("done.")
         end
     )
-    
-love.mousepressed
-    :filter(function (x, y, button) return button == 1 end)
-    :subscribe(
-        function (x, y, button)
-            next_map()
-            ofsx = 0
-            ofsy = 0
-        end
-    )
+ 

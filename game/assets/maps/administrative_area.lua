@@ -8,11 +8,13 @@ return {
   height = 30,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 16,
+  nextobjectid = 20,
   properties = {
     ["background_tile"] = 45,
     ["bgm"] = "town",
-    ["outer_map"] = "arkcity"
+    ["outer_map"] = "arkcity",
+    ["outer_map_x"] = 34,
+    ["outer_map_y"] = 55
   },
   tilesets = {
     {
@@ -278,6 +280,60 @@ return {
           properties = {
             ["animation"] = "down",
             ["sprite"] = "guy"
+          }
+        },
+        {
+          id = 16,
+          name = "to_institute",
+          type = "transfer",
+          shape = "rectangle",
+          x = 80,
+          y = 320,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "institute",
+            ["transfer_x"] = 1,
+            ["transfer_y"] = 7
+          }
+        },
+        {
+          id = 18,
+          name = "to_hospital",
+          type = "transfer",
+          shape = "rectangle",
+          x = 320,
+          y = 80,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "hospital",
+            ["transfer_x"] = 8,
+            ["transfer_y"] = 8
+          }
+        },
+        {
+          id = 19,
+          name = "to_security_room",
+          type = "transfer",
+          shape = "rectangle",
+          x = 384,
+          y = 384,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "security_room",
+            ["transfer_x"] = 8,
+            ["transfer_y"] = 8
           }
         }
       }
