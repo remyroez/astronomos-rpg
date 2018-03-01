@@ -11,7 +11,10 @@ return {
   nextobjectid = 1,
   properties = {
     ["background_tile"] = 45,
-    ["bgm"] = "town"
+    ["bgm"] = "town",
+    ["outer_map"] = "arkcity",
+    ["outer_map_x"] = 20,
+    ["outer_map_y"] = 52
   },
   tilesets = {
     {
