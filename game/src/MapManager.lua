@@ -151,6 +151,10 @@ function MapManager:convertTileToPixel(x, y)
     end
 end
 
+function MapManager:convertPixelToPixel(x, y)
+    return self:convertTileToPixel(self:convertPixelToTile(x, y))
+end
+
 function MapManager:getTile(layer, x, y)
     if not self.current_map then
         -- invalid map
