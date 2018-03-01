@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="50" height="32" tilewidth="16" tileheight="16" infinite="0" nextobjectid="1">
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="50" height="32" tilewidth="16" tileheight="16" infinite="0" nextobjectid="4">
  <properties>
   <property name="background_tile" type="int" value="1"/>
   <property name="bgm" value="field"/>
@@ -78,4 +78,27 @@
 256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256
 </data>
  </layer>
+ <objectgroup name="object">
+  <object id="1" name="field" type="transfer" gid="242" x="32" y="192" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="field"/>
+    <property name="transfer_x" type="int" value="7"/>
+    <property name="transfer_y" type="int" value="39"/>
+   </properties>
+  </object>
+  <object id="2" name="road_to_arkcity_underground" type="transfer" gid="242" x="768" y="192" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="road_to_arkcity_underground"/>
+    <property name="transfer_x" type="int" value="5"/>
+    <property name="transfer_y" type="int" value="10"/>
+   </properties>
+  </object>
+  <object id="3" name="arkcity" type="transfer" gid="242" x="80" y="416" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="arkcity"/>
+    <property name="transfer_x" type="int" value="3"/>
+    <property name="transfer_y" type="int" value="2"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>
