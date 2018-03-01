@@ -141,6 +141,25 @@ function Object:getPosition()
     end
 end
 
+function Object:getDimensions()
+    if not self.sprite then
+        -- no sprite
+        return 0, 0
+    else
+        return self.sprite:getWidth(), self.sprite:getHeight()
+    end
+end
+
+function Object:getWidth()
+    local value, _ = self:getDimensions()
+    return value
+end
+
+function Object:getHeight()
+    local _, value = self:getDimensions()
+    return value
+end
+
 function Object:getTargetPosition()
     if not self.target then
         -- no target
