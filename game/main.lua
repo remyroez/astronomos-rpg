@@ -106,7 +106,8 @@ function love.load(arg)
         joystick = love.joystick.getJoysticks()[1],
     }
     --load_map("administrative_area", 0, 24)
-    load_map("field", 11, 20)
+    --load_map("field", 11, 20)
+    load_map("arkcity", 24, 20)
 end
 
 function createPlayer(x, y, sprite)
