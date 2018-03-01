@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="48" height="58" tilewidth="16" tileheight="16" infinite="0" nextobjectid="1">
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="48" height="58" tilewidth="16" tileheight="16" infinite="0" nextobjectid="8">
  <properties>
   <property name="background_tile" type="int" value="1"/>
   <property name="bgm" value="field"/>
@@ -130,4 +130,55 @@
 256,256,256,256,256,256,256,256,0,0,0,256,256,256,256,256,256,256,256,256,0,0,256,256,0,0,0,0,256,256,0,0,256,256,0,0,256,256,0,0,0,0,0,0,0,256,256,256
 </data>
  </layer>
+ <objectgroup name="object">
+  <object id="1" name="road_to_arkcity" type="transfer" gid="242" x="48" y="48" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="road_to_arkcity"/>
+    <property name="transfer_x" type="int" value="5"/>
+    <property name="transfer_y" type="int" value="25"/>
+   </properties>
+  </object>
+  <object id="2" name="mamusu" type="transfer" gid="242" x="656" y="352" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="mamusu"/>
+    <property name="transfer_x" type="int" value="25"/>
+    <property name="transfer_y" type="int" value="6"/>
+   </properties>
+  </object>
+  <object id="3" name="road_to_brain_room" type="transfer" gid="242" x="128" y="480" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="road_to_brain_room"/>
+    <property name="transfer_x" type="int" value="5"/>
+    <property name="transfer_y" type="int" value="6"/>
+   </properties>
+  </object>
+  <object id="4" name="administrative_area" type="transfer" gid="242" x="544" y="896" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="administrative_area"/>
+    <property name="transfer_x" type="int" value="0"/>
+    <property name="transfer_y" type="int" value="24"/>
+   </properties>
+  </object>
+  <object id="5" name="residential_area" type="transfer" gid="242" x="320" y="848" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="residential_area"/>
+    <property name="transfer_x" type="int" value="9"/>
+    <property name="transfer_y" type="int" value="0"/>
+   </properties>
+  </object>
+  <object id="6" name="underground_passage" type="transfer" gid="242" x="128" y="832" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="underground_passage"/>
+    <property name="transfer_x" type="int" value="2"/>
+    <property name="transfer_y" type="int" value="2"/>
+   </properties>
+  </object>
+  <object id="7" name="road_to_arkcity_2" type="transfer" gid="242" x="400" y="32" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="road_to_arkcity"/>
+    <property name="transfer_x" type="int" value="5"/>
+    <property name="transfer_y" type="int" value="25"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

@@ -8,7 +8,7 @@ return {
   height = 58,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 1,
+  nextobjectid = 8,
   properties = {
     ["background_tile"] = 1,
     ["bgm"] = "field",
@@ -188,6 +188,144 @@ return {
         256, 256, 256, 256, 0, 0, 256, 0, 256, 256, 256, 256, 0, 0, 256, 256, 256, 256, 0, 256, 0, 0, 256, 256, 256, 0, 0, 0, 0, 0, 256, 256, 0, 0, 0, 256, 0, 0, 256, 256, 256, 256, 0, 0, 0, 0, 256, 256,
         256, 256, 256, 256, 256, 256, 256, 0, 0, 0, 0, 0, 0, 0, 256, 256, 256, 256, 256, 256, 0, 0, 256, 256, 0, 0, 0, 0, 256, 256, 0, 0, 256, 256, 0, 0, 256, 256, 0, 0, 256, 256, 0, 0, 0, 0, 256, 256,
         256, 256, 256, 256, 256, 256, 256, 256, 0, 0, 0, 256, 256, 256, 256, 256, 256, 256, 256, 256, 0, 0, 256, 256, 0, 0, 0, 0, 256, 256, 0, 0, 256, 256, 0, 0, 256, 256, 0, 0, 0, 0, 0, 0, 0, 256, 256, 256
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "object",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 1,
+          name = "road_to_arkcity",
+          type = "transfer",
+          shape = "rectangle",
+          x = 48,
+          y = 48,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "road_to_arkcity",
+            ["transfer_x"] = 5,
+            ["transfer_y"] = 25
+          }
+        },
+        {
+          id = 2,
+          name = "mamusu",
+          type = "transfer",
+          shape = "rectangle",
+          x = 656,
+          y = 352,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "mamusu",
+            ["transfer_x"] = 25,
+            ["transfer_y"] = 6
+          }
+        },
+        {
+          id = 3,
+          name = "road_to_brain_room",
+          type = "transfer",
+          shape = "rectangle",
+          x = 128,
+          y = 480,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "road_to_brain_room",
+            ["transfer_x"] = 5,
+            ["transfer_y"] = 6
+          }
+        },
+        {
+          id = 4,
+          name = "administrative_area",
+          type = "transfer",
+          shape = "rectangle",
+          x = 544,
+          y = 896,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "administrative_area",
+            ["transfer_x"] = 0,
+            ["transfer_y"] = 24
+          }
+        },
+        {
+          id = 5,
+          name = "residential_area",
+          type = "transfer",
+          shape = "rectangle",
+          x = 320,
+          y = 848,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "residential_area",
+            ["transfer_x"] = 9,
+            ["transfer_y"] = 0
+          }
+        },
+        {
+          id = 6,
+          name = "underground_passage",
+          type = "transfer",
+          shape = "rectangle",
+          x = 128,
+          y = 832,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "underground_passage",
+            ["transfer_x"] = 2,
+            ["transfer_y"] = 2
+          }
+        },
+        {
+          id = 7,
+          name = "road_to_arkcity_2",
+          type = "transfer",
+          shape = "rectangle",
+          x = 400,
+          y = 32,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "road_to_arkcity",
+            ["transfer_x"] = 5,
+            ["transfer_y"] = 25
+          }
+        }
       }
     }
   }
