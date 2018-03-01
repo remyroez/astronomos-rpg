@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="32" height="30" tilewidth="16" tileheight="16" infinite="0" nextobjectid="1">
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="32" height="30" tilewidth="16" tileheight="16" infinite="0" nextobjectid="4">
  <properties>
   <property name="background_tile" type="int" value="15"/>
   <property name="bgm" value="field"/>
@@ -74,4 +74,27 @@
 256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256
 </data>
  </layer>
+ <objectgroup name="object">
+  <object id="1" name="field_2" type="transfer" gid="242" x="416" y="256" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="field"/>
+    <property name="transfer_x" type="int" value="30"/>
+    <property name="transfer_y" type="int" value="45"/>
+   </properties>
+  </object>
+  <object id="2" name="field_2" type="transfer" gid="242" x="48" y="48" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="field"/>
+    <property name="transfer_x" type="int" value="35"/>
+    <property name="transfer_y" type="int" value="42"/>
+   </properties>
+  </object>
+  <object id="3" name="powerplant_underground" type="transfer" gid="242" x="304" y="64" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="powerplant_underground"/>
+    <property name="transfer_x" type="int" value="6"/>
+    <property name="transfer_y" type="int" value="7"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

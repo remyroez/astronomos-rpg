@@ -8,7 +8,7 @@ return {
   height = 30,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 1,
+  nextobjectid = 4,
   properties = {
     ["background_tile"] = 15,
     ["bgm"] = "field",
@@ -132,6 +132,72 @@ return {
         256, 0, 256, 256, 256, 256, 256, 0, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 0, 0, 0, 0, 0, 256,
         256, 0, 0, 0, 0, 0, 0, 0, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 0, 0, 0, 0, 0, 256,
         256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "object",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 1,
+          name = "field_2",
+          type = "transfer",
+          shape = "rectangle",
+          x = 416,
+          y = 256,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "field",
+            ["transfer_x"] = 30,
+            ["transfer_y"] = 45
+          }
+        },
+        {
+          id = 2,
+          name = "field_2",
+          type = "transfer",
+          shape = "rectangle",
+          x = 48,
+          y = 48,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "field",
+            ["transfer_x"] = 35,
+            ["transfer_y"] = 42
+          }
+        },
+        {
+          id = 3,
+          name = "powerplant_underground",
+          type = "transfer",
+          shape = "rectangle",
+          x = 304,
+          y = 64,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "powerplant_underground",
+            ["transfer_x"] = 6,
+            ["transfer_y"] = 7
+          }
+        }
       }
     }
   }
