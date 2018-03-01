@@ -20,7 +20,7 @@ function ObjectManager:newObject(template)
     if object.type == "npc" then
         object.sprite = self.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
         object:setAnimation(properties["animation"] or "down")
-        object:setPosition(self.mapManager:convertPixelToPixel(template.x, template.y - sprite:getHeight()))
+        object:setPosition(self.mapManager:convertPixelToPixel(template.x, template.y - object:getHeight()))
         self:subscribeWalk(
             object,
             properties["walk_type"] or "random_walk",
