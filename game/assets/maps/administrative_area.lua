@@ -284,7 +284,7 @@ return {
         },
         {
           id = 16,
-          name = "to_institute",
+          name = "institute",
           type = "transfer",
           shape = "rectangle",
           x = 80,
@@ -302,7 +302,7 @@ return {
         },
         {
           id = 18,
-          name = "to_hospital",
+          name = "hospital",
           type = "transfer",
           shape = "rectangle",
           x = 320,
@@ -320,7 +320,7 @@ return {
         },
         {
           id = 19,
-          name = "to_security_room",
+          name = "security_room",
           type = "transfer",
           shape = "rectangle",
           x = 384,
