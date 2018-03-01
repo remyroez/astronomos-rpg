@@ -18,25 +18,21 @@ function ObjectManager:newObject(template)
     local object = Object(template.type, template.properties)
     local properties = template.properties
     if object.type == "npc" then
-        local sprite = self.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
-        sprite:set(properties["animation"] or "down")
-        sprite.x = template.x
-        sprite.y = template.y - sprite:getHeight() -- bottom -> top
-        object.sprite = sprite
+        object.sprite = self.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
+        object:setAnimation(properties["animation"] or "down")
+        object:setPosition(self.mapManager:convertPixelToPixel(template.x, template.y - sprite:getHeight()))
         self:subscribeWalk(
             object,
             properties["walk_type"] or "random_walk",
             properties["walk_duration"] or (1 / 60 * 20 * 10)
         )
     elseif object.type == "player" then
-        local sprite = self.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
-        sprite:set(properties["animation"] or "down")
-        sprite.x = template.x
-        sprite.y = template.y
-        object.sprite = sprite
+        object.sprite = self.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
+        object:setAnimation(properties["animation"] or "down")
+        object:setPosition(self.mapManager:convertPixelToPixel(template.x, template.y))
     elseif object.type == "transfer" then
         -- transfer
-        object:setPosition(template.x, template.y - template.height)
+        object:setPosition(self.mapManager:convertPixelToPixel(template.x, template.y - template.height))
     else
         print("ObjectManager:newObject", "unknown type")
     end
