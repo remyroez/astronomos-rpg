@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="18" height="17" tilewidth="16" tileheight="16" infinite="0" nextobjectid="1">
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="18" height="17" tilewidth="16" tileheight="16" infinite="0" nextobjectid="2">
  <properties>
   <property name="background_tile" type="int" value="80"/>
   <property name="bgm" value="town"/>
@@ -47,4 +47,13 @@
 256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256
 </data>
  </layer>
+ <objectgroup name="object">
+  <object id="1" name="road_to_laboratory_4" type="transfer" gid="242" x="112" y="144" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="road_to_laboratory_4"/>
+    <property name="transfer_x" type="int" value="26"/>
+    <property name="transfer_y" type="int" value="2"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>
