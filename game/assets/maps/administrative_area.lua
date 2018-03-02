@@ -314,8 +314,8 @@ return {
           visible = true,
           properties = {
             ["transfer_map"] = "hospital",
-            ["transfer_x"] = 8,
-            ["transfer_y"] = 8
+            ["transfer_x"] = 9,
+            ["transfer_y"] = 9
           }
         },
         {
