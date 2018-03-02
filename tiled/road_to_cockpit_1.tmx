@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="32" height="30" tilewidth="16" tileheight="16" infinite="0" nextobjectid="1">
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="32" height="30" tilewidth="16" tileheight="16" infinite="0" nextobjectid="3">
  <properties>
   <property name="background_tile" type="int" value="83"/>
   <property name="bgm" value="space"/>
@@ -74,4 +74,20 @@
 256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256,256
 </data>
  </layer>
+ <objectgroup name="object">
+  <object id="1" name="space_tower" type="transfer" gid="242" x="16" y="32" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="space_tower"/>
+    <property name="transfer_x" type="int" value="19"/>
+    <property name="transfer_y" type="int" value="25"/>
+   </properties>
+  </object>
+  <object id="2" name="road_to_cockpit_2" type="transfer" gid="242" x="464" y="448" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="road_to_cockpit_2"/>
+    <property name="transfer_x" type="int" value="2"/>
+    <property name="transfer_y" type="int" value="2"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>
