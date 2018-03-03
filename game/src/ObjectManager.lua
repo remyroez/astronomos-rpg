@@ -15,7 +15,7 @@ function ObjectManager:initialize(mapManager, spriteManager)
 end
 
 function ObjectManager:newObject(template)
-    local object = Object(template.type, template.properties)
+    local object = Object(template)
     local properties = template.properties
     if object.type == "npc" then
         object.sprite = self.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
@@ -122,8 +122,7 @@ function ObjectManager:getObjectFromTile(x, y, type)
     local object = nil
 
     for _, obj in ipairs(self.objects) do
-        local ox, oy = self.mapManager:convertPixelToTile(obj:getTargetPosition())
-        if ox ~= x or oy ~= y then
+        if not obj:inObject(x, y) then
             -- position not match
         elseif type and type ~= obj.type then
             -- type not match
@@ -137,7 +136,6 @@ function ObjectManager:getObjectFromTile(x, y, type)
 end
 
 function ObjectManager:getObjectFromPixel(x, y, type)
-    x, y = self.mapManager:convertPixelToTile(x, y)
     return self:getObjectFromTile(x, y, type)
 end
 
