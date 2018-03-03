@@ -18,9 +18,26 @@ local starty = 0
 local ofsx = 0
 local ofsy = 0
 
-local object = rx.BehaviorSubject.create(0, 0)
+local maid64 = require 'maid64'
 
 local context = {}
+
+function toggleFullscreen()
+    return love.window.setFullscreen(not love.window.getFullscreen())
+end
+
+function resize(width, height)
+    local w, h = love.graphics.getDimensions()
+    width = math.max(maid64.sizeX, math.floor((width or w) / maid64.sizeX) * maid64.sizeX)
+    height = math.max(maid64.sizeY, math.floor((height or h) / maid64.sizeY) * maid64.sizeY)
+    maid64.resize(width, height)
+    if maid64.overscan then
+        maid64.x = (w - (maid64.scaler * maid64.sizeX)) / 2
+    else
+        maid64.x = w / 2 - (maid64.scaler * (maid64.sizeX / 2))
+    end
+    maid64.y = h / 2 - (maid64.scaler * (maid64.sizeY / 2))
+end
 
 function load_map(path, x, y)
     startx = x or 0
@@ -32,6 +49,12 @@ function load_map(path, x, y)
 end
 
 function love.load(arg)
+    love.graphics.setDefaultFilter("nearest", "nearest")
+    local w, h = love.graphics.getDimensions()
+
+    maid64.setup(w, h)
+    resize(w, h)
+
     assets = cargo.init("assets")
 
     love.graphics.clear()
@@ -39,8 +62,6 @@ function love.load(arg)
 
     context.bgmPlayer = BgmPlayer(assets.bgm)
     context.bgmPlayer:setVolume(0.1)
-
-    local w, h = love.graphics.getDimensions()
 
     context.spriteManager = SpriteManager(
         assets.images.spritesheet, 
@@ -101,6 +122,8 @@ function love.load(arg)
             cancel = {'key:x', 'button:b'},
                esp = {'key:c', 'button:x'},
               menu = {'key:space', 'button:start'},
+            -- system
+            alt = {'key:ralt', 'key:lalt'},
         },
         pairs = {
             move = {'left', 'right', 'up', 'down'}
@@ -232,10 +255,20 @@ love.update
 love.draw
     :subscribe(
         function ()
+            maid64.start()
             context.mapManager:draw()
             context.spriteManager:draw()
+            maid64.finish()
         end
     )
+
+love.resize
+    :subscribe(function(w, h) resize(w, h) end)
+    
+love.keypressed
+    :filter(function (key) return context.input:down 'alt' end)
+    :filter(function (key) return (key == 'return') end)
+    :subscribe(function () toggleFullscreen() end)
 
 love.keypressed
     :filter(function (key) return key == 'escape' end)
@@ -244,20 +277,3 @@ love.keypressed
 love.keypressed
     :filter(function (key) return key == 'f5' end)
     :subscribe(function () love.event.quit("restart") end)
-
-love.mousemoved
-    :map(
-        function (x, y, dx, dy, istouched)
-            return math.max(100, math.min(x, 400)), math.max(100, math.min(y, 400))
-        end    
-    )
-    :subscribe(
-        function (x, y)
-            object:onNext(x, y)
-        end,
-        function () end,
-        function ()
-            print("done.")
-        end
-    )
- 
