@@ -8,7 +8,7 @@ return {
   height = 16,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 1,
+  nextobjectid = 2,
   properties = {
     ["background_tile"] = 15,
     ["bgm"] = "field",
@@ -104,6 +104,36 @@ return {
         256, 0, 0, 0, 0, 0, 0, 256, 0, 0, 0, 0, 0, 256, 0, 0, 256, 256, 0, 0, 256, 256, 256, 0, 0, 256, 256, 256, 0, 0, 256, 0, 256,
         256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 0, 0, 0, 0, 256, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 256,
         256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "object",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 1,
+          name = "field",
+          type = "transfer",
+          shape = "rectangle",
+          x = 0,
+          y = 96,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "field",
+            ["transfer_x"] = 29,
+            ["transfer_y"] = 25
+          }
+        }
       }
     }
   }
