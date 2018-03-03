@@ -41,6 +41,10 @@ function ObjectManager:newObject(template)
 end
 
 function ObjectManager:clearObjects()
+    for _, object in ipairs(self.objects) do
+        object:finalize()
+    end
+
     self.objects = {}
 end
 

@@ -50,7 +50,9 @@ function Object:initialize(type, properties)
                         self.resetDelta()
                         self.onArrival(self:getPosition())
                     end
-                    self.sprite:updateSpriteBatch()
+                    if self.sprite then
+                        self.sprite:updateSpriteBatch()
+                    end
                 end
             )
         )
@@ -82,6 +84,13 @@ function Object:initialize(type, properties)
         )
 end
 
+function Object:finalize()
+    self.sprite = nil
+    self.tween = nil
+
+    self:deregisterSubscribes()
+end
+
 function Object:registerSubscribe(name, subscribe)
     self:deregisterSubscribe(name)
     self.subscribes[name] = subscribe
@@ -94,6 +103,15 @@ function Object:deregisterSubscribe(name)
         self.subscribes[name]:unsubscribe()
         self.subscribes[name] = nil
     end
+end
+
+function Object:deregisterSubscribes()
+    for key, subscription in pairs(self.subscribes) do
+        if subscription then
+            subscription:unsubscribe()
+        end
+    end
+    self.subscribes = {}
 end
 
 function Object:state()

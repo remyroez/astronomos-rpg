@@ -74,8 +74,10 @@ function love.load(arg)
     context.objectManager = ObjectManager(context.mapManager, context.spriteManager)
 
     context.mapManager.onLoad = function (map)
-        context.spriteManager:clearSpriteInstances()
         context.objectManager:clearObjects()
+        context.spriteManager:clearSpriteInstances()
+        collectgarbage("collect")
+
         if map.layers["object"] then
             local layer = map.layers["object"]
             for _, object in ipairs(layer.objects) do
