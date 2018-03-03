@@ -22,6 +22,12 @@ local maid64 = require 'maid64'
 
 local context = {}
 
+function screenshot(path)
+    path = path or tostring(os.time())
+    local ss = love.graphics.newScreenshot();
+    ss:encode('png', path .. '.png');
+end
+
 function toggleFullscreen()
     return love.window.setFullscreen(not love.window.getFullscreen())
 end
@@ -277,3 +283,7 @@ love.keypressed
 love.keypressed
     :filter(function (key) return key == 'f5' end)
     :subscribe(function () love.event.quit("restart") end)
+
+love.keypressed
+    :filter(function (key) return key == 'f6' end)
+    :subscribe(function () screenshot() end)
