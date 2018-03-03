@@ -8,7 +8,7 @@ return {
   height = 58,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 12,
+  nextobjectid = 18,
   properties = {
     ["background_tile"] = 1,
     ["bgm"] = "field",
@@ -288,6 +288,114 @@ return {
             ["transfer_map"] = "road_to_arkcity",
             ["transfer_x"] = 2,
             ["transfer_y"] = 11
+          }
+        },
+        {
+          id = 12,
+          name = "cave-1",
+          type = "transfer",
+          shape = "rectangle",
+          x = 480,
+          y = 512,
+          width = 128,
+          height = 112,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "cave",
+            ["transfer_x"] = 0,
+            ["transfer_y"] = 5
+          }
+        },
+        {
+          id = 13,
+          name = "cave-2",
+          type = "transfer",
+          shape = "rectangle",
+          x = 512,
+          y = 400,
+          width = 96,
+          height = 32,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "cave",
+            ["transfer_x"] = 0,
+            ["transfer_y"] = 5
+          }
+        },
+        {
+          id = 14,
+          name = "cave-3",
+          type = "transfer",
+          shape = "rectangle",
+          x = 544,
+          y = 368,
+          width = 48,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "cave",
+            ["transfer_x"] = 0,
+            ["transfer_y"] = 5
+          }
+        },
+        {
+          id = 15,
+          name = "cave-4",
+          type = "transfer",
+          shape = "rectangle",
+          x = 560,
+          y = 352,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "cave",
+            ["transfer_x"] = 0,
+            ["transfer_y"] = 5
+          }
+        },
+        {
+          id = 16,
+          name = "cave-5",
+          type = "transfer",
+          shape = "rectangle",
+          x = 528,
+          y = 528,
+          width = 80,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "cave",
+            ["transfer_x"] = 0,
+            ["transfer_y"] = 5
+          }
+        },
+        {
+          id = 17,
+          name = "cave-6",
+          type = "transfer",
+          shape = "rectangle",
+          x = 560,
+          y = 544,
+          width = 48,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "cave",
+            ["transfer_x"] = 0,
+            ["transfer_y"] = 5
           }
         }
       }

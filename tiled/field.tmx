@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="48" height="58" tilewidth="16" tileheight="16" infinite="0" nextobjectid="12">
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="48" height="58" tilewidth="16" tileheight="16" infinite="0" nextobjectid="18">
  <properties>
   <property name="background_tile" type="int" value="1"/>
   <property name="bgm" value="field"/>
@@ -164,6 +164,48 @@
     <property name="transfer_map" value="road_to_arkcity"/>
     <property name="transfer_x" type="int" value="2"/>
     <property name="transfer_y" type="int" value="11"/>
+   </properties>
+  </object>
+  <object id="12" name="cave-1" type="transfer" gid="242" x="480" y="512" width="128" height="112">
+   <properties>
+    <property name="transfer_map" value="cave"/>
+    <property name="transfer_x" type="int" value="0"/>
+    <property name="transfer_y" type="int" value="5"/>
+   </properties>
+  </object>
+  <object id="13" name="cave-2" type="transfer" gid="242" x="512" y="400" width="96" height="32">
+   <properties>
+    <property name="transfer_map" value="cave"/>
+    <property name="transfer_x" type="int" value="0"/>
+    <property name="transfer_y" type="int" value="5"/>
+   </properties>
+  </object>
+  <object id="14" name="cave-3" type="transfer" gid="242" x="544" y="368" width="48" height="16">
+   <properties>
+    <property name="transfer_map" value="cave"/>
+    <property name="transfer_x" type="int" value="0"/>
+    <property name="transfer_y" type="int" value="5"/>
+   </properties>
+  </object>
+  <object id="15" name="cave-4" type="transfer" gid="242" x="560" y="352" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="cave"/>
+    <property name="transfer_x" type="int" value="0"/>
+    <property name="transfer_y" type="int" value="5"/>
+   </properties>
+  </object>
+  <object id="16" name="cave-5" type="transfer" gid="242" x="528" y="528" width="80" height="16">
+   <properties>
+    <property name="transfer_map" value="cave"/>
+    <property name="transfer_x" type="int" value="0"/>
+    <property name="transfer_y" type="int" value="5"/>
+   </properties>
+  </object>
+  <object id="17" name="cave-6" type="transfer" gid="242" x="560" y="544" width="48" height="16">
+   <properties>
+    <property name="transfer_map" value="cave"/>
+    <property name="transfer_x" type="int" value="0"/>
+    <property name="transfer_y" type="int" value="5"/>
    </properties>
   </object>
  </objectgroup>
