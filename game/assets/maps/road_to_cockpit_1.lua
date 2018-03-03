@@ -8,7 +8,7 @@ return {
   height = 30,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 1,
+  nextobjectid = 3,
   properties = {
     ["background_tile"] = 83,
     ["bgm"] = "space",
@@ -132,6 +132,54 @@ return {
         256, 256, 256, 0, 0, 0, 256, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 256, 0, 0, 0, 0, 0, 0, 0, 256,
         256, 0, 0, 0, 0, 0, 256, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 256, 0, 0, 0, 0, 0, 0, 0, 256,
         256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "object",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 1,
+          name = "space_tower",
+          type = "transfer",
+          shape = "rectangle",
+          x = 16,
+          y = 32,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "space_tower",
+            ["transfer_x"] = 19,
+            ["transfer_y"] = 25
+          }
+        },
+        {
+          id = 2,
+          name = "road_to_cockpit_2",
+          type = "transfer",
+          shape = "rectangle",
+          x = 464,
+          y = 448,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "road_to_cockpit_2",
+            ["transfer_x"] = 2,
+            ["transfer_y"] = 2
+          }
+        }
       }
     }
   }

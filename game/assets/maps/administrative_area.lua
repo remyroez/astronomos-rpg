@@ -284,7 +284,7 @@ return {
         },
         {
           id = 16,
-          name = "to_institute",
+          name = "institute",
           type = "transfer",
           shape = "rectangle",
           x = 80,
@@ -302,7 +302,7 @@ return {
         },
         {
           id = 18,
-          name = "to_hospital",
+          name = "hospital",
           type = "transfer",
           shape = "rectangle",
           x = 320,
@@ -314,13 +314,13 @@ return {
           visible = true,
           properties = {
             ["transfer_map"] = "hospital",
-            ["transfer_x"] = 8,
-            ["transfer_y"] = 8
+            ["transfer_x"] = 9,
+            ["transfer_y"] = 9
           }
         },
         {
           id = 19,
-          name = "to_security_room",
+          name = "security_room",
           type = "transfer",
           shape = "rectangle",
           x = 384,

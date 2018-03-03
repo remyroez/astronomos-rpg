@@ -8,8 +8,12 @@ return {
   height = 30,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 1,
-  properties = {},
+  nextobjectid = 3,
+  properties = {
+    ["background_tile"] = 83,
+    ["bgm"] = "space",
+    ["encounter_table"] = 2
+  },
   tilesets = {
     {
       name = "tileset",
@@ -128,6 +132,54 @@ return {
         256, 0, 256, 0, 0, 0, 0, 256, 256, 256, 256, 256, 256, 256, 0, 256,
         256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 256,
         256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "object",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 1,
+          name = "road_to_cockpit_1",
+          type = "transfer",
+          shape = "rectangle",
+          x = 32,
+          y = 48,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "road_to_cockpit_1",
+            ["transfer_x"] = 29,
+            ["transfer_y"] = 27
+          }
+        },
+        {
+          id = 2,
+          name = "road_to_cockpit_3",
+          type = "transfer",
+          shape = "rectangle",
+          x = 192,
+          y = 432,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "road_to_cockpit_3",
+            ["transfer_x"] = 5,
+            ["transfer_y"] = 13
+          }
+        }
       }
     }
   }

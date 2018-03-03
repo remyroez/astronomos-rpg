@@ -8,7 +8,7 @@ return {
   height = 15,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 1,
+  nextobjectid = 3,
   properties = {
     ["background_tile"] = 84,
     ["bgm"] = "space",
@@ -102,6 +102,54 @@ return {
         256, 256, 256, 256, 256, 0, 256, 0, 256, 0, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 0, 256,
         256, 256, 256, 256, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 256, 256, 256, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256,
         256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "object",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 1,
+          name = "road_to_laboratory_3",
+          type = "transfer",
+          shape = "rectangle",
+          x = 192,
+          y = 48,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "road_to_laboratory_3",
+            ["transfer_x"] = 22,
+            ["transfer_y"] = 3
+          }
+        },
+        {
+          id = 2,
+          name = "laboratory",
+          type = "transfer",
+          shape = "rectangle",
+          x = 416,
+          y = 48,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "laboratory",
+            ["transfer_x"] = 7,
+            ["transfer_y"] = 8
+          }
+        }
       }
     }
   }

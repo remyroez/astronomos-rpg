@@ -20,16 +20,21 @@ local function isTweenableType(type)
     return result
 end
 
-function Object:initialize(type, properties)
-    self.type = type or "unknown"
-    self.properties = properties or {}
+function Object:initialize(object)
+    assert(object)
+
+    self.object = object
+
+    self.type = object.type or "unknown"
+    self.properties = object.properties or {}
+
+    self.x = object.x or 0
+    self.y = object.y or 0
+    self.width = object.width or 0
+    self.height = object.height or 0
 
     self.sprite = nil
     self.tween = nil
-
-    self.x = 0
-    self.y = 0
-
     self.target = nil
 
     self.subscribes = {}
@@ -50,7 +55,10 @@ function Object:initialize(type, properties)
                         self.resetDelta()
                         self.onArrival(self:getPosition())
                     end
-                    self.sprite:updateSpriteBatch()
+                    if self.sprite then
+                        self.sprite:updateSpriteBatch()
+                        self.x, self.y = self.sprite.x, self.sprite.y
+                    end
                 end
             )
         )
@@ -82,6 +90,13 @@ function Object:initialize(type, properties)
         )
 end
 
+function Object:finalize()
+    self.sprite = nil
+    self.tween = nil
+
+    self:deregisterSubscribes()
+end
+
 function Object:registerSubscribe(name, subscribe)
     self:deregisterSubscribe(name)
     self.subscribes[name] = subscribe
@@ -94,6 +109,15 @@ function Object:deregisterSubscribe(name)
         self.subscribes[name]:unsubscribe()
         self.subscribes[name] = nil
     end
+end
+
+function Object:deregisterSubscribes()
+    for key, subscription in pairs(self.subscribes) do
+        if subscription then
+            subscription:unsubscribe()
+        end
+    end
+    self.subscribes = {}
 end
 
 function Object:state()
@@ -139,6 +163,78 @@ function Object:getPosition()
     else
         return self.sprite.x, self.sprite.y
     end
+end
+
+function Object:left()
+    return self.x
+end
+
+function Object:top()
+    return self.y
+end
+
+function Object:right()
+    return self:left() + self.width
+end
+
+function Object:bottom()
+    return self:top() + self.height
+end
+
+function Object:inObject(x, y)
+    return (x >= self:left()) and (y >= self:top()) and (x < self:right()) and (y < self:bottom())
+end
+
+function Object:getDimensions()
+    return self.width, self.height
+end
+
+function Object:getWidth()
+    local value, _ = self:getDimensions()
+    return value
+end
+
+function Object:getHeight()
+    local _, value = self:getDimensions()
+    return value
+end
+
+function Object:getObjectDimensions()
+    if not self.object then
+        -- no sprite
+        return 0, 0
+    else
+        return self.object.width, self.object.height
+    end
+end
+
+function Object:getObjectWidth()
+    local value, _ = self:getObjectDimensions()
+    return value
+end
+
+function Object:getObjectHeight()
+    local _, value = self:getObjectDimensions()
+    return value
+end
+
+function Object:getSpriteDimensions()
+    if not self.sprite then
+        -- no sprite
+        return 0, 0
+    else
+        return self.sprite:getWidth(), self.sprite:getHeight()
+    end
+end
+
+function Object:getSpriteWidth()
+    local value, _ = self:getSpriteDimensions()
+    return value
+end
+
+function Object:getSpriteHeight()
+    local _, value = self:getSpriteDimensions()
+    return value
 end
 
 function Object:getTargetPosition()

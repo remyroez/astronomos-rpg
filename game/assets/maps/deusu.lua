@@ -11,7 +11,10 @@ return {
   nextobjectid = 1,
   properties = {
     ["background_tile"] = 2,
-    ["bgm"] = "town"
+    ["bgm"] = "town",
+    ["outer_map"] = "field",
+    ["outer_map_x"] = 13,
+    ["outer_map_y"] = 5
   },
   tilesets = {
     {
@@ -132,6 +135,17 @@ return {
         256, 256, 256, 256, 256, 256, 256, 256, 0, 0, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
       }
+    },
+    {
+      type = "objectgroup",
+      name = "object",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {}
     }
   }
 }

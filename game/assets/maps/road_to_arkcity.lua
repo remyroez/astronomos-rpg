@@ -8,7 +8,7 @@ return {
   height = 32,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 1,
+  nextobjectid = 4,
   properties = {
     ["background_tile"] = 1,
     ["bgm"] = "field",
@@ -136,6 +136,72 @@ return {
         256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 0, 0, 256, 256, 256, 256, 256, 256, 0, 256, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256,
         256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256,
         256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "object",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 1,
+          name = "field",
+          type = "transfer",
+          shape = "rectangle",
+          x = 32,
+          y = 192,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "field",
+            ["transfer_x"] = 7,
+            ["transfer_y"] = 39
+          }
+        },
+        {
+          id = 2,
+          name = "road_to_arkcity_underground",
+          type = "transfer",
+          shape = "rectangle",
+          x = 768,
+          y = 192,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "road_to_arkcity_underground",
+            ["transfer_x"] = 5,
+            ["transfer_y"] = 10
+          }
+        },
+        {
+          id = 3,
+          name = "arkcity",
+          type = "transfer",
+          shape = "rectangle",
+          x = 80,
+          y = 416,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "arkcity",
+            ["transfer_x"] = 3,
+            ["transfer_y"] = 2
+          }
+        }
       }
     }
   }

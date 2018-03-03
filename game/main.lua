@@ -74,8 +74,10 @@ function love.load(arg)
     context.objectManager = ObjectManager(context.mapManager, context.spriteManager)
 
     context.mapManager.onLoad = function (map)
-        context.spriteManager:clearSpriteInstances()
         context.objectManager:clearObjects()
+        context.spriteManager:clearSpriteInstances()
+        collectgarbage("collect")
+
         if map.layers["object"] then
             local layer = map.layers["object"]
             for _, object in ipairs(layer.objects) do
@@ -105,7 +107,10 @@ function love.load(arg)
         },
         joystick = love.joystick.getJoysticks()[1],
     }
-    load_map("administrative_area", 0, 24)
+    --load_map("administrative_area", 0, 24)
+    load_map("field", 11, 20)
+    --load_map("arkcity", 24, 20)
+    --load_map("space_tower", 8, 3)
 end
 
 function createPlayer(x, y, sprite)

@@ -8,7 +8,7 @@ return {
   height = 30,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 1,
+  nextobjectid = 4,
   properties = {
     ["background_tile"] = 36,
     ["bgm"] = "field",
@@ -132,6 +132,72 @@ return {
         256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 0, 256,
         256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256,
         0, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 0
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "object",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 1,
+          name = "arkcity",
+          type = "transfer",
+          shape = "rectangle",
+          x = 32,
+          y = 48,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "arkcity",
+            ["transfer_x"] = 8,
+            ["transfer_y"] = 51
+          }
+        },
+        {
+          id = 2,
+          name = "control_room",
+          type = "transfer",
+          shape = "rectangle",
+          x = 224,
+          y = 464,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "control_room",
+            ["transfer_x"] = 14,
+            ["transfer_y"] = 13
+          }
+        },
+        {
+          id = 3,
+          name = "space_tower",
+          type = "transfer",
+          shape = "rectangle",
+          x = 224,
+          y = 288,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "space_tower",
+            ["transfer_x"] = 14,
+            ["transfer_y"] = 34
+          }
+        }
       }
     }
   }

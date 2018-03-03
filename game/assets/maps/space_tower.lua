@@ -8,7 +8,7 @@ return {
   height = 45,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 1,
+  nextobjectid = 5,
   properties = {
     ["background_tile"] = 64,
     ["bgm"] = "town"
@@ -161,6 +161,90 @@ return {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "object",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 1,
+          name = "underground_passage",
+          type = "transfer",
+          shape = "rectangle",
+          x = 224,
+          y = 560,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "underground_passage",
+            ["transfer_x"] = 14,
+            ["transfer_y"] = 17
+          }
+        },
+        {
+          id = 2,
+          name = "road_to_cockpit_1",
+          type = "transfer",
+          shape = "rectangle",
+          x = 304,
+          y = 416,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "road_to_cockpit_1",
+            ["transfer_x"] = 1,
+            ["transfer_y"] = 1
+          }
+        },
+        {
+          id = 3,
+          name = "road_to_laboratory_1",
+          type = "transfer",
+          shape = "rectangle",
+          x = 144,
+          y = 64,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "road_to_laboratory_1",
+            ["transfer_x"] = 10,
+            ["transfer_y"] = 14
+          }
+        },
+        {
+          id = 4,
+          name = "mamusu",
+          type = "transfer",
+          shape = "rectangle",
+          x = 704,
+          y = 80,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "mamusu",
+            ["transfer_x"] = 16,
+            ["transfer_y"] = 15
+          }
+        }
       }
     }
   }

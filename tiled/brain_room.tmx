@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="16" height="14" tilewidth="16" tileheight="16" infinite="0" nextobjectid="1">
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="16" height="14" tilewidth="16" tileheight="16" infinite="0" nextobjectid="2">
  <properties>
   <property name="background_tile" type="int" value="41"/>
   <property name="bgm" value="town"/>
@@ -41,4 +41,13 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup name="object">
+  <object id="1" name="road_to_brain_room" type="transfer" gid="242" x="0" y="16" width="16" height="16">
+   <properties>
+    <property name="transfer_map" value="road_to_brain_room"/>
+    <property name="transfer_x" type="int" value="30"/>
+    <property name="transfer_y" type="int" value="1"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>

@@ -8,7 +8,7 @@ return {
   height = 15,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 1,
+  nextobjectid = 2,
   properties = {
     ["background_tile"] = 40,
     ["bgm"] = "town"
@@ -101,6 +101,36 @@ return {
         256, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 256,
         256, 0, 0, 0, 0, 256, 0, 0, 0, 0, 256, 0, 0, 0, 0, 256,
         256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256, 256
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "object",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 1,
+          name = "administrative_area",
+          type = "transfer",
+          shape = "rectangle",
+          x = 16,
+          y = 128,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 242,
+          visible = true,
+          properties = {
+            ["transfer_map"] = "administrative_area",
+            ["transfer_x"] = 5,
+            ["transfer_y"] = 19
+          }
+        }
       }
     }
   }

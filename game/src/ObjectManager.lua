@@ -15,28 +15,24 @@ function ObjectManager:initialize(mapManager, spriteManager)
 end
 
 function ObjectManager:newObject(template)
-    local object = Object(template.type, template.properties)
+    local object = Object(template)
     local properties = template.properties
     if object.type == "npc" then
-        local sprite = self.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
-        sprite:set(properties["animation"] or "down")
-        sprite.x = template.x
-        sprite.y = template.y - sprite:getHeight() -- bottom -> top
-        object.sprite = sprite
+        object.sprite = self.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
+        object:setAnimation(properties["animation"] or "down")
+        object:setPosition(self.mapManager:convertPixelToPixel(template.x, template.y - object:getHeight()))
         self:subscribeWalk(
             object,
             properties["walk_type"] or "random_walk",
             properties["walk_duration"] or (1 / 60 * 20 * 10)
         )
     elseif object.type == "player" then
-        local sprite = self.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
-        sprite:set(properties["animation"] or "down")
-        sprite.x = template.x
-        sprite.y = template.y
-        object.sprite = sprite
+        object.sprite = self.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
+        object:setAnimation(properties["animation"] or "down")
+        object:setPosition(self.mapManager:convertPixelToPixel(template.x, template.y))
     elseif object.type == "transfer" then
         -- transfer
-        object:setPosition(template.x, template.y - template.height)
+        object:setPosition(self.mapManager:convertPixelToPixel(template.x, template.y - template.height))
     else
         print("ObjectManager:newObject", "unknown type")
     end
@@ -45,6 +41,10 @@ function ObjectManager:newObject(template)
 end
 
 function ObjectManager:clearObjects()
+    for _, object in ipairs(self.objects) do
+        object:finalize()
+    end
+
     self.objects = {}
 end
 
@@ -122,8 +122,7 @@ function ObjectManager:getObjectFromTile(x, y, type)
     local object = nil
 
     for _, obj in ipairs(self.objects) do
-        local ox, oy = self.mapManager:convertPixelToTile(obj:getTargetPosition())
-        if ox ~= x or oy ~= y then
+        if not obj:inObject(x, y) then
             -- position not match
         elseif type and type ~= obj.type then
             -- type not match
@@ -137,7 +136,6 @@ function ObjectManager:getObjectFromTile(x, y, type)
 end
 
 function ObjectManager:getObjectFromPixel(x, y, type)
-    x, y = self.mapManager:convertPixelToTile(x, y)
     return self:getObjectFromTile(x, y, type)
 end
 
