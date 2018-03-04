@@ -1,4 +1,6 @@
 
+local const = require 'const'
+
 require 'util'
 
 local rx = require 'rx'
@@ -50,8 +52,8 @@ function load_map(path, x, y)
     startx = x or 0
     starty = y or 0
     context.mapManager:setMap(path)
-    if context.mapManager:properties().bgm then
-        context.bgmPlayer:play(context.mapManager:properties().bgm)
+    if context.mapManager:properties(const.MAP.PROPERTY.BGM) then
+        context.bgmPlayer:play(context.mapManager:properties(const.MAP.PROPERTY.BGM))
     end
 end
 
@@ -65,14 +67,13 @@ function love.load(arg)
     assets = cargo.init("assets")
 
     love.graphics.clear()
-    love.graphics.setColor(255, 255, 255)
 
     context.bgmPlayer = BgmPlayer(assets.bgm)
-    context.bgmPlayer:setVolume(0.1)
+    context.bgmPlayer:setVolume(const.MAP.BGM_VOLUME.DEFAULT)
 
     context.spriteManager = SpriteManager(
         assets.images.spritesheet, 
-        16, 16,
+        const.TILE.WIDTH, const.TILE.HEIGHT,
         w, h
     )
     context.spriteSheet = SpriteSheet(context.spriteManager)
@@ -87,8 +88,8 @@ function love.load(arg)
         context.spriteManager:clearSpriteInstances()
         collectgarbage("collect")
 
-        if map.layers["object"] then
-            local layer = map.layers["object"]
+        if map.layers[const.LAYER.TYPE.OBJECT] then
+            local layer = map.layers[const.LAYER.TYPE.OBJECT]
             for _, object in ipairs(layer.objects) do
                 context.objectManager:newObject(object)
             end
@@ -126,11 +127,11 @@ end
 
 function createPlayer(x, y, sprite)
     context.minami = context.objectManager:newObject {
-        type = "player",
+        type = const.OBJECT.TYPE.PLAYER,
         x = x or 0,
         y = y or 0,
         properties = {
-            sprite = sprite or "minami"
+            [const.OBJECT.PROPERTY.SPRITE] = sprite or "minami"
         }
     }
     context.minami.onArrival
@@ -138,27 +139,29 @@ function createPlayer(x, y, sprite)
             function (x, y)
                 if context.mapManager:inMapFromPixel(x, y) then
                     -- in map
-                    local transfer = context.objectManager:getObjectFromPixel(x, y, "transfer")
+                    local transfer = context.objectManager:getObjectFromPixel(
+                        x, y, const.OBJECT.TYPE.TRANSFER
+                    )
                     if not transfer then
                         -- no transfer
-                    elseif not transfer.properties["transfer_map"] then
+                    elseif not transfer.properties[const.OBJECT.PROPERTY.TRANSFER_MAP] then
                         -- no map
                     else
                         local properties = transfer.properties
                         load_map(
-                            properties["transfer_map"],
-                            properties["transfer_x"] or 0,
-                            properties["transfer_y"] or 0
+                            properties[const.OBJECT.PROPERTY.TRANSFER_MAP],
+                            properties[const.OBJECT.PROPERTY.TRANSFER_X] or 0,
+                            properties[const.OBJECT.PROPERTY.TRANSFER_Y] or 0
                         )
                     end
-                elseif not context.mapManager:properties()["outer_map"] then
+                elseif not context.mapManager:properties(const.MAP.PROPERTY.OUTER_MAP) then
                     -- no map
                 else
                     local properties = context.mapManager:properties()
                     load_map(
-                        properties["outer_map"],
-                        properties["outer_map_x"] or 0,
-                        properties["outer_map_y"] or 0
+                        properties[const.MAP.PROPERTY.OUTER_MAP],
+                        properties[const.MAP.PROPERTY.OUTER_MAP_X] or 0,
+                        properties[const.MAP.PROPERTY.OUTER_MAP_Y] or 0
                     )
                 end
             end
