@@ -10,6 +10,7 @@ local assets = {}
 local BgmPlayer = require 'BgmPlayer'
 local MapManager = require 'MapManager'
 local SpriteManager = require 'SpriteManager'
+local SpriteSheet = require 'SpriteSheet'
 local ObjectManager = require 'ObjectManager'
 
 local baton = require 'baton'
@@ -74,27 +75,8 @@ function love.load(arg)
         16, 16,
         w, h
     )
-
-    setupSpriteSheet {
-        { name = "minami", index = 2 },
-        { name = "siba", index = 3 },
-        { name = "misa", index = 4 },
-        { name = "aine", index = 5 },
-        { name = "shop", index = 6 },
-        { name = "doctor", index = 7 },
-        { name = "female", index = 8 },
-        { name = "male", index = 9 },
-        { name = "oldman", index = 10 },
-        { name = "citizen", index = 11 },
-        { name = "nurse", index = 12 },
-        { name = "guy", index = 13 },
-        { name = "guard", index = 14 },
-        { name = "robot", index = 15 },
-        { name = "astronaut", index = 16 },
-        { name = "skeleton", index = 17 },
-        { name = "dolphin", index = 18 },
-        { name = "orca", index = 19 },
-    }
+    context.spriteSheet = SpriteSheet(context.spriteManager)
+    context.spriteSheet:registerSprites(assets.data.spritesheet)
 
     context.mapManager = MapManager("assets/maps", w, h)
 
@@ -181,31 +163,6 @@ function createPlayer(x, y, sprite)
                 end
             end
         )
-end
-
-function setupSpriteSheet(settings)
-    for i, sprite in pairs(settings) do
-        local name = sprite.name or ("sprite-" .. tostring(_))
-        context.spriteManager:newSprite(name)
-        do
-            local index = sprite.index or i
-            local speed = sprite.speed or (1 / 60 * 20)
-            local x = (index % 2) * 8 + 1
-            local y = math.floor(index / 2) + 1
-            context.spriteManager:newSpriteAnimation(
-                name,  "down", speed, (x) .. "-" .. (x + 1), y
-            )
-            context.spriteManager:newSpriteAnimation(
-                name,  "left", speed, (x + 2) .. "-" .. (x + 3), y
-            )
-            context.spriteManager:newSpriteAnimation(
-                name,  "up", speed, (x + 4) .. "-" .. (x + 5), y
-            )
-            context.spriteManager:newSpriteAnimation(
-                name,  "right", speed, (x + 6) .. "-" .. (x + 7), y
-            )
-        end
-    end
 end
 
 love.update

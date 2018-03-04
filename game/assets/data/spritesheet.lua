@@ -1,128 +1,20 @@
 return {
-  name = "spritesheet",
-  tilewidth = 16,
-  tileheight = 16,
-  spacing = 0,
-  margin = 0,
-  image = "../images/spritesheet.png",
-  imagewidth = 256,
-  imageheight = 256,
-  tileoffset = {
-    x = 0,
-    y = 0
-  },
-  grid = {
-    orientation = "orthogonal",
-    width = 16,
-    height = 16
-  },
-  properties = {},
-  terrains = {},
-  tilecount = 256,
-  tiles = {
-    {
-      id = 16,
-      animation = {
-        {
-          tileid = 16,
-          duration = 100
-        },
-        {
-          tileid = 17,
-          duration = 100
-        }
-      }
-    },
-    {
-      id = 18,
-      animation = {
-        {
-          tileid = 18,
-          duration = 100
-        },
-        {
-          tileid = 19,
-          duration = 100
-        }
-      }
-    },
-    {
-      id = 20,
-      animation = {
-        {
-          tileid = 20,
-          duration = 100
-        },
-        {
-          tileid = 21,
-          duration = 100
-        }
-      }
-    },
-    {
-      id = 22,
-      animation = {
-        {
-          tileid = 22,
-          duration = 100
-        },
-        {
-          tileid = 23,
-          duration = 100
-        }
-      }
-    },
-    {
-      id = 24,
-      animation = {
-        {
-          tileid = 24,
-          duration = 100
-        },
-        {
-          tileid = 25,
-          duration = 100
-        }
-      }
-    },
-    {
-      id = 26,
-      animation = {
-        {
-          tileid = 26,
-          duration = 100
-        },
-        {
-          tileid = 27,
-          duration = 100
-        }
-      }
-    },
-    {
-      id = 28,
-      animation = {
-        {
-          tileid = 28,
-          duration = 100
-        },
-        {
-          tileid = 29,
-          duration = 100
-        }
-      }
-    },
-    {
-      id = 30,
-      animation = {
-        {
-          tileid = 30,
-          duration = 100
-        },
-        {
-          tileid = 31,
-          duration = 100
-        }
-      }
-    }
-  }
+  { name = "minami", index = 2 },
+  { name = "siba", index = 3 },
+  { name = "misa", index = 4 },
+  { name = "aine", index = 5 },
+  { name = "shop", index = 6 },
+  { name = "doctor", index = 7 },
+  { name = "female", index = 8 },
+  { name = "male", index = 9 },
+  { name = "oldman", index = 10 },
+  { name = "citizen", index = 11 },
+  { name = "nurse", index = 12 },
+  { name = "guy", index = 13 },
+  { name = "guard", index = 14 },
+  { name = "robot", index = 15 },
+  { name = "astronaut", index = 16 },
+  { name = "skeleton", index = 17 },
+  { name = "dolphin", index = 18 },
+  { name = "orca", index = 19 },
 }
