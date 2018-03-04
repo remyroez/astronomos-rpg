@@ -9,6 +9,37 @@ const.DIRECTION = {
     STAY = "stay"
 }
 
+const.TILE = {
+    WIDTH = 16,
+    HEIGHT = 16
+}
+
+const.MAP = {
+    PROPERTY = {
+        BGM = "bgm",
+        BGM_VOLUME = "bgm_volume",
+        BACKGROUND_TILE = "background_tile",
+        ENCOUNTER_TABLE = "encounter_table",
+        OUTER_MAP = "outer_map",
+        OUTER_MAP_X = "outer_map_x",
+        OUTER_MAP_Y = "outer_map_y",
+    },
+    BGM_VOLUME = {
+        DEFAULT = 0.1
+    }
+}
+
+const.LAYER = {
+    TYPE = {
+        OBJECT = "object",
+        TILEMAP = "tilemap",
+        BACKGROUND = "background",
+        COLLISION = "collision"
+    },
+    PROPERTY = {
+    }
+}
+
 const.OBJECT = {
     TYPE = {
         NPC = "npc",
@@ -22,6 +53,9 @@ const.OBJECT = {
         ANIMATION = "animation",
         WALK_TYPE = "walk_type",
         WALK_DURATION = "walk_duration",
+        TRANSFER_MAP = "transfer_map",
+        TRANSFER_X = "transfer_x",
+        TRANSFER_Y = "transfer_y",
     },
     WALK_TYPE = {
         RANDOM_WALK = "random_walk"
