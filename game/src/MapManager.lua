@@ -3,12 +3,7 @@ local MapManager = class("MapManager")
 
 local sti = require 'sti'
 
-local LAYER = {
-    OBJECT = "object",
-    TILEMAP = "tilemap",
-    BACKGROUND = "background",
-    COLLISION = "collision"
-}
+local const = require 'const'
 
 function MapManager:initialize(basepath, width, height)
     self.basepath = basepath
@@ -25,7 +20,7 @@ function MapManager:initialize(basepath, width, height)
 end
 
 function MapManager:addBackgroundLayer(map, tile_gid)
-    local layer = map:addCustomLayer(LAYER.BACKGROUND, 1)
+    local layer = map:addCustomLayer(const.LAYER.TYPE.BACKGROUND, 1)
     layer.tile = map.tiles[tile_gid]
     layer.image = map.tilesets[layer.tile.tileset].image
     layer.width = math.ceil(self.width / layer.tile.width)
@@ -60,18 +55,18 @@ function MapManager:load(name)
         local map = sti(self.basepath .. "/" .. name .. ".lua")
         map:resize(self:getDimensions())
         for name, layer in pairs(map.layers) do
-            if name == LAYER.COLLISION then
+            if name == const.LAYER.TYPE.COLLISION then
                 layer.visible = false
-            elseif name == LAYER.OBJECT then
+            elseif name == const.LAYER.TYPE.OBJECT then
                 layer.visible = false
-            elseif name == LAYER.TILEMAP then
+            elseif name == const.LAYER.TYPE.TILEMAP then
                 layer.visible = true
             else
                 layer.visible = false
             end
         end
-        if map.properties.background_tile then
-            self:addBackgroundLayer(map, map.properties.background_tile + 1)
+        if map.properties[const.MAP.PROPERTY.BACKGROUND_TILE] then
+            self:addBackgroundLayer(map, map.properties[const.MAP.PROPERTY.BACKGROUND_TILE] + 1)
         end
         self.maps[name] = map
     end
@@ -175,7 +170,7 @@ function MapManager:getTileFromPixel(layer, x, y)
 end
 
 function MapManager:canPassThrough(x, y)
-    local tile = self:getTileFromPixel(LAYER.COLLISION, x, y)
+    local tile = self:getTileFromPixel(const.LAYER.TYPE.COLLISION, x, y)
     if not tile then
         return true
     else
@@ -198,8 +193,14 @@ function MapManager:inMapFromPixel(x, y)
     return self:inMap(self:convertPixelToTile(x, y))
 end
 
-function MapManager:properties()
-    return self.current_map and self.current_map.properties or {}
+function MapManager:properties(key)
+    if not self.current_map then
+        return nil
+    elseif not key then
+        return self.current_map.properties
+    else
+        return self.current_map.properties[key]
+    end
 end
 
 function MapManager:update(dt)
