@@ -13,7 +13,7 @@ local BgmPlayer = require 'BgmPlayer'
 local MapManager = require 'MapManager'
 local SpriteManager = require 'SpriteManager'
 local SpriteSheet = require 'SpriteSheet'
-local ObjectManager = require 'ObjectManager'
+local ActorManager = require 'ActorManager'
 
 local baton = require 'baton'
 local startx = 0
@@ -81,17 +81,17 @@ function love.load(arg)
 
     context.mapManager = MapManager("assets/maps", w, h)
 
-    context.objectManager = ObjectManager(context.mapManager, context.spriteManager)
+    context.actorManager = ActorManager(context.mapManager, context.spriteManager)
 
     context.mapManager.onLoad = function (map)
-        context.objectManager:clearActors()
+        context.actorManager:clearActors()
         context.spriteManager:clearSpriteInstances()
         collectgarbage("collect")
 
         if map.layers[const.LAYER.TYPE.OBJECT] then
             local layer = map.layers[const.LAYER.TYPE.OBJECT]
             for _, object in ipairs(layer.objects) do
-                context.objectManager:newActor(object)
+                context.actorManager:newActor(object)
             end
         end
         local x, y = map:convertTileToPixel(startx, starty)
@@ -126,7 +126,7 @@ function love.load(arg)
 end
 
 function createPlayer(x, y, sprite)
-    context.minami = context.objectManager:newActor {
+    context.minami = context.actorManager:newActor {
         type = const.OBJECT.TYPE.PLAYER,
         x = x or 0,
         y = y or 0,
@@ -139,7 +139,7 @@ function createPlayer(x, y, sprite)
             function (x, y)
                 if context.mapManager:inMapFromPixel(x, y) then
                     -- in map
-                    local transfer = context.objectManager:getActorFromPixel(
+                    local transfer = context.actorManager:getActorFromPixel(
                         x, y, const.OBJECT.TYPE.TRANSFER
                     )
                     if not transfer then
@@ -195,7 +195,7 @@ love.update
                         if context.input:down 'cancel' then
                             speed = speed / 2
                         end
-                        context.objectManager:walkActor(
+                        context.actorManager:walkActor(
                             context.minami,
                             direction,
                             speed,
@@ -204,7 +204,7 @@ love.update
                         )
                     end
                 end
-                context.objectManager:update(dt)
+                context.actorManager:update(dt)
                 
                 ofsx, ofsy = context.minami:getPosition()
             end

@@ -1,5 +1,5 @@
 local class = require 'middleclass'
-local ObjectManager = class("ObjectManager")
+local ActorManager = class("ActorManager")
 
 local rx = require 'rx'
 
@@ -8,17 +8,17 @@ local const = require 'const'
 local Actor = require "Actor"
 local SpriteSheet = require "SpriteSheet"
 
-ObjectManager.SUBSCRIPTION = {
+ActorManager.SUBSCRIPTION = {
     TWEEN = "tween",
     WALK = "walk"
 }
 
-ObjectManager.DEFAULT_SPRITE = "minami"
-ObjectManager.DEFAULT_ANIMATION = "down"
-ObjectManager.DEFAULT_WALK_TYPE = const.OBJECT.WALK_TYPE.DEFAULT
-ObjectManager.DEFAULT_WALK_DURATION = (1 / 60 * 20 * 10)
+ActorManager.DEFAULT_SPRITE = "minami"
+ActorManager.DEFAULT_ANIMATION = "down"
+ActorManager.DEFAULT_WALK_TYPE = const.OBJECT.WALK_TYPE.DEFAULT
+ActorManager.DEFAULT_WALK_DURATION = (1 / 60 * 20 * 10)
 
-ObjectManager.DEFAULT_RANDOM_WALK_SPEED = 1 / 60 * 10
+ActorManager.DEFAULT_RANDOM_WALK_SPEED = 1 / 60 * 10
 
 local function isTweenableType(type)
     local result = false
@@ -36,7 +36,7 @@ local function isTweenableType(type)
     return result
 end
 
-function ObjectManager:initialize(mapManager, spriteManager)
+function ActorManager:initialize(mapManager, spriteManager)
     self.mapManager = mapManager
     self.spriteManager = spriteManager
     self.actors = {}
@@ -49,19 +49,19 @@ function ObjectManager:initialize(mapManager, spriteManager)
         const.DIRECTION.STAY,
         const.DIRECTION.STAY
     }
-    self.random_walk_speed = ObjectManager.DEFAULT_RANDOM_WALK_SPEED
+    self.random_walk_speed = ActorManager.DEFAULT_RANDOM_WALK_SPEED
 end
 
-function ObjectManager:newActor(object)
+function ActorManager:newActor(object)
     local actor = Actor(object)
     local properties = object.properties
     local hasTween = false
     if actor.type == const.OBJECT.TYPE.NPC then
         actor.sprite = self.spriteManager:newSpriteInstance(
-            properties[const.OBJECT.PROPERTY.SPRITE] or ObjectManager.DEFAULT_SPRITE
+            properties[const.OBJECT.PROPERTY.SPRITE] or ActorManager.DEFAULT_SPRITE
         )
         actor:setAnimation(
-            properties[const.OBJECT.PROPERTY.ANIMATION] or ObjectManager.DEFAULT_ANIMATION
+            properties[const.OBJECT.PROPERTY.ANIMATION] or ActorManager.DEFAULT_ANIMATION
         )
         actor:setPosition(self.mapManager:convertPixelToPixel(object.x, object.y - actor:getHeight()))
         self:subscribeWalk(
@@ -72,10 +72,10 @@ function ObjectManager:newActor(object)
         hasTween = true
     elseif actor.type == const.OBJECT.TYPE.PLAYER then
         actor.sprite = self.spriteManager:newSpriteInstance(
-            properties[const.OBJECT.PROPERTY.SPRITE] or ObjectManager.DEFAULT_SPRITE
+            properties[const.OBJECT.PROPERTY.SPRITE] or ActorManager.DEFAULT_SPRITE
         )
         actor:setAnimation(
-            properties[const.OBJECT.PROPERTY.ANIMATION] or ObjectManager.DEFAULT_ANIMATION
+            properties[const.OBJECT.PROPERTY.ANIMATION] or ActorManager.DEFAULT_ANIMATION
         )
         actor:setPosition(self.mapManager:convertPixelToPixel(object.x, object.y))
         hasTween = true
@@ -83,12 +83,12 @@ function ObjectManager:newActor(object)
         -- transfer
         actor:setPosition(self.mapManager:convertPixelToPixel(object.x, object.y - object.height))
     else
-        print("ObjectManager:newActor", "unknown type")
+        print("ActorManager:newActor", "unknown type")
     end
 
     if hasTween then
         actor:registerSubscription(
-            ObjectManager.SUBSCRIPTION.TWEEN,
+            ActorManager.SUBSCRIPTION.TWEEN,
             actor.update
                 :filter(function (dt) return actor.tween end)
                 :subscribe(
@@ -114,7 +114,7 @@ function ObjectManager:newActor(object)
     return actor
 end
 
-function ObjectManager:clearActors()
+function ActorManager:clearActors()
     for _, actor in ipairs(self.actors) do
         actor:finalize()
     end
@@ -122,7 +122,7 @@ function ObjectManager:clearActors()
     self.actors = {}
 end
 
-function ObjectManager:subscribeWalk(actor, walk_type, walk_duration)
+function ActorManager:subscribeWalk(actor, walk_type, walk_duration)
     local subscription = nil
 
     if walk_type == const.OBJECT.WALK_TYPE.RANDOM_WALK then
@@ -143,11 +143,11 @@ function ObjectManager:subscribeWalk(actor, walk_type, walk_duration)
     if not subscription then
         -- no subscription
     else
-        actor:registerSubscription(ObjectManager.SUBSCRIPTION.WALK, subscription)
+        actor:registerSubscription(ActorManager.SUBSCRIPTION.WALK, subscription)
     end
 end
 
-function ObjectManager:walkActor(actor, direction, speed, can_move_out, through)
+function ActorManager:walkActor(actor, direction, speed, can_move_out, through)
     if direction == const.DIRECTION.STAY then
         return
     end
@@ -171,7 +171,7 @@ function ObjectManager:walkActor(actor, direction, speed, can_move_out, through)
     end
 end
 
-function ObjectManager:setActorDirection(actor, direction)
+function ActorManager:setActorDirection(actor, direction)
     if actor.type == const.OBJECT.TYPE.NPC or actor.type == const.OBJECT.TYPE.PLAYER then
         if not direction then
             -- no direction
@@ -189,7 +189,7 @@ function ObjectManager:setActorDirection(actor, direction)
     end
 end
 
-function ObjectManager:canPassThrough(x, y)
+function ActorManager:canPassThrough(x, y)
     local result = true
     if not self.mapManager:canPassThrough(x, y) then
         -- can not pass through
@@ -201,7 +201,7 @@ function ObjectManager:canPassThrough(x, y)
     return result
 end
 
-function ObjectManager:getActorFromPixel(x, y, type)
+function ActorManager:getActorFromPixel(x, y, type)
     local result = nil
 
     for _, actor in ipairs(self.actors) do
@@ -218,15 +218,15 @@ function ObjectManager:getActorFromPixel(x, y, type)
     return result
 end
 
-function ObjectManager:getActorFromTile(x, y, type)
+function ActorManager:getActorFromTile(x, y, type)
     x, y = self.mapManager:convertTileToPixel(x, y)
     return self:getActorFromTile(x, y, type)
 end
 
-function ObjectManager:update(dt)
+function ActorManager:update(dt)
     for _, actor in ipairs(self.actors) do
         actor:update(dt)
     end
 end
 
-return ObjectManager
+return ActorManager
