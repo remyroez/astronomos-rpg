@@ -10,20 +10,17 @@ function BitmapFont:initialize(image, fontWidth, fontHeight)
 
     self.quads = {}
     self.characters = {}
-    self.batch = nil
-    self.dirty = false
     
     if self.image then
-        self:setupFont()
+        self:setupQuads()
     end
 end
 
-function BitmapFont:setup(image, fontWidth, fontHeight)
-    if image ~= self.image then
-        self:clearSpriteBatch()
-        self.batch = nil
-    end
+function BitmapFont:newBatch()
+    return gfx.newSpriteBatch(self.image)
+end
 
+function BitmapFont:setupQuads(image, fontWidth, fontHeight)
     self.image = image or self.image
     self.width = fontWidth or self.width
     self.height = fontHeight or self.height
@@ -31,10 +28,6 @@ function BitmapFont:setup(image, fontWidth, fontHeight)
     if not self.image then
         -- no image
     else
-        if not self.batch then
-            self.batch = gfx.newSpriteBatch(self.image)
-        end
-
         self.quads = {}
     
         local numX = math.floor(self.image:getWidth() / self.width)
@@ -57,18 +50,32 @@ function BitmapFont:setup(image, fontWidth, fontHeight)
     end
 end
 
-function BitmapFont:clearSpriteBatch()
-    if not self.batch then
-        -- no batch
+function BitmapFont:getQuad(character_name)
+    local quad
+
+    local character = self.characters[character_name]
+
+    if not character then
+        -- no character
+    elseif not character.index then
+        -- no index
+    elseif not self.quads[character.index + 1] then
+        -- no quad
     else
-        self.batch:clear()
+        quad = self.quads[character.index + 1]
     end
+
+    return quad
 end
 
-function BitmapFont:draw(...)
-    if self.batch then
-        gfx.draw(self.batch, ...)
+function BitmapFont:getQuads(character_names)
+    local quads = {}
+
+    for _, character_name in ipairs(character_names) do
+        table.insert(quads, self:getQuad(character_name))
     end
+
+    return quads
 end
 
 return BitmapFont
