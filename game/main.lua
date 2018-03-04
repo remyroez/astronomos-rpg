@@ -1,4 +1,6 @@
 
+local const = require 'const'
+
 require 'util'
 
 local rx = require 'rx'
@@ -10,7 +12,8 @@ local assets = {}
 local BgmPlayer = require 'BgmPlayer'
 local MapManager = require 'MapManager'
 local SpriteManager = require 'SpriteManager'
-local ObjectManager = require 'ObjectManager'
+local SpriteSheet = require 'SpriteSheet'
+local ActorManager = require 'ActorManager'
 
 local baton = require 'baton'
 local startx = 0
@@ -18,70 +21,77 @@ local starty = 0
 local ofsx = 0
 local ofsy = 0
 
-local object = rx.BehaviorSubject.create(0, 0)
+local maid64 = require 'maid64'
 
 local context = {}
+
+function screenshot(path)
+    path = path or tostring(os.time())
+    local ss = love.graphics.newScreenshot();
+    ss:encode('png', path .. '.png');
+end
+
+function toggleFullscreen()
+    return love.window.setFullscreen(not love.window.getFullscreen())
+end
+
+function resize(width, height)
+    local w, h = love.graphics.getDimensions()
+    width = math.max(maid64.sizeX, math.floor((width or w) / maid64.sizeX) * maid64.sizeX)
+    height = math.max(maid64.sizeY, math.floor((height or h) / maid64.sizeY) * maid64.sizeY)
+    maid64.resize(width, height)
+    if maid64.overscan then
+        maid64.x = (w - (maid64.scaler * maid64.sizeX)) / 2
+    else
+        maid64.x = w / 2 - (maid64.scaler * (maid64.sizeX / 2))
+    end
+    maid64.y = h / 2 - (maid64.scaler * (maid64.sizeY / 2))
+end
 
 function load_map(path, x, y)
     startx = x or 0
     starty = y or 0
     context.mapManager:setMap(path)
-    if context.mapManager:properties().bgm then
-        context.bgmPlayer:play(context.mapManager:properties().bgm)
+    if context.mapManager:properties(const.MAP.PROPERTY.BGM) then
+        context.bgmPlayer:play(context.mapManager:properties(const.MAP.PROPERTY.BGM))
     end
 end
 
 function love.load(arg)
+    love.graphics.setDefaultFilter("nearest", "nearest")
+    local w, h = love.graphics.getDimensions()
+
+    maid64.setup(w, h)
+    resize(w, h)
+
     assets = cargo.init("assets")
 
     love.graphics.clear()
-    love.graphics.setColor(255, 255, 255)
 
     context.bgmPlayer = BgmPlayer(assets.bgm)
-    context.bgmPlayer:setVolume(0.1)
-
-    local w, h = love.graphics.getDimensions()
+    context.bgmPlayer:setVolume(const.MAP.BGM_VOLUME.DEFAULT)
 
     context.spriteManager = SpriteManager(
         assets.images.spritesheet, 
-        16, 16,
+        const.TILE.WIDTH, const.TILE.HEIGHT,
         w, h
     )
-
-    setupSpriteSheet {
-        { name = "minami", index = 2 },
-        { name = "siba", index = 3 },
-        { name = "misa", index = 4 },
-        { name = "aine", index = 5 },
-        { name = "shop", index = 6 },
-        { name = "doctor", index = 7 },
-        { name = "female", index = 8 },
-        { name = "male", index = 9 },
-        { name = "oldman", index = 10 },
-        { name = "citizen", index = 11 },
-        { name = "nurse", index = 12 },
-        { name = "guy", index = 13 },
-        { name = "guard", index = 14 },
-        { name = "robot", index = 15 },
-        { name = "astronaut", index = 16 },
-        { name = "skeleton", index = 17 },
-        { name = "dolphin", index = 18 },
-        { name = "orca", index = 19 },
-    }
+    context.spriteSheet = SpriteSheet(context.spriteManager)
+    context.spriteSheet:registerSprites(assets.data.spritesheet)
 
     context.mapManager = MapManager("assets/maps", w, h)
 
-    context.objectManager = ObjectManager(context.mapManager, context.spriteManager)
+    context.actorManager = ActorManager(context.mapManager, context.spriteManager)
 
     context.mapManager.onLoad = function (map)
-        context.objectManager:clearObjects()
+        context.actorManager:clearActors()
         context.spriteManager:clearSpriteInstances()
         collectgarbage("collect")
 
-        if map.layers["object"] then
-            local layer = map.layers["object"]
+        if map.layers[const.LAYER.TYPE.OBJECT] then
+            local layer = map.layers[const.LAYER.TYPE.OBJECT]
             for _, object in ipairs(layer.objects) do
-                context.objectManager:newObject(object)
+                context.actorManager:newActor(object)
             end
         end
         local x, y = map:convertTileToPixel(startx, starty)
@@ -101,6 +111,8 @@ function love.load(arg)
             cancel = {'key:x', 'button:b'},
                esp = {'key:c', 'button:x'},
               menu = {'key:space', 'button:start'},
+            -- system
+            alt = {'key:ralt', 'key:lalt'},
         },
         pairs = {
             move = {'left', 'right', 'up', 'down'}
@@ -114,12 +126,12 @@ function love.load(arg)
 end
 
 function createPlayer(x, y, sprite)
-    context.minami = context.objectManager:newObject {
-        type = "player",
+    context.minami = context.actorManager:newActor {
+        type = const.OBJECT.TYPE.PLAYER,
         x = x or 0,
         y = y or 0,
         properties = {
-            sprite = sprite or "minami"
+            [const.OBJECT.PROPERTY.SPRITE] = sprite or "minami"
         }
     }
     context.minami.onArrival
@@ -127,56 +139,33 @@ function createPlayer(x, y, sprite)
             function (x, y)
                 if context.mapManager:inMapFromPixel(x, y) then
                     -- in map
-                    local transfer = context.objectManager:getObjectFromPixel(x, y, "transfer")
+                    local transfer = context.actorManager:getActorFromPixel(
+                        x, y, const.OBJECT.TYPE.TRANSFER
+                    )
                     if not transfer then
                         -- no transfer
-                    elseif not transfer.properties["transfer_map"] then
+                    elseif not transfer.properties[const.OBJECT.PROPERTY.TRANSFER_MAP] then
                         -- no map
                     else
                         local properties = transfer.properties
                         load_map(
-                            properties["transfer_map"],
-                            properties["transfer_x"] or 0,
-                            properties["transfer_y"] or 0
+                            properties[const.OBJECT.PROPERTY.TRANSFER_MAP],
+                            properties[const.OBJECT.PROPERTY.TRANSFER_X] or 0,
+                            properties[const.OBJECT.PROPERTY.TRANSFER_Y] or 0
                         )
                     end
-                elseif not context.mapManager:properties()["outer_map"] then
+                elseif not context.mapManager:properties(const.MAP.PROPERTY.OUTER_MAP) then
                     -- no map
                 else
                     local properties = context.mapManager:properties()
                     load_map(
-                        properties["outer_map"],
-                        properties["outer_map_x"] or 0,
-                        properties["outer_map_y"] or 0
+                        properties[const.MAP.PROPERTY.OUTER_MAP],
+                        properties[const.MAP.PROPERTY.OUTER_MAP_X] or 0,
+                        properties[const.MAP.PROPERTY.OUTER_MAP_Y] or 0
                     )
                 end
             end
         )
-end
-
-function setupSpriteSheet(settings)
-    for i, sprite in pairs(settings) do
-        local name = sprite.name or ("sprite-" .. tostring(_))
-        context.spriteManager:newSprite(name)
-        do
-            local index = sprite.index or i
-            local speed = sprite.speed or (1 / 60 * 20)
-            local x = (index % 2) * 8 + 1
-            local y = math.floor(index / 2) + 1
-            context.spriteManager:newSpriteAnimation(
-                name,  "down", speed, (x) .. "-" .. (x + 1), y
-            )
-            context.spriteManager:newSpriteAnimation(
-                name,  "left", speed, (x + 2) .. "-" .. (x + 3), y
-            )
-            context.spriteManager:newSpriteAnimation(
-                name,  "up", speed, (x + 4) .. "-" .. (x + 5), y
-            )
-            context.spriteManager:newSpriteAnimation(
-                name,  "right", speed, (x + 6) .. "-" .. (x + 7), y
-            )
-        end
-    end
 end
 
 love.update
@@ -206,7 +195,7 @@ love.update
                         if context.input:down 'cancel' then
                             speed = speed / 2
                         end
-                        context.objectManager:walkObject(
+                        context.actorManager:walkActor(
                             context.minami,
                             direction,
                             speed,
@@ -215,7 +204,7 @@ love.update
                         )
                     end
                 end
-                context.objectManager:update(dt)
+                context.actorManager:update(dt)
                 
                 ofsx, ofsy = context.minami:getPosition()
             end
@@ -232,10 +221,20 @@ love.update
 love.draw
     :subscribe(
         function ()
+            maid64.start()
             context.mapManager:draw()
             context.spriteManager:draw()
+            maid64.finish()
         end
     )
+
+love.resize
+    :subscribe(function(w, h) resize(w, h) end)
+    
+love.keypressed
+    :filter(function (key) return context.input:down 'alt' end)
+    :filter(function (key) return (key == 'return') end)
+    :subscribe(function () toggleFullscreen() end)
 
 love.keypressed
     :filter(function (key) return key == 'escape' end)
@@ -245,19 +244,6 @@ love.keypressed
     :filter(function (key) return key == 'f5' end)
     :subscribe(function () love.event.quit("restart") end)
 
-love.mousemoved
-    :map(
-        function (x, y, dx, dy, istouched)
-            return math.max(100, math.min(x, 400)), math.max(100, math.min(y, 400))
-        end    
-    )
-    :subscribe(
-        function (x, y)
-            object:onNext(x, y)
-        end,
-        function () end,
-        function ()
-            print("done.")
-        end
-    )
- 
+love.keypressed
+    :filter(function (key) return key == 'f6' end)
+    :subscribe(function () screenshot() end)
