@@ -3,40 +3,114 @@ local ObjectManager = class("ObjectManager")
 
 local rx = require 'rx'
 
-local Object = require("Object")
+local const = require 'const'
+
+local Object = require "Object"
+local SpriteSheet = require "SpriteSheet"
+
+ObjectManager.SUBSCRIPTION = {
+    TWEEN = "tween",
+    WALK = "walk"
+}
+
+ObjectManager.DEFAULT_SPRITE = "minami"
+ObjectManager.DEFAULT_ANIMATION = "down"
+ObjectManager.DEFAULT_WALK_TYPE = const.OBJECT.WALK_TYPE.DEFAULT
+ObjectManager.DEFAULT_WALK_DURATION = (1 / 60 * 20 * 10)
+
+ObjectManager.DEFAULT_RANDOM_WALK_SPEED = 1 / 60 * 10
+
+local function isTweenableType(type)
+    local result = false
+
+    if type == const.OBJECT.TYPE.NPC then
+        result = true
+    elseif type == const.OBJECT.TYPE.PLAYER then
+        result = true
+    elseif type == const.OBJECT.TYPE.TRANSFER then
+        result = false
+    else
+        result = false
+    end
+
+    return result
+end
 
 function ObjectManager:initialize(mapManager, spriteManager)
     self.mapManager = mapManager
     self.spriteManager = spriteManager
     self.objects = {}
 
-    self.random_walk_table = { "right", "left", "down", "up", "stay", "stay" }
-    self.random_walk_speed = 1 / 60 * 10
+    self.random_walk_table = {
+        const.DIRECTION.RIGHT,
+        const.DIRECTION.LEFT,
+        const.DIRECTION.DOWN,
+        const.DIRECTION.UP,
+        const.DIRECTION.STAY,
+        const.DIRECTION.STAY
+    }
+    self.random_walk_speed = ObjectManager.DEFAULT_RANDOM_WALK_SPEED
 end
 
 function ObjectManager:newObject(template)
     local object = Object(template)
     local properties = template.properties
-    if object.type == "npc" then
-        object.sprite = self.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
-        object:setAnimation(properties["animation"] or "down")
+    local hasTween = false
+    if object.type == const.OBJECT.TYPE.NPC then
+        object.sprite = self.spriteManager:newSpriteInstance(
+            properties[const.OBJECT.PROPERTY.SPRITE] or ObjectManager.DEFAULT_SPRITE
+        )
+        object:setAnimation(
+            properties[const.OBJECT.PROPERTY.ANIMATION] or ObjectManager.DEFAULT_ANIMATION
+        )
         object:setPosition(self.mapManager:convertPixelToPixel(template.x, template.y - object:getHeight()))
         self:subscribeWalk(
             object,
-            properties["walk_type"] or "random_walk",
-            properties["walk_duration"] or (1 / 60 * 20 * 10)
+            properties[const.OBJECT.PROPERTY.WALK_TYPE] or const.OBJECT.WALK_TYPE.DEFAULT,
+            properties[const.OBJECT.PROPERTY.WALK_DURATION] or const.OBJECT.WALK_DURATION.DEFAULT
         )
-    elseif object.type == "player" then
-        object.sprite = self.spriteManager:newSpriteInstance(properties["sprite"] or "minami")
-        object:setAnimation(properties["animation"] or "down")
+        hasTween = true
+    elseif object.type == const.OBJECT.TYPE.PLAYER then
+        object.sprite = self.spriteManager:newSpriteInstance(
+            properties[const.OBJECT.PROPERTY.SPRITE] or ObjectManager.DEFAULT_SPRITE
+        )
+        object:setAnimation(
+            properties[const.OBJECT.PROPERTY.ANIMATION] or ObjectManager.DEFAULT_ANIMATION
+        )
         object:setPosition(self.mapManager:convertPixelToPixel(template.x, template.y))
-    elseif object.type == "transfer" then
+        hasTween = true
+    elseif object.type == const.OBJECT.TYPE.TRANSFER then
         -- transfer
         object:setPosition(self.mapManager:convertPixelToPixel(template.x, template.y - template.height))
     else
         print("ObjectManager:newObject", "unknown type")
     end
+
+    if hasTween then
+        object:registerSubscribe(
+            ObjectManager.SUBSCRIPTION.TWEEN,
+            object.update
+                :filter(function (dt) return object.tween end)
+                :subscribe(
+                    function (self, dt)
+                        if self.tween:update(dt) then
+                            -- complete
+                            self.tween = nil
+                            self.target = nil
+                            self.resetDelta()
+                            self.onArrival(self:getPosition())
+                        end
+                        if self.sprite then
+                            self.sprite:updateSpriteBatch()
+                            self.x, self.y = self.sprite.x, self.sprite.y
+                        end
+                    end
+                )
+        )
+    end
+
     table.insert(self.objects, object)
+
     return object
 end
 
@@ -51,7 +125,7 @@ end
 function ObjectManager:subscribeWalk(object, walk_type, walk_duration)
     local subscribe = nil
 
-    if walk_type == "random_walk" then
+    if walk_type == const.OBJECT.WALK_TYPE.RANDOM_WALK then
         subscribe = object.waitStream
             :filter(function (time) return time > walk_duration end)
             :subscribe(
@@ -69,21 +143,24 @@ function ObjectManager:subscribeWalk(object, walk_type, walk_duration)
     if not subscribe then
         -- no subscribe
     else
-        object:registerSubscribe("walk", subscribe)
+        object:registerSubscribe(ObjectManager.SUBSCRIPTION.WALK, subscribe)
     end
 end
 
 function ObjectManager:walkObject(object, direction, speed, can_move_out, through)
+    if direction == const.DIRECTION.STAY then
+        return
+    end
     can_move_out = can_move_out or false
     local x, y = object:getPosition()
     local tilewidth, tileheight = self.mapManager:getTileDimensions()
-    if direction == 'right' then
+    if direction == const.DIRECTION.RIGHT then
         x = x + tilewidth
-    elseif direction == 'left' then
+    elseif direction == const.DIRECTION.LEFT then
         x = x - tilewidth
-    elseif direction == 'down' then
+    elseif direction == const.DIRECTION.DOWN then
         y = y + tileheight
-    elseif direction == 'up' then
+    elseif direction == const.DIRECTION.UP then
         y = y - tileheight
     end
     self:setObjectDirection(object, direction)
@@ -95,13 +172,19 @@ function ObjectManager:walkObject(object, direction, speed, can_move_out, throug
 end
 
 function ObjectManager:setObjectDirection(object, direction)
-    if object.type == 'npc' or object.type == 'player' then
+    if object.type == const.OBJECT.TYPE.NPC or object.type == const.OBJECT.TYPE.PLAYER then
         if not direction then
             -- no direction
-        elseif direction == "stay" then
-            -- invalid direction
+        elseif direction == const.DIRECTION.DOWN then
+            object:setAnimation(SpriteSheet.ANIMATION.DOWN)
+        elseif direction == const.DIRECTION.LEFT then
+            object:setAnimation(SpriteSheet.ANIMATION.LEFT)
+        elseif direction == const.DIRECTION.UP then
+            object:setAnimation(SpriteSheet.ANIMATION.UP)
+        elseif direction == const.DIRECTION.RIGHT then
+            object:setAnimation(SpriteSheet.ANIMATION.RIGHT)
         else
-            object:setAnimation(direction)
+            -- invalid direction
         end
     end
 end
@@ -111,7 +194,7 @@ function ObjectManager:canPassThrough(x, y)
     if not self.mapManager:canPassThrough(x, y) then
         -- can not pass through
         result = false
-    elseif self:getObjectFromPixel(x, y, "npc") then
+    elseif self:getObjectFromPixel(x, y, const.OBJECT.TYPE.NPC) then
         -- object
         result = false
     end
@@ -141,14 +224,7 @@ end
 
 function ObjectManager:update(dt)
     for _, object in ipairs(self.objects) do
-        local event = object:update(dt)
-        if event == "random_walk" then
-            self:walkObject(
-                object,
-                self.random_walk_table[math.random(#self.random_walk_table)],
-                self.random_walk_speed
-            )
-        end
+        object:update(dt)
     end
 end
 

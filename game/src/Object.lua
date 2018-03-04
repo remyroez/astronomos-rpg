@@ -4,28 +4,19 @@ local Object = class("Object")
 local tween = require 'tween'
 local rx = require 'rx'
 
-local function isTweenableType(type)
-    local result = false
+local const = require 'const'
 
-    if type == 'npc' then
-        result = true
-    elseif type == 'player' then
-        result = true
-    elseif type == 'transfer' then
-        result = false
-    else
-        result = false
-    end
-
-    return result
-end
+Object.STATE = {
+    MOVING = "moving",
+    READY = "ready"
+}
 
 function Object:initialize(object)
     assert(object)
 
     self.object = object
 
-    self.type = object.type or "unknown"
+    self.type = object.type or const.OBJECT.TYPE.UNKNOWN
     self.properties = object.properties or {}
 
     self.x = object.x or 0
@@ -40,29 +31,6 @@ function Object:initialize(object)
     self.subscribes = {}
 
     self.update = rx.Subject.create()
-
-    if isTweenableType(self.type) then
-        self:registerSubscribe(
-            "tween",
-            self.update
-            :filter(function (dt) return self.tween end)
-            :subscribe(
-                function (self, dt)
-                    if self.tween:update(dt) then
-                        -- complete
-                        self.tween = nil
-                        self.target = nil
-                        self.resetDelta()
-                        self.onArrival(self:getPosition())
-                    end
-                    if self.sprite then
-                        self.sprite:updateSpriteBatch()
-                        self.x, self.y = self.sprite.x, self.sprite.y
-                    end
-                end
-            )
-        )
-    end
 
     self.onArrival = rx.Subject.create()
 
@@ -122,9 +90,9 @@ end
 
 function Object:state()
     if self.tween then
-        return "moving"
+        return Object.STATE.MOVING
     else
-        return "ready"
+        return Object.STATE.READY
     end
 end
 
