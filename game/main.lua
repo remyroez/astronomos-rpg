@@ -14,6 +14,7 @@ local MapManager = require 'MapManager'
 local SpriteManager = require 'SpriteManager'
 local SpriteSheet = require 'SpriteSheet'
 local ActorManager = require 'ActorManager'
+local WindowManager = require 'WindowManager'
 
 local baton = require 'baton'
 local startx = 0
@@ -66,8 +67,6 @@ function love.load(arg)
 
     assets = cargo.init("assets")
 
-    love.graphics.clear()
-
     context.bgmPlayer = BgmPlayer(assets.bgm)
     context.bgmPlayer:setVolume(const.MAP.BGM_VOLUME.DEFAULT)
 
@@ -82,6 +81,12 @@ function love.load(arg)
     context.mapManager = MapManager("assets/maps", w, h)
 
     context.actorManager = ActorManager(context.mapManager, context.spriteManager)
+
+    context.windowManager = WindowManager(assets.images.font, 8, 8, w, h)
+    context.windowManager:setupAsciiCharacters()
+
+    context.windowManager:push()
+    context.windowManager:window():print("Hello,World!", 1, 1)
 
     context.mapManager.onLoad = function (map)
         context.actorManager:clearActors()
@@ -215,6 +220,7 @@ love.update
             context.mapManager:update(dt)
             context.spriteManager:setOffset(ox, oy)
             context.spriteManager:update(dt)
+            context.windowManager:update(dt)
         end
     )
 
@@ -224,6 +230,7 @@ love.draw
             maid64.start()
             context.mapManager:draw()
             context.spriteManager:draw()
+            context.windowManager:draw()
             maid64.finish()
         end
     )
