@@ -84,14 +84,14 @@ function love.load(arg)
     context.objectManager = ObjectManager(context.mapManager, context.spriteManager)
 
     context.mapManager.onLoad = function (map)
-        context.objectManager:clearObjects()
+        context.objectManager:clearActors()
         context.spriteManager:clearSpriteInstances()
         collectgarbage("collect")
 
         if map.layers[const.LAYER.TYPE.OBJECT] then
             local layer = map.layers[const.LAYER.TYPE.OBJECT]
             for _, object in ipairs(layer.objects) do
-                context.objectManager:newObject(object)
+                context.objectManager:newActor(object)
             end
         end
         local x, y = map:convertTileToPixel(startx, starty)
@@ -126,7 +126,7 @@ function love.load(arg)
 end
 
 function createPlayer(x, y, sprite)
-    context.minami = context.objectManager:newObject {
+    context.minami = context.objectManager:newActor {
         type = const.OBJECT.TYPE.PLAYER,
         x = x or 0,
         y = y or 0,
@@ -139,7 +139,7 @@ function createPlayer(x, y, sprite)
             function (x, y)
                 if context.mapManager:inMapFromPixel(x, y) then
                     -- in map
-                    local transfer = context.objectManager:getObjectFromPixel(
+                    local transfer = context.objectManager:getActorFromPixel(
                         x, y, const.OBJECT.TYPE.TRANSFER
                     )
                     if not transfer then
@@ -195,7 +195,7 @@ love.update
                         if context.input:down 'cancel' then
                             speed = speed / 2
                         end
-                        context.objectManager:walkObject(
+                        context.objectManager:walkActor(
                             context.minami,
                             direction,
                             speed,

@@ -5,7 +5,7 @@ local rx = require 'rx'
 
 local const = require 'const'
 
-local Object = require "Object"
+local Actor = require "Actor"
 local SpriteSheet = require "SpriteSheet"
 
 ObjectManager.SUBSCRIPTION = {
@@ -39,7 +39,7 @@ end
 function ObjectManager:initialize(mapManager, spriteManager)
     self.mapManager = mapManager
     self.spriteManager = spriteManager
-    self.objects = {}
+    self.actors = {}
 
     self.random_walk_table = {
         const.DIRECTION.RIGHT,
@@ -52,45 +52,45 @@ function ObjectManager:initialize(mapManager, spriteManager)
     self.random_walk_speed = ObjectManager.DEFAULT_RANDOM_WALK_SPEED
 end
 
-function ObjectManager:newObject(template)
-    local object = Object(template)
-    local properties = template.properties
+function ObjectManager:newActor(object)
+    local actor = Actor(object)
+    local properties = object.properties
     local hasTween = false
-    if object.type == const.OBJECT.TYPE.NPC then
-        object.sprite = self.spriteManager:newSpriteInstance(
+    if actor.type == const.OBJECT.TYPE.NPC then
+        actor.sprite = self.spriteManager:newSpriteInstance(
             properties[const.OBJECT.PROPERTY.SPRITE] or ObjectManager.DEFAULT_SPRITE
         )
-        object:setAnimation(
+        actor:setAnimation(
             properties[const.OBJECT.PROPERTY.ANIMATION] or ObjectManager.DEFAULT_ANIMATION
         )
-        object:setPosition(self.mapManager:convertPixelToPixel(template.x, template.y - object:getHeight()))
+        actor:setPosition(self.mapManager:convertPixelToPixel(object.x, object.y - actor:getHeight()))
         self:subscribeWalk(
-            object,
+            actor,
             properties[const.OBJECT.PROPERTY.WALK_TYPE] or const.OBJECT.WALK_TYPE.DEFAULT,
             properties[const.OBJECT.PROPERTY.WALK_DURATION] or const.OBJECT.WALK_DURATION.DEFAULT
         )
         hasTween = true
-    elseif object.type == const.OBJECT.TYPE.PLAYER then
-        object.sprite = self.spriteManager:newSpriteInstance(
+    elseif actor.type == const.OBJECT.TYPE.PLAYER then
+        actor.sprite = self.spriteManager:newSpriteInstance(
             properties[const.OBJECT.PROPERTY.SPRITE] or ObjectManager.DEFAULT_SPRITE
         )
-        object:setAnimation(
+        actor:setAnimation(
             properties[const.OBJECT.PROPERTY.ANIMATION] or ObjectManager.DEFAULT_ANIMATION
         )
-        object:setPosition(self.mapManager:convertPixelToPixel(template.x, template.y))
+        actor:setPosition(self.mapManager:convertPixelToPixel(object.x, object.y))
         hasTween = true
-    elseif object.type == const.OBJECT.TYPE.TRANSFER then
+    elseif actor.type == const.OBJECT.TYPE.TRANSFER then
         -- transfer
-        object:setPosition(self.mapManager:convertPixelToPixel(template.x, template.y - template.height))
+        actor:setPosition(self.mapManager:convertPixelToPixel(object.x, object.y - object.height))
     else
-        print("ObjectManager:newObject", "unknown type")
+        print("ObjectManager:newActor", "unknown type")
     end
 
     if hasTween then
-        object:registerSubscribe(
+        actor:registerSubscription(
             ObjectManager.SUBSCRIPTION.TWEEN,
-            object.update
-                :filter(function (dt) return object.tween end)
+            actor.update
+                :filter(function (dt) return actor.tween end)
                 :subscribe(
                     function (self, dt)
                         if self.tween:update(dt) then
@@ -109,50 +109,50 @@ function ObjectManager:newObject(template)
         )
     end
 
-    table.insert(self.objects, object)
+    table.insert(self.actors, actor)
 
-    return object
+    return actor
 end
 
-function ObjectManager:clearObjects()
-    for _, object in ipairs(self.objects) do
-        object:finalize()
+function ObjectManager:clearActors()
+    for _, actor in ipairs(self.actors) do
+        actor:finalize()
     end
 
-    self.objects = {}
+    self.actors = {}
 end
 
-function ObjectManager:subscribeWalk(object, walk_type, walk_duration)
-    local subscribe = nil
+function ObjectManager:subscribeWalk(actor, walk_type, walk_duration)
+    local subscription = nil
 
     if walk_type == const.OBJECT.WALK_TYPE.RANDOM_WALK then
-        subscribe = object.waitStream
+        subscription = actor.waitStream
             :filter(function (time) return time > walk_duration end)
             :subscribe(
                 function (...)
-                    self:walkObject(
-                        object,
+                    self:walkActor(
+                        actor,
                         self.random_walk_table[math.random(#self.random_walk_table)],
                         self.random_walk_speed
                     )
-                    object.resetDelta()
+                    actor.resetDelta()
                 end
             )
     end
 
-    if not subscribe then
-        -- no subscribe
+    if not subscription then
+        -- no subscription
     else
-        object:registerSubscribe(ObjectManager.SUBSCRIPTION.WALK, subscribe)
+        actor:registerSubscription(ObjectManager.SUBSCRIPTION.WALK, subscription)
     end
 end
 
-function ObjectManager:walkObject(object, direction, speed, can_move_out, through)
+function ObjectManager:walkActor(actor, direction, speed, can_move_out, through)
     if direction == const.DIRECTION.STAY then
         return
     end
     can_move_out = can_move_out or false
-    local x, y = object:getPosition()
+    local x, y = actor:getPosition()
     local tilewidth, tileheight = self.mapManager:getTileDimensions()
     if direction == const.DIRECTION.RIGHT then
         x = x + tilewidth
@@ -163,26 +163,26 @@ function ObjectManager:walkObject(object, direction, speed, can_move_out, throug
     elseif direction == const.DIRECTION.UP then
         y = y - tileheight
     end
-    self:setObjectDirection(object, direction)
+    self:setActorDirection(actor, direction)
     if not can_move_out and not self.mapManager:inMapFromPixel(x, y) then
         -- can not move out
     elseif through or self:canPassThrough(x, y) then
-        object:move(x, y, speed or 1)
+        actor:move(x, y, speed or 1)
     end
 end
 
-function ObjectManager:setObjectDirection(object, direction)
-    if object.type == const.OBJECT.TYPE.NPC or object.type == const.OBJECT.TYPE.PLAYER then
+function ObjectManager:setActorDirection(actor, direction)
+    if actor.type == const.OBJECT.TYPE.NPC or actor.type == const.OBJECT.TYPE.PLAYER then
         if not direction then
             -- no direction
         elseif direction == const.DIRECTION.DOWN then
-            object:setAnimation(SpriteSheet.ANIMATION.DOWN)
+            actor:setAnimation(SpriteSheet.ANIMATION.DOWN)
         elseif direction == const.DIRECTION.LEFT then
-            object:setAnimation(SpriteSheet.ANIMATION.LEFT)
+            actor:setAnimation(SpriteSheet.ANIMATION.LEFT)
         elseif direction == const.DIRECTION.UP then
-            object:setAnimation(SpriteSheet.ANIMATION.UP)
+            actor:setAnimation(SpriteSheet.ANIMATION.UP)
         elseif direction == const.DIRECTION.RIGHT then
-            object:setAnimation(SpriteSheet.ANIMATION.RIGHT)
+            actor:setAnimation(SpriteSheet.ANIMATION.RIGHT)
         else
             -- invalid direction
         end
@@ -194,37 +194,38 @@ function ObjectManager:canPassThrough(x, y)
     if not self.mapManager:canPassThrough(x, y) then
         -- can not pass through
         result = false
-    elseif self:getObjectFromPixel(x, y, const.OBJECT.TYPE.NPC) then
-        -- object
+    elseif self:getActorFromPixel(x, y, const.OBJECT.TYPE.NPC) then
+        -- actor
         result = false
     end
     return result
 end
 
-function ObjectManager:getObjectFromTile(x, y, type)
-    local object = nil
+function ObjectManager:getActorFromPixel(x, y, type)
+    local result = nil
 
-    for _, obj in ipairs(self.objects) do
-        if not obj:inObject(x, y) then
+    for _, actor in ipairs(self.actors) do
+        if not actor:inObject(x, y) then
             -- position not match
-        elseif type and type ~= obj.type then
+        elseif type and type ~= actor.type then
             -- type not match
         else
-            object = obj
+            result = actor
             break
         end
     end
 
-    return object
+    return result
 end
 
-function ObjectManager:getObjectFromPixel(x, y, type)
-    return self:getObjectFromTile(x, y, type)
+function ObjectManager:getActorFromTile(x, y, type)
+    x, y = self.mapManager:convertTileToPixel(x, y)
+    return self:getActorFromTile(x, y, type)
 end
 
 function ObjectManager:update(dt)
-    for _, object in ipairs(self.objects) do
-        object:update(dt)
+    for _, actor in ipairs(self.actors) do
+        actor:update(dt)
     end
 end
 

@@ -1,17 +1,17 @@
 local class = require 'middleclass'
-local Object = class("Object")
+local Actor = class("Actor")
 
 local tween = require 'tween'
 local rx = require 'rx'
 
 local const = require 'const'
 
-Object.STATE = {
+Actor.STATE = {
     MOVING = "moving",
     READY = "ready"
 }
 
-function Object:initialize(object)
+function Actor:initialize(object)
     assert(object)
 
     self.object = object
@@ -28,7 +28,7 @@ function Object:initialize(object)
     self.tween = nil
     self.target = nil
 
-    self.subscribes = {}
+    self.subscriptions = {}
 
     self.update = rx.Subject.create()
 
@@ -38,7 +38,7 @@ function Object:initialize(object)
 
     self.waitStream = self.update
         :map(
-            function (object, dt)
+            function (actor, dt)
                 return { dt = dt, reset = false }
             end
         )
@@ -58,45 +58,45 @@ function Object:initialize(object)
         )
 end
 
-function Object:finalize()
+function Actor:finalize()
     self.sprite = nil
     self.tween = nil
 
-    self:deregisterSubscribes()
+    self:deregisterSubscriptions()
 end
 
-function Object:registerSubscribe(name, subscribe)
-    self:deregisterSubscribe(name)
-    self.subscribes[name] = subscribe
+function Actor:registerSubscription(name, subscribe)
+    self:deregisterSubscription(name)
+    self.subscriptions[name] = subscribe
 end
 
-function Object:deregisterSubscribe(name)
-    if not self.subscribes[name] then
+function Actor:deregisterSubscription(name)
+    if not self.subscriptions[name] then
         -- subscribe not found
     else
-        self.subscribes[name]:unsubscribe()
-        self.subscribes[name] = nil
+        self.subscriptions[name]:unsubscribe()
+        self.subscriptions[name] = nil
     end
 end
 
-function Object:deregisterSubscribes()
-    for key, subscription in pairs(self.subscribes) do
+function Actor:deregisterSubscriptions()
+    for key, subscription in pairs(self.subscriptions) do
         if subscription then
             subscription:unsubscribe()
         end
     end
-    self.subscribes = {}
+    self.subscriptions = {}
 end
 
-function Object:state()
+function Actor:state()
     if self.tween then
-        return Object.STATE.MOVING
+        return Actor.STATE.MOVING
     else
-        return Object.STATE.READY
+        return Actor.STATE.READY
     end
 end
 
-function Object:move(x, y, seconds)
+function Actor:move(x, y, seconds)
     if self.target then
         self:setPosition(self:getTargetPosition())
     end
@@ -111,7 +111,7 @@ function Object:move(x, y, seconds)
     )
 end
 
-function Object:setPosition(x, y)
+function Actor:setPosition(x, y)
     self.tween = nil
     self.target = nil
     self.resetDelta()
@@ -124,7 +124,7 @@ function Object:setPosition(x, y)
     self.y = y
 end
 
-function Object:getPosition()
+function Actor:getPosition()
     if not self.sprite then
         -- no sprite
         return self.x, self.y
@@ -133,41 +133,41 @@ function Object:getPosition()
     end
 end
 
-function Object:left()
+function Actor:left()
     return self.x
 end
 
-function Object:top()
+function Actor:top()
     return self.y
 end
 
-function Object:right()
+function Actor:right()
     return self:left() + self.width
 end
 
-function Object:bottom()
+function Actor:bottom()
     return self:top() + self.height
 end
 
-function Object:inObject(x, y)
+function Actor:inObject(x, y)
     return (x >= self:left()) and (y >= self:top()) and (x < self:right()) and (y < self:bottom())
 end
 
-function Object:getDimensions()
+function Actor:getDimensions()
     return self.width, self.height
 end
 
-function Object:getWidth()
+function Actor:getWidth()
     local value, _ = self:getDimensions()
     return value
 end
 
-function Object:getHeight()
+function Actor:getHeight()
     local _, value = self:getDimensions()
     return value
 end
 
-function Object:getObjectDimensions()
+function Actor:getObjectDimensions()
     if not self.object then
         -- no sprite
         return 0, 0
@@ -176,17 +176,17 @@ function Object:getObjectDimensions()
     end
 end
 
-function Object:getObjectWidth()
+function Actor:getObjectWidth()
     local value, _ = self:getObjectDimensions()
     return value
 end
 
-function Object:getObjectHeight()
+function Actor:getObjectHeight()
     local _, value = self:getObjectDimensions()
     return value
 end
 
-function Object:getSpriteDimensions()
+function Actor:getSpriteDimensions()
     if not self.sprite then
         -- no sprite
         return 0, 0
@@ -195,17 +195,17 @@ function Object:getSpriteDimensions()
     end
 end
 
-function Object:getSpriteWidth()
+function Actor:getSpriteWidth()
     local value, _ = self:getSpriteDimensions()
     return value
 end
 
-function Object:getSpriteHeight()
+function Actor:getSpriteHeight()
     local _, value = self:getSpriteDimensions()
     return value
 end
 
-function Object:getTargetPosition()
+function Actor:getTargetPosition()
     if not self.target then
         -- no target
         return self:getPosition()
@@ -214,7 +214,7 @@ function Object:getTargetPosition()
     end
 end
 
-function Object:setAnimation(name)
+function Actor:setAnimation(name)
     if not self.sprite then
         -- no sprite
     else
@@ -222,4 +222,4 @@ function Object:setAnimation(name)
     end
 end
 
-return Object
+return Actor
