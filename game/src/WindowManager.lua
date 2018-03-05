@@ -26,18 +26,41 @@ function WindowManager:setupFont(image, fontWidth, fontHeight)
     self.font:setupQuads(image, fontWidth, fontHeight)
 end
 
+function WindowManager:characters()
+    return self.font.characters
+end
+
+function WindowManager:mergeCharacters(characters)
+    for key, character in pairs(characters) do
+        self.font.characters[key] = characters[key]
+    end
+end
+
 function WindowManager:setupCharacters(characters)
     self.font.characters = characters
 end
 
-function WindowManager:setupAsciiCharacters(lower_case)
+function WindowManager:setupAsciiCharacters(glyphs, lower_case)
     lower_case = lower_case or false
-    local characters = {}
-    local ascii = " ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-    for i = 1, #ascii do
-        local c = string.sub(ascii, i, i)
-        characters[c] = { index = string.byte(lower_case and c or string.upper(c)) }
+    if type(glyphs) == 'boolean' then
+        lower_case = glyphs
+        glyphs = nil
     end
+    local characters = {}
+
+    if not glyphs then
+        -- all ascii
+        for i = 32, 126 do
+            local c = string.char(i)
+            characters[c] = { { index = string.byte(lower_case and c or string.upper(c)) } }
+        end
+    elseif type(glyphs) == 'string' then
+        for i = 1, #glyphs do
+            local c = string.sub(glyphs, i, i)
+            characters[c] = { { index = string.byte(lower_case and c or string.upper(c)) } }
+        end
+    end
+
     self:setupCharacters(characters)
 end
 

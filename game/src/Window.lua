@@ -3,7 +3,6 @@ local Window = class("Window")
 
 local gfx = love.graphics
 
-local utf8 = require 'utf8'
 local tween = require 'tween'
 
 function Window:initialize(font, x, y, width, height, frame)
@@ -49,23 +48,27 @@ function Window:window()
 end
 
 function Window:flushText(text)
-    local codes = {}
-    local index = 0
-    for p, c in utf8.codes(text.text) do
-        table.insert(codes, utf8.char(c))
-        index = index + 1
-    end
-
-    local quads = self.font:getQuads(codes)
+    local glyphs = self.font:getGlyphs(text.text)
 
     local x, y = self.x + text.x, self.y + text.y
-    for i, quad in ipairs(quads) do
-        if not quad then
-            -- no quad
+    for i, glyph in ipairs(glyphs) do
+        if not glyph then
+            -- no glyph
         else
-            self.batch:add(quad, x * self.font.width, y * self.font.height)
+            for _, part in ipairs(glyph) do
+                local ofsx, ofsy = 0, 0
+                if part.character then
+                    ofsx = part.character.x or 0
+                    ofsy = part.character.y or 0
+                end
+                self.batch:add(
+                    part.quad,
+                    (x + ofsx) * self.font.width,
+                    (y + ofsy) * self.font.height
+                )
+            end
         end
-        x = x + 1
+        x = x + (glyph.advance or 1)
     end
 end
 

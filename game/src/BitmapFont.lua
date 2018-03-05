@@ -3,10 +3,14 @@ local BitmapFont = class("BitmapFont")
 
 local gfx = love.graphics
 
-function BitmapFont:initialize(image, fontWidth, fontHeight)
+local utf8 = require 'utf8'
+
+function BitmapFont:initialize(image, fontWidth, fontHeight, line_height)
     self.image = image
     self.width = fontWidth or 8
     self.height = fontHeight or 8
+
+    self.line_height = line_height or self.height
 
     self.quads = {}
     self.characters = {}
@@ -20,10 +24,11 @@ function BitmapFont:newBatch()
     return gfx.newSpriteBatch(self.image)
 end
 
-function BitmapFont:setupQuads(image, fontWidth, fontHeight)
+function BitmapFont:setupQuads(image, fontWidth, fontHeight, line_height)
     self.image = image or self.image
     self.width = fontWidth or self.width
     self.height = fontHeight or self.height
+    self.line_height = line_height or self.line_height
 
     if not self.image then
         -- no image
@@ -50,32 +55,64 @@ function BitmapFont:setupQuads(image, fontWidth, fontHeight)
     end
 end
 
-function BitmapFont:getQuad(character_name)
-    local quad
+function BitmapFont:getGlyph(name)
+    local glyph = {}
 
-    local character = self.characters[character_name]
+    local character = self.characters[name]
 
     if not character then
         -- no character
     elseif not character.index then
-        -- no index
-    elseif not self.quads[character.index + 1] then
-        -- no quad
+        -- any characters
+        for _, c in ipairs(character) do
+            if not self.quads[c.index + 1] then
+                -- no quad
+            else
+                table.insert(
+                    glyph,
+                    {
+                        quad = self.quads[c.index + 1],
+                        character = c
+                    }
+                )
+            end
+        end
     else
-        quad = self.quads[character.index + 1]
+        glyph = {
+            {
+                quad = self.quads[character.index + 1],
+                character = character
+            }
+        }
     end
 
-    return quad
+    if #glyph == 0 then
+        glyph = {
+            {
+                quad = self.quads[#self.quads],
+            }
+        }
+    end
+
+    return glyph
 end
 
-function BitmapFont:getQuads(character_names)
-    local quads = {}
+function BitmapFont:getGlyphs(character_names)
+    local glyphs = {}
 
-    for _, character_name in ipairs(character_names) do
-        table.insert(quads, self:getQuad(character_name))
+    if type(character_names) == "string" then
+        local codes = {}
+        for p, c in utf8.codes(character_names) do
+            table.insert(codes, utf8.char(c))
+        end
+        character_names = codes
     end
 
-    return quads
+    for _, name in ipairs(character_names) do
+        table.insert(glyphs, self:getGlyph(name))
+    end
+
+    return glyphs
 end
 
 return BitmapFont
