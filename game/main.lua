@@ -83,10 +83,16 @@ function love.load(arg)
     context.actorManager = ActorManager(context.mapManager, context.spriteManager)
 
     context.windowManager = WindowManager(assets.images.font, 8, 8, w, h)
-    context.windowManager:setupAsciiCharacters()
+    context.windowManager:setupAsciiCharacters(" .!?:0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+    context.windowManager:mergeCharacters(assets.data.typography)
 
     context.windowManager:push()
-    context.windowManager:window():print("Hello,World!", 1, 1)
+    context.windowManager:window():print("Hello,World!...力、。", 1, 1)
+    context.windowManager:window():print("あかさたなはまやらわぁゃがざだばぱ", 1, 3)
+    context.windowManager:window():print("いきしちにひみ　り　ぃ　ぎじぢびぴ", 1, 5)
+    context.windowManager:window():print("うくすつぬふむゆるをぅゅぐずづぶぴ", 1, 7)
+    context.windowManager:window():print("えけせてねへめ　れっぇ　げぜでべぺ", 1, 9)
+    context.windowManager:window():print("おこそとのほもよろんぉょごぜどぼぽ", 1, 11)
 
     context.mapManager.onLoad = function (map)
         context.actorManager:clearActors()
