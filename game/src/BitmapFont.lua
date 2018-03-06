@@ -10,7 +10,7 @@ function BitmapFont:initialize(image, fontWidth, fontHeight, line_height)
     self.width = fontWidth or 8
     self.height = fontHeight or 8
 
-    self.line_height = line_height or self.height
+    self.line_height = line_height or 1
 
     self.quads = {}
     self.characters = {}
