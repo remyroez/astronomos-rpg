@@ -94,6 +94,12 @@ function love.load(arg)
     context.windowManager:window():print("えけせてねへめ　れっぇ　げぜでべぺ", 1, 9)
     context.windowManager:window():print("おこそとのほもよろんぉょごぜどぼぽ", 1, 11)
 
+    context.windowManager:window():print("アカサタナハマヤラワァャガザダバパ", 1, 13)
+    context.windowManager:window():print("イキシチニヒミ　リ　ィ　ギジヂビピ", 1, 15)
+    context.windowManager:window():print("ウクスツヌフムユルヲゥュグズヅブピ", 1, 17)
+    context.windowManager:window():print("エケセテネヘメ　レッェ　ゲゼデベペ", 1, 19)
+    context.windowManager:window():print("オコソトノホモヨロンォョゴゼドボポ", 1, 21)
+    
     context.mapManager.onLoad = function (map)
         context.actorManager:clearActors()
         context.spriteManager:clearSpriteInstances()
