@@ -6,8 +6,8 @@ local Window = require 'Window'
 
 local gfx = love.graphics
 
-function WindowManager:initialize(image, fontWidth, fontHeight, width, height)
-    self.font = BitmapFont(image, fontWidth, fontHeight)
+function WindowManager:initialize(image, fontWidth, fontHeight, lineHeight, width, height)
+    self.font = BitmapFont(image, fontWidth, fontHeight, lineHeight)
     self:resize(width, height)
 
     self.windows = {}
@@ -64,8 +64,8 @@ function WindowManager:setupAsciiCharacters(glyphs, lower_case)
     self:setupCharacters(characters)
 end
 
-function WindowManager:push(x, y, w, h)
-    local window = Window(self.font, x, y, w, h)
+function WindowManager:push(...)
+    local window = Window(self.font, ...)
     table.insert(self.windows, window)
     return window
 end

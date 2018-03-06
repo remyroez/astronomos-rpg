@@ -82,24 +82,30 @@ function love.load(arg)
 
     context.actorManager = ActorManager(context.mapManager, context.spriteManager)
 
-    context.windowManager = WindowManager(assets.images.font, 8, 8, w, h)
+    context.windowManager = WindowManager(assets.images.font, 8, 8, 2, w, h)
     context.windowManager:setupAsciiCharacters(" .!?:0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
     context.windowManager:mergeCharacters(assets.data.typography)
 
-    context.windowManager:push()
-    context.windowManager:window():print("Hello,World!...力、。", 1, 1)
-    context.windowManager:window():print("あかさたなはまやらわぁゃがざだばぱ", 1, 3)
-    context.windowManager:window():print("いきしちにひみ　り　ぃ　ぎじぢびぴ", 1, 5)
-    context.windowManager:window():print("うくすつぬふむゆるをぅゅぐずづぶぴ", 1, 7)
-    context.windowManager:window():print("えけせてねへめ　れっぇ　げぜでべぺ", 1, 9)
-    context.windowManager:window():print("おこそとのほもよろんぉょごぜどぼぽ", 1, 11)
+    context.windowManager:push(2, 2, 10, 15, true)
+    context.windowManager:window():print("いろはにほへとちりぬるを")
+    context.windowManager:window():print("わかよたれそつねならむ")
+    context.windowManager:window():print("うゐのおくやまけふこえて")
+    context.windowManager:window():print("あさきゆめみしゑひもせす")
+    --[[
+    context.windowManager:window():print("Hello,World!...力、。")
+    context.windowManager:window():print("あかさたなはまやらわぁゃがざだばぱ", 0, 3)
+    context.windowManager:window():print("いきしちにひみ　り　ぃ　ぎじぢびぴ", 0, 5)
+    context.windowManager:window():print("うくすつぬふむゆるをぅゅぐずづぶぴ", 0, 7)
+    context.windowManager:window():print("えけせてねへめ　れっぇ　げぜでべぺ", 0, 9)
+    context.windowManager:window():print("おこそとのほもよろんぉょごぜどぼぽ", 0, 11)
 
-    context.windowManager:window():print("アカサタナハマヤラワァャガザダバパ", 1, 13)
-    context.windowManager:window():print("イキシチニヒミ　リ　ィ　ギジヂビピ", 1, 15)
-    context.windowManager:window():print("ウクスツヌフムユルヲゥュグズヅブピ", 1, 17)
-    context.windowManager:window():print("エケセテネヘメ　レッェ　ゲゼデベペ", 1, 19)
-    context.windowManager:window():print("オコソトノホモヨロンォョゴゼドボポ", 1, 21)
-    
+    context.windowManager:window():print("アカサタナハマヤラワァャガザダバパ", 0, 13)
+    context.windowManager:window():print("イキシチニヒミ　リ　ィ　ギジヂビピ", 0, 15)
+    context.windowManager:window():print("ウクスツヌフムユルヲゥュグズヅブピ", 0, 17)
+    context.windowManager:window():print("エケセテネヘメ　レッェ　ゲゼデベペ", 0, 19)
+    context.windowManager:window():print("オコソトノホモヨロンォョゴゼドボポ", 0, 21)
+    --]]
+
     context.mapManager.onLoad = function (map)
         context.actorManager:clearActors()
         context.spriteManager:clearSpriteInstances()
@@ -266,3 +272,11 @@ love.keypressed
 love.keypressed
     :filter(function (key) return key == 'f6' end)
     :subscribe(function () screenshot() end)
+
+love.keypressed
+    :filter(function (key) return key == 'pageup' end)
+    :subscribe(function () context.windowManager:window():vscroll(-1) end)
+
+love.keypressed
+    :filter(function (key) return key == 'pagedown' end)
+    :subscribe(function () context.windowManager:window():vscroll(1) end)
