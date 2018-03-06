@@ -5,34 +5,94 @@ local gfx = love.graphics
 
 local tween = require 'tween'
 
-function Window:initialize(font, x, y, width, height, frame)
+Window.DEFAULT_FRAMES = {
+    background = "background",
+    top = "horizontal_frame",
+    bottom = "horizontal_frame",
+    left = "vertical_frame",
+    right = "vertical_frame",
+    left_top = "left_top_frame",
+    right_top = "right_top_frame",
+    left_bottom = "left_bottom_frame",
+    right_bottom = "right_bottom_frame",
+}
+
+Window.OVERFLOW = {
+    VISIBLE = 'visible',
+    HIDDEN = 'hidden',
+    LINEFEED = 'linefeed',
+    AUTO = 'auto',
+}
+Window.OVERFLOW.DEFAULT = Window.OVERFLOW.LINEFEED
+
+function Window:initialize(font, x, y, width, height, frame, background)
     assert(font)
 
     self.font = font
     self.x = (x or 0)
     self.y = (y or 0)
-    self.width = width or math.floor(love.graphics.getWidth() / self.font.width)
-    self.height = height or math.floor(love.graphics.getHeight() / self.font.height)
+    self.width = width or (math.floor(love.graphics.getWidth() / self.font.width) - self.x)
+    self.height = height or (math.floor(love.graphics.getHeight() / self.font.height) - self.y)
     self.frame = frame or false
+    self.background = background or self.frame or false
 
     self.texts = {}
+    self.frames = {}
     self.windows = {}
+    self.overflow = Window.OVERFLOW.DEFAULT
+    self.scrolls = { h = 0, v = 0 }
     self.dirty = true
     
     self.batch = self.font:newBatch()
+
+    if self.frame then
+        self:setupFrames()
+    end
+end
+
+function Window:left()
+    return self.x
+end
+
+function Window:top()
+    return self.y
+end
+
+function Window:right()
+    return self.x + self.width
+end
+
+function Window:bottom()
+    return self.y + self.height
 end
 
 function Window:print(text, x, y)
-    table.insert(self.texts, { text = text or "", x = x or 0, y = y or 0, index = 0 })
+    table.insert(self.texts, { text = text or "", x = x, y = y, index = 0 })
     self.dirty = true
+end
+
+function Window:hscroll(h)
+    self.scrolls.h = self.scrolls.h + h
+    self.dirty = true
+end
+
+function Window:vscroll(v)
+    self.scrolls.v = self.scrolls.v + v
+    self.dirty = true
+end
+
+function Window:scroll(h, v)
+    self.hscroll(h)
+    self:vscroll(v)
 end
 
 function Window:clear()
     self.texts = {}
+    self.dirty = true
 end
 
-function Window:push(x, y, w, h)
-    local window = Window(self.font, x, y, w, h)
+function Window:push(...)
+    local window = Window(self.font, ...)
     table.insert(self.windows, window)
     return window
 end
@@ -47,35 +107,147 @@ function Window:window()
     return self.windows[#self.windows]
 end
 
-function Window:flushText(text)
-    local glyphs = self.font:getGlyphs(text.text)
+function Window:setupFrames(frames)
+    frames = frames or Window.DEFAULT_FRAMES
+    self.frames = {}
+    for part, name in pairs(frames) do
+        self.frames[part] = self.font:getGlyph(name)
+    end
+    self.dirty = true
+end
 
-    local x, y = self.x + text.x, self.y + text.y
-    for i, glyph in ipairs(glyphs) do
-        if not glyph then
-            -- no glyph
-        else
-            for _, part in ipairs(glyph) do
-                local ofsx, ofsy = 0, 0
-                if part.character then
-                    ofsx = part.character.x or 0
-                    ofsy = part.character.y or 0
-                end
-                self.batch:add(
-                    part.quad,
-                    (x + ofsx) * self.font.width,
-                    (y + ofsy) * self.font.height
-                )
+function Window:putGlyph(glyph, x, y)
+    if not glyph then
+        -- no glyph
+    else
+        for _, part in ipairs(glyph) do
+            local ofsx, ofsy = 0, 0
+            if part.character then
+                ofsx = part.character.x or 0
+                ofsy = part.character.y or 0
+            end
+            self.batch:add(
+                part.quad,
+                (x + ofsx) * self.font.width,
+                (y + ofsy) * self.font.height
+            )
+        end
+    end
+end
+
+function Window:flushBackground()
+    if not self.frames.background then
+        -- no background
+    else
+        local glyph = self.frames.background
+        for i = self:top() + 1, self:bottom() - 2 do
+            for j = self:left() + 1, self:right() - 2 do
+                self:putGlyph(glyph, j, i)
             end
         end
+    end
+end
+
+function Window:flushText(text, cx, cy)
+    local glyphs = self.font:getGlyphs(text.text)
+
+    local ofsx, ofsy = (self:left() + self.scrolls.h), (self:top() + self.scrolls.v)
+
+    local left, top = self:left(), self:top()
+    local right, bottom = self:right(), self:bottom()
+
+    if self.frame then
+        left, top, right, bottom = left + 1, top + 1, right - 1, bottom - 1
+        ofsx, ofsy = ofsx + 1, ofsy + 1
+    end
+    
+    local x, y = (text.x or cx) + ofsx, (text.y or cy) + ofsy
+
+    local beginx, beginy = x, y
+
+    local visible = true
+    for i, glyph in ipairs(glyphs) do
+        -- x check
+        if x < left then
+            visible = false
+        elseif x <= right then
+            visible = true
+        elseif self.overflow == Window.OVERFLOW.VISIBLE then
+            visible = true
+        elseif self.overflow == Window.OVERFLOW.HIDDEN then
+            visible = false
+        elseif self.overflow == Window.OVERFLOW.LINEFEED then
+            x, y = beginx, y + self.font.line_height
+            visible = true
+        end
+
+        -- y check
+        if y < top then
+            visible = false
+        elseif y <= bottom then
+            -- ok
+        elseif self.overflow == Window.OVERFLOW.VISIBLE then
+            -- ok
+        elseif self.overflow == Window.OVERFLOW.HIDDEN then
+            visible = false
+        elseif self.overflow == Window.OVERFLOW.LINEFEED then
+            visible = false
+        end
+
+        -- put
+        if visible then
+            self:putGlyph(glyph, x, y)
+        end
         x = x + (glyph.advance or 1)
+    end
+    
+    x, y = beginx - ofsx, y + self.font.line_height - ofsy
+    
+    return x, y
+end
+
+function Window:flushFrame()
+    for part, glyph in pairs(self.frames) do
+        if part == 'left_top' then
+            self:putGlyph(glyph, self:left(), self:top())
+        elseif part == 'right_top' then
+            self:putGlyph(glyph, self:right() - 1, self:top())
+        elseif part == 'left_bottom' then
+            self:putGlyph(glyph, self:left(), self:bottom() - 1)
+        elseif part == 'right_bottom' then
+            self:putGlyph(glyph, self:right() - 1, self:bottom() - 1)
+        elseif part == 'left' then
+            for i = 1, self.height - 2 do
+                self:putGlyph(glyph, self:left(), self:top() + i)
+            end
+        elseif part == 'right' then
+            for i = 1, self.height - 2 do
+                self:putGlyph(glyph, self:right() - 1, self:top() + i)
+            end
+        elseif part == 'top' then
+            for i = 1, self.width - 2 do
+                self:putGlyph(glyph, self:left() + i, self:top())
+            end
+        elseif part == 'bottom' then
+            for i = 1, self.width - 2 do
+                self:putGlyph(glyph, self:left() + i, self:bottom() - 1)
+            end
+        else
+        end
     end
 end
 
 function Window:flush()
     self.batch:clear()
+    if self.background then
+        self:flushBackground()
+    end
+    local x, y = 0, self.font.line_height - 1
     for _, text in ipairs(self.texts) do
-        self:flushText(text)
+        x, y = self:flushText(text, x, y)
+    end
+    if self.frame then
+        self:flushFrame()
     end
 end
 
@@ -104,9 +276,7 @@ end
 
 function Window:draw()
     gfx.draw(
-        self.batch,
-        math.floor(self.x * self.font.width),
-        math.floor(self.y * self.font.height)
+        self.batch
     )
 
     for _, window in ipairs(self.windows) do
