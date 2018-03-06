@@ -2,6 +2,9 @@ local voiced_dot = { index = 158, y = -1 }
 local semi_voiced_dot = { index = 159, y = -1 }
 
 return {
+  ["background"] = {
+    index = 0,
+  },
   ["力"] = {
     index = 1,
   },
