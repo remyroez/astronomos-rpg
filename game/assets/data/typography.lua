@@ -311,4 +311,244 @@ return {
   ["ん"] = {
     index = 157,
   },
+  ["ヲ"] = {
+    index = 166,
+  },
+  ["ァ"] = {
+    index = 167,
+  },
+  ["ィ"] = {
+    index = 168,
+  },
+  ["ゥ"] = {
+    index = 169,
+  },
+  ["ェ"] = {
+    index = 170,
+  },
+  ["ォ"] = {
+    index = 171,
+  },
+  ["ャ"] = {
+    index = 172,
+  },
+  ["ュ"] = {
+    index = 173,
+  },
+  ["ョ"] = {
+    index = 174,
+  },
+  ["ッ"] = {
+    index = 175,
+  },
+  ["ア"] = {
+    index = 177,
+  },
+  ["イ"] = {
+    index = 178,
+  },
+  ["ウ"] = {
+    index = 179,
+  },
+  ["エ"] = {
+    index = 180,
+  },
+  ["オ"] = {
+    index = 181,
+  },
+  ["カ"] = {
+    index = 182,
+  },
+  ["キ"] = {
+    index = 183,
+  },
+  ["ク"] = {
+    index = 184,
+  },
+  ["ケ"] = {
+    index = 185,
+  },
+  ["コ"] = {
+    index = 186,
+  },
+  ["ガ"] = {
+    { index = 182, }, voiced_dot
+  },
+  ["ギ"] = {
+    { index = 183, }, voiced_dot
+  },
+  ["グ"] = {
+    { index = 184, }, voiced_dot
+  },
+  ["ゲ"] = {
+    { index = 185, }, voiced_dot
+  },
+  ["ゴ"] = {
+    { index = 186, }, voiced_dot
+  },
+  ["サ"] = {
+    index = 187,
+  },
+  ["シ"] = {
+    index = 188,
+  },
+  ["ス"] = {
+    index = 189,
+  },
+  ["セ"] = {
+    index = 190,
+  },
+  ["ソ"] = {
+    index = 191,
+  },
+  ["ザ"] = {
+    { index = 187, }, voiced_dot
+  },
+  ["ジ"] = {
+    { index = 188, }, voiced_dot
+  },
+  ["ズ"] = {
+    { index = 189, }, voiced_dot
+  },
+  ["ゼ"] = {
+    { index = 190, }, voiced_dot
+  },
+  ["ゾ"] = {
+    { index = 191, }, voiced_dot
+  },
+  ["タ"] = {
+    index = 192,
+  },
+  ["チ"] = {
+    index = 193,
+  },
+  ["ツ"] = {
+    index = 194,
+  },
+  ["テ"] = {
+    index = 195,
+  },
+  ["ト"] = {
+    index = 196,
+  },
+  ["ダ"] = {
+    { index = 192, }, voiced_dot
+  },
+  ["ヂ"] = {
+    { index = 193, }, voiced_dot
+  },
+  ["ヅ"] = {
+    { index = 194, }, voiced_dot
+  },
+  ["デ"] = {
+    { index = 195, }, voiced_dot
+  },
+  ["ド"] = {
+    { index = 196, }, voiced_dot
+  },
+  ["ナ"] = {
+    index = 197,
+  },
+  ["ニ"] = {
+    index = 198,
+  },
+  ["ヌ"] = {
+    index = 199,
+  },
+  ["ネ"] = {
+    index = 200,
+  },
+  ["ノ"] = {
+    index = 201,
+  },
+  ["ハ"] = {
+    index = 202,
+  },
+  ["ヒ"] = {
+    index = 203,
+  },
+  ["フ"] = {
+    index = 204,
+  },
+  ["ヘ"] = {
+    index = 205,
+  },
+  ["ホ"] = {
+    index = 206,
+  },
+  ["バ"] = {
+    { index = 202, }, voiced_dot
+  },
+  ["ビ"] = {
+    { index = 203, }, voiced_dot
+  },
+  ["ブ"] = {
+    { index = 204, }, voiced_dot
+  },
+  ["ベ"] = {
+    { index = 205, }, voiced_dot
+  },
+  ["ボ"] = {
+    { index = 206, }, voiced_dot
+  },
+  ["パ"] = {
+    { index = 202, }, semi_voiced_dot
+  },
+  ["ピ"] = {
+    { index = 203, }, semi_voiced_dot
+  },
+  ["プ"] = {
+    { index = 204, }, semi_voiced_dot
+  },
+  ["ペ"] = {
+    { index = 205, }, semi_voiced_dot
+  },
+  ["ポ"] = {
+    { index = 206, }, semi_voiced_dot
+  },
+  ["マ"] = {
+    index = 207,
+  },
+  ["ミ"] = {
+    index = 208,
+  },
+  ["ム"] = {
+    index = 209,
+  },
+  ["メ"] = {
+    index = 210,
+  },
+  ["モ"] = {
+    index = 211,
+  },
+  ["ヤ"] = {
+    index = 212,
+  },
+  ["ユ"] = {
+    index = 213,
+  },
+  ["ヨ"] = {
+    index = 214,
+  },
+  ["ラ"] = {
+    index = 215,
+  },
+  ["リ"] = {
+    index = 216,
+  },
+  ["ル"] = {
+    index = 217,
+  },
+  ["レ"] = {
+    index = 218,
+  },
+  ["ロ"] = {
+    index = 219,
+  },
+  ["ワ"] = {
+    index = 220,
+  },
+  ["ン"] = {
+    index = 221,
+  },
 }
