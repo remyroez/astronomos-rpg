@@ -15,6 +15,8 @@ Window.DEFAULT_FRAMES = {
     right_top = "right_top_frame",
     left_bottom = "left_bottom_frame",
     right_bottom = "right_bottom_frame",
+    button = "button",
+    cursor = "cursor",
 }
 
 Window.OVERFLOW = {
@@ -41,6 +43,7 @@ function Window:initialize(font, x, y, width, height, frame, background)
     self.windows = {}
     self.overflow = Window.OVERFLOW.DEFAULT
     self.scrolls = { h = 0, v = 0 }
+    self.button = { visible = false, tween = nil, value = 0 }
     self.dirty = true
     
     self.batch = self.font:newBatch()
@@ -67,8 +70,9 @@ function Window:bottom()
 end
 
 function Window:print(text, x, y)
-    table.insert(self.texts, { text = text or "", x = x, y = y, index = 0 })
+    table.insert(self.texts, { text = text or "", x = x, y = y, index = 0, id = #self.texts })
     self.dirty = true
+    return self
 end
 
 function Window:hscroll(h)
@@ -101,10 +105,28 @@ function Window:pop()
     if #self.windows > 0 then
         table.remove(self.windows)
     end
+    return self:window()
 end
 
 function Window:window()
     return self.windows[#self.windows]
+end
+
+function Window:resetButton(second, visible)
+    self.button.value = 0
+    self.button.seconds = second or self.button.seconds
+    if not self.button.seconds then
+        self.button.visible = false
+        self.button.tween = nil
+    else
+        self.button.visible = visible or not self.button.visible
+        self.button.tween = tween.new(
+            self.button.seconds or 1,
+            self.button,
+            { value = 1 }
+        )
+    end
+    self.dirty = true
 end
 
 function Window:setupFrames(frames)
@@ -156,6 +178,7 @@ function Window:flushText(text, cx, cy)
     local left, top = self:left(), self:top()
     local right, bottom = self:right(), self:bottom()
 
+    -- frame padding
     if self.frame then
         left, top, right, bottom = left + 1, top + 1, right - 1, bottom - 1
         ofsx, ofsy = ofsx + 1, ofsy + 1
@@ -198,6 +221,8 @@ function Window:flushText(text, cx, cy)
         if visible then
             self:putGlyph(glyph, x, y)
         end
+
+        -- advance
         x = x + (glyph.advance or 1)
     end
     
@@ -237,6 +262,19 @@ function Window:flushFrame()
     end
 end
 
+function Window:flushButton()
+    if not self.frames['button'] then
+        -- no quad
+    else
+        local x = self:left() + math.floor(self.width / 2)
+        local y = self:bottom() - 1
+        if self.frame then
+            y = y - 1
+        end
+        self:putGlyph(self.frames['button'], x, y)
+    end
+end
+
 function Window:flush()
     self.batch:clear()
     if self.background then
@@ -249,9 +287,20 @@ function Window:flush()
     if self.frame then
         self:flushFrame()
     end
+    if self.button.visible then
+        self:flushButton()
+    end
 end
 
 function Window:update(dt)
+    -- button
+    if self.button.tween then
+        if self.button.tween:update(dt) then
+            self:resetButton()
+        end
+    end
+
+    -- texts
     for _, text in ipairs(self.texts) do
         if not text.tween then
             -- no tween
@@ -264,20 +313,20 @@ function Window:update(dt)
         end
     end
 
+    -- flush
     if self.dirty then
         self:flush()
         self.dirty = false
     end
 
+    -- children
     for _, window in ipairs(self.windows) do
         window:update(dt)
     end
 end
 
 function Window:draw()
-    gfx.draw(
-        self.batch
-    )
+    gfx.draw(self.batch)
 
     for _, window in ipairs(self.windows) do
         window:draw()
