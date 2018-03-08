@@ -69,8 +69,24 @@ function Window:bottom()
     return self.y + self.height
 end
 
-function Window:print(text, x, y)
-    table.insert(self.texts, { text = text or "", x = x, y = y, index = 0, id = #self.texts })
+function Window:print(text, x, y, speed)
+    local message = {
+        text = text or "",
+        glyphs = self.font:getGlyphs(text),
+        x = x,
+        y = y,
+        speed = speed,
+        index = 0,
+        id = #self.texts
+    }
+    if speed then
+        message.tween = tween.new(
+            #message.glyphs * speed,
+            message,
+            { index = #message.glyphs }
+        )
+    end
+    table.insert(self.texts, message)
     self.dirty = true
     return self
 end
@@ -171,7 +187,11 @@ function Window:flushBackground()
 end
 
 function Window:flushText(text, cx, cy)
-    local glyphs = self.font:getGlyphs(text.text)
+    local glyphs = text.glyphs
+    if not glyphs then
+        text.glyphs = self.font:getGlyphs(text.text)
+        glyphs = text.glyphs
+    end
 
     local ofsx, ofsy = (self:left() + self.scrolls.h), (self:top() + self.scrolls.v)
 
@@ -188,42 +208,51 @@ function Window:flushText(text, cx, cy)
 
     local beginx, beginy = x, y
 
+    local index = #glyphs
+    if text.tween then
+        index = math.floor(text.index)
+    end
+
     local visible = true
     for i, glyph in ipairs(glyphs) do
-        -- x check
-        if x < left then
-            visible = false
-        elseif x <= right then
-            visible = true
-        elseif self.overflow == Window.OVERFLOW.VISIBLE then
-            visible = true
-        elseif self.overflow == Window.OVERFLOW.HIDDEN then
-            visible = false
-        elseif self.overflow == Window.OVERFLOW.LINEFEED then
-            x, y = beginx, y + self.font.line_height
-            visible = true
+        if i > index then
+            -- before index
+        else
+            -- x check
+            if x < left then
+                visible = false
+            elseif x <= right then
+                visible = true
+            elseif self.overflow == Window.OVERFLOW.VISIBLE then
+                visible = true
+            elseif self.overflow == Window.OVERFLOW.HIDDEN then
+                visible = false
+            elseif self.overflow == Window.OVERFLOW.LINEFEED then
+                x, y = beginx, y + self.font.line_height
+                visible = true
+            end
+    
+            -- y check
+            if y < top then
+                visible = false
+            elseif y <= bottom then
+                -- ok
+            elseif self.overflow == Window.OVERFLOW.VISIBLE then
+                -- ok
+            elseif self.overflow == Window.OVERFLOW.HIDDEN then
+                visible = false
+            elseif self.overflow == Window.OVERFLOW.LINEFEED then
+                visible = false
+            end
+    
+            -- put
+            if visible then
+                self:putGlyph(glyph, x, y)
+            end
+    
+            -- advance
+            x = x + (glyph.advance or 1)
         end
-
-        -- y check
-        if y < top then
-            visible = false
-        elseif y <= bottom then
-            -- ok
-        elseif self.overflow == Window.OVERFLOW.VISIBLE then
-            -- ok
-        elseif self.overflow == Window.OVERFLOW.HIDDEN then
-            visible = false
-        elseif self.overflow == Window.OVERFLOW.LINEFEED then
-            visible = false
-        end
-
-        -- put
-        if visible then
-            self:putGlyph(glyph, x, y)
-        end
-
-        -- advance
-        x = x + (glyph.advance or 1)
     end
     
     x, y = beginx - ofsx, y + self.font.line_height - ofsy
@@ -306,7 +335,9 @@ function Window:update(dt)
             -- no tween
         else
             local index = math.floor(text.index)
-            text.tween:update(dt)
+            if text.tween:update(dt) then
+                text.tween = nil
+            end
             if index ~= math.floor(text.index) then
                 self.dirty = true
             end
