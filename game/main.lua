@@ -88,8 +88,8 @@ function love.load(arg)
 
     context.windowManager:push(2, 18, 28, 10, true)
     context.windowManager:window()
-        :print("いろはにほへとちりぬるを　わかよたれそつねならむ　うゐのおくやまけふこえて　あさきゆめみしゑひもせす", 1, nil, 1 / 60 * 5)
-        :print("わかよたれそつねならむ")
+        :print("いろはにほへとちりぬるを　わかよたれそつねならむぺうゐのおくやまけふこえて　あさきゆめみしゑひもせす", 1, nil, 1 / 60 * 5)
+        :print("がざだばぱ　わかよたれそつねならむ")
         :print("うゐのおくやまけふこえて")
         :print("あさきゆめみしゑひもせす")
         :resetButton(1 / 60 * 10)
@@ -282,3 +282,11 @@ love.keypressed
 love.keypressed
     :filter(function (key) return key == 'pagedown' end)
     :subscribe(function () context.windowManager:window():vscroll(1) end)
+
+love.keypressed
+    :filter(function (key) return key == 'home' end)
+    :subscribe(function () context.windowManager:window():hscroll(-1) end)
+
+love.keypressed
+    :filter(function (key) return key == 'end' end)
+    :subscribe(function () context.windowManager:window():hscroll(1) end)
