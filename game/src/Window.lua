@@ -154,21 +154,36 @@ function Window:setupFrames(frames)
     self.dirty = true
 end
 
-function Window:putGlyph(glyph, x, y)
+function Window:putGlyph(glyph, x, y, left, top, right, bottom)
+    left = left or self:left()
+    top = top or self:top()
+    right = right or self:right()
+    bottom = bottom or self:bottom()
+
     if not glyph then
         -- no glyph
     else
         for _, part in ipairs(glyph) do
-            local ofsx, ofsy = 0, 0
+            local putx, puty = x, y
             if part.character then
-                ofsx = part.character.x or 0
-                ofsy = part.character.y or 0
+                putx = putx + (part.character.x or 0)
+                puty = puty + (part.character.y or 0)
             end
-            self.batch:add(
-                part.quad,
-                (x + ofsx) * self.font.width,
-                (y + ofsy) * self.font.height
-            )
+            if putx < left then
+                -- out of left
+            elseif putx >= right then
+                -- out of right
+            elseif puty < top then
+                -- out of top
+            elseif puty >= bottom then
+                -- out of bottom
+            else
+                self.batch:add(
+                    part.quad,
+                    putx * self.font.width,
+                    puty * self.font.height
+                )
+            end
         end
     end
 end
@@ -207,6 +222,7 @@ function Window:flushText(text, cx, cy)
     local x, y = (text.x or cx) + ofsx, (text.y or cy) + ofsy
 
     local beginx, beginy = x, y
+    local wordwrap = right + self.scrolls.h
 
     local index = #glyphs
     if text.tween then
@@ -221,7 +237,7 @@ function Window:flushText(text, cx, cy)
             -- x check
             if x < left then
                 visible = false
-            elseif x <= right then
+            elseif x < wordwrap then
                 visible = true
             elseif self.overflow == Window.OVERFLOW.VISIBLE then
                 visible = true
@@ -235,7 +251,7 @@ function Window:flushText(text, cx, cy)
             -- y check
             if y < top then
                 visible = false
-            elseif y <= bottom then
+            elseif y < bottom then
                 -- ok
             elseif self.overflow == Window.OVERFLOW.VISIBLE then
                 -- ok
@@ -247,7 +263,7 @@ function Window:flushText(text, cx, cy)
     
             -- put
             if visible then
-                self:putGlyph(glyph, x, y)
+                self:putGlyph(glyph, x, y, left, top, right, bottom)
             end
     
             -- advance
