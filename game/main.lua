@@ -88,7 +88,7 @@ function love.load(arg)
 
     context.windowManager:push(2, 18, 28, 10, true)
     context.windowManager:window()
-        :print("いろはにほへとちりぬるを")
+        :print("いろはにほへとちりぬるを　わかよたれそつねならむ　うゐのおくやまけふこえて　あさきゆめみしゑひもせす", 1, nil, 1 / 60 * 5)
         :print("わかよたれそつねならむ")
         :print("うゐのおくやまけふこえて")
         :print("あさきゆめみしゑひもせす")
