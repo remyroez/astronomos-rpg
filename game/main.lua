@@ -88,10 +88,10 @@ function love.load(arg)
 
     context.windowManager:push(2, 18, 28, 10, true)
     context.windowManager:window()
-        :print("いろはにほへとちりぬるを　わかよたれそつねならむぺうゐのおくやまけふこえて　あさきゆめみしゑひもせす", 1, nil, 1 / 60 * 5)
-        :print("がざだばぱ　わかよたれそつねならむ")
-        :print("うゐのおくやまけふこえて")
-        :print("あさきゆめみしゑひもせす")
+        --:print("いろはにほへとちりぬるを　わかよたれそつねならむぺうゐのおくやまけふこえて　あさきゆめみしゑひもせす", 1, nil, 1 / 60 * 5)
+        :print("がざだばぱ　わかよたれそつねならむ", 1):toChoice(true)
+        :print("うゐのおくやまけふこえて"):toChoice()
+        :print("あさきゆめみしゑひもせす"):toChoice()
         :resetButton(1 / 60 * 10)
     --[[
     context.windowManager:window():print("Hello,World!...力、。")
@@ -290,3 +290,11 @@ love.keypressed
 love.keypressed
     :filter(function (key) return key == 'end' end)
     :subscribe(function () context.windowManager:window():hscroll(1) end)
+
+love.keypressed
+    :filter(function (key) return key == 'w' end)
+    :subscribe(function () context.windowManager:window():moveSelect(-1) end)
+
+love.keypressed
+    :filter(function (key) return key == 's' end)
+    :subscribe(function () context.windowManager:window():moveSelect(1) end)
