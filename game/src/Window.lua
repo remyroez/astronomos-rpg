@@ -38,7 +38,7 @@ function Window:initialize(font, x, y, width, height, frame, background)
     self.frame = frame or false
     self.background = background or self.frame or false
 
-    self.texts = {}
+    self.messages = {}
     self.frames = {}
     self.windows = {}
     self.overflow = Window.OVERFLOW.DEFAULT
@@ -77,7 +77,7 @@ function Window:print(text, x, y, speed)
         y = y,
         speed = speed,
         index = 0,
-        id = #self.texts
+        id = #self.messages
     }
     if speed then
         message.tween = tween.new(
@@ -86,7 +86,7 @@ function Window:print(text, x, y, speed)
             { index = #message.glyphs }
         )
     end
-    table.insert(self.texts, message)
+    table.insert(self.messages, message)
     self.dirty = true
     return self
 end
@@ -107,7 +107,7 @@ function Window:scroll(h, v)
 end
 
 function Window:clear()
-    self.texts = {}
+    self.messages = {}
     self.dirty = true
 end
 
@@ -201,11 +201,11 @@ function Window:flushBackground()
     end
 end
 
-function Window:flushText(text, cx, cy)
-    local glyphs = text.glyphs
+function Window:flushMessage(message, cx, cy)
+    local glyphs = message.glyphs
     if not glyphs then
-        text.glyphs = self.font:getGlyphs(text.text)
-        glyphs = text.glyphs
+        message.glyphs = self.font:getGlyphs(message.text)
+        glyphs = message.glyphs
     end
 
     local ofsx, ofsy = (self:left() + self.scrolls.h), (self:top() + self.scrolls.v)
@@ -219,14 +219,14 @@ function Window:flushText(text, cx, cy)
         ofsx, ofsy = ofsx + 1, ofsy + 1
     end
     
-    local x, y = (text.x or cx) + ofsx, (text.y or cy) + ofsy
+    local x, y = (message.x or cx) + ofsx, (message.y or cy) + ofsy
 
     local beginx, beginy = x, y
     local wordwrap = right + self.scrolls.h
 
     local index = #glyphs
-    if text.tween then
-        index = math.floor(text.index)
+    if message.tween then
+        index = math.floor(message.index)
     end
 
     local visible = true
@@ -326,8 +326,8 @@ function Window:flush()
         self:flushBackground()
     end
     local x, y = 0, self.font.line_height - 1
-    for _, text in ipairs(self.texts) do
-        x, y = self:flushText(text, x, y)
+    for _, message in ipairs(self.messages) do
+        x, y = self:flushMessage(message, x, y)
     end
     if self.frame then
         self:flushFrame()
@@ -345,16 +345,16 @@ function Window:update(dt)
         end
     end
 
-    -- texts
-    for _, text in ipairs(self.texts) do
-        if not text.tween then
+    -- messages
+    for _, message in ipairs(self.messages) do
+        if not message.tween then
             -- no tween
         else
-            local index = math.floor(text.index)
-            if text.tween:update(dt) then
-                text.tween = nil
+            local index = math.floor(message.index)
+            if message.tween:update(dt) then
+                message.tween = nil
             end
-            if index ~= math.floor(text.index) then
+            if index ~= math.floor(message.index) then
                 self.dirty = true
             end
         end
