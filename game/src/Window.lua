@@ -39,6 +39,8 @@ function Window:initialize(font, x, y, width, height, frame, background)
     self.background = background or self.frame or false
 
     self.messages = {}
+    self.choices = {}
+    self.selected = nil
     self.frames = {}
     self.windows = {}
     self.overflow = Window.OVERFLOW.DEFAULT
@@ -69,6 +71,21 @@ function Window:bottom()
     return self.y + self.height
 end
 
+function Window:message(id)
+    if not id then
+        return self.messages[#self.messages]
+    else
+        local target
+        for _, message in ipairs(self.messages) do
+            if message.id == id then
+                target = message
+                break
+            end
+        end
+        return target
+    end
+end
+
 function Window:print(text, x, y, speed)
     local message = {
         text = text or "",
@@ -76,19 +93,55 @@ function Window:print(text, x, y, speed)
         x = x,
         y = y,
         speed = speed,
-        index = 0,
+        counter = 0,
         id = #self.messages
     }
     if speed then
         message.tween = tween.new(
             #message.glyphs * speed,
             message,
-            { index = #message.glyphs }
+            { counter = #message.glyphs }
         )
     end
     table.insert(self.messages, message)
     self.dirty = true
     return self
+end
+
+function Window:toChoice(selected)
+    local message = self:message()
+
+    if not message then
+        -- no message
+    else
+        table.insert(self.choices, message.id)
+        if selected then
+            self.selected = #self.choices
+        end
+        self.dirty = true
+    end
+
+    return self
+end
+
+function Window:isSelected(id)
+    return self.choices[self.selected] == id
+end
+
+function Window:moveSelect(offset)
+    self.selected = self.selected + offset
+    self:wrapSelect()
+    self.dirty = true
+end
+
+function Window:wrapSelect()
+    if self.selected < 1 then
+        self.selected = #self.choices
+        self.dirty = true
+    elseif self.selected > #self.choices then
+        self.selected = 1
+        self.dirty = true
+    end
 end
 
 function Window:hscroll(h)
@@ -108,6 +161,8 @@ end
 
 function Window:clear()
     self.messages = {}
+    self.choices = {}
+    self.selected = nil
     self.dirty = true
 end
 
@@ -188,6 +243,14 @@ function Window:putGlyph(glyph, x, y, left, top, right, bottom)
     end
 end
 
+function Window:flushCursor(...)
+    if not self.frames.cursor then
+        -- no cursor
+    else
+        self:putGlyph(self.frames.cursor, ...)
+    end
+end
+
 function Window:flushBackground()
     if not self.frames.background then
         -- no background
@@ -224,15 +287,20 @@ function Window:flushMessage(message, cx, cy)
     local beginx, beginy = x, y
     local wordwrap = right + self.scrolls.h
 
-    local index = #glyphs
+    local counter = #glyphs
     if message.tween then
-        index = math.floor(message.index)
+        counter = math.floor(message.counter)
+    end
+
+    -- choice
+    if self:isSelected(message.id) then
+        self:flushCursor(x - 1, y, left, top, right, bottom)
     end
 
     local visible = true
     for i, glyph in ipairs(glyphs) do
-        if i > index then
-            -- before index
+        if i > counter then
+            -- before counter
         else
             -- x check
             if x < left then
@@ -350,11 +418,11 @@ function Window:update(dt)
         if not message.tween then
             -- no tween
         else
-            local index = math.floor(message.index)
+            local counter = math.floor(message.counter)
             if message.tween:update(dt) then
                 message.tween = nil
             end
-            if index ~= math.floor(message.index) then
+            if counter ~= math.floor(message.counter) then
                 self.dirty = true
             end
         end
