@@ -135,10 +135,18 @@ function Window:toChoice(selected)
 end
 
 function Window:isSelected(id)
-    return self.choices.items[self.selected] == id
+    return self.selected and (self.choices.items[self.selected] == id) or false
 end
 
 function Window:selectChoice(x, y)
+    if not self.selected then
+        self.selected = self.selected or 1
+        self.dirty = true
+        return
+    end
+
+    local last_selected = self.selected
+
     x = x or 0
     y = y or 0
 
@@ -160,9 +168,17 @@ function Window:selectChoice(x, y)
         sy = 0
     end
 
-    local selected = self.selected
     self.selected = sx * row + sy + 1
-    if selected ~= self.selected then
+    if last_selected ~= self.selected then
+        self.dirty = true
+    end
+end
+
+function Window:setChoice(x, y)
+    local last_selected = self.selected
+    self.selected = 1
+    self:selectChoice(x, y)
+    if last_selected ~= self.selected then
         self.dirty = true
     end
 end
