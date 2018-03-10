@@ -14,6 +14,7 @@ local MapManager = require 'MapManager'
 local SpriteManager = require 'SpriteManager'
 local SpriteSheet = require 'SpriteSheet'
 local ActorManager = require 'ActorManager'
+local WindowManager = require 'WindowManager'
 
 local baton = require 'baton'
 local startx = 0
@@ -66,8 +67,6 @@ function love.load(arg)
 
     assets = cargo.init("assets")
 
-    love.graphics.clear()
-
     context.bgmPlayer = BgmPlayer(assets.bgm)
     context.bgmPlayer:setVolume(const.MAP.BGM_VOLUME.DEFAULT)
 
@@ -82,6 +81,41 @@ function love.load(arg)
     context.mapManager = MapManager("assets/maps", w, h)
 
     context.actorManager = ActorManager(context.mapManager, context.spriteManager)
+
+    context.windowManager = WindowManager(assets.images.font, 8, 8, 2, w, h)
+    context.windowManager:setupAsciiCharacters(" .!?:0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+    context.windowManager:mergeCharacters(assets.data.typography)
+
+    context.windowManager:push(2, 18, 28, 10, true)
+        :print("いろはにほへとちりぬるを　わかよたれそつねならむぺうゐのおくやまけふこえて　あさきゆめみしゑひもせす", 1, nil, 1 / 60 * 5)
+        :print("がざだばぱ　わかよたれそつねならむ", 1)
+        :print("うゐのおくやまけふこえて")
+        :print("あさきゆめみしゑひもせす")
+        :resetButton(1 / 60 * 10)
+        
+    context.windowManager:push(2, 2, 12, 8, true)
+        :title("COMMAND")
+        :setupChoices(3, 2)
+        :print("はなす", 1, 1):toChoice(true)
+        :print("くすり"):toChoice()
+        :print("ちから"):toChoice()
+        :print("ESP", 6, 1):toChoice()
+        :print("すてる"):toChoice()
+        :print("もちもの"):toChoice()
+    --[[
+    context.windowManager:window():print("Hello,World!...力、。")
+    context.windowManager:window():print("あかさたなはまやらわぁゃがざだばぱ", 0, 3)
+    context.windowManager:window():print("いきしちにひみ　り　ぃ　ぎじぢびぴ", 0, 5)
+    context.windowManager:window():print("うくすつぬふむゆるをぅゅぐずづぶぴ", 0, 7)
+    context.windowManager:window():print("えけせてねへめ　れっぇ　げぜでべぺ", 0, 9)
+    context.windowManager:window():print("おこそとのほもよろんぉょごぜどぼぽ", 0, 11)
+
+    context.windowManager:window():print("アカサタナハマヤラワァャガザダバパ", 0, 13)
+    context.windowManager:window():print("イキシチニヒミ　リ　ィ　ギジヂビピ", 0, 15)
+    context.windowManager:window():print("ウクスツヌフムユルヲゥュグズヅブピ", 0, 17)
+    context.windowManager:window():print("エケセテネヘメ　レッェ　ゲゼデベペ", 0, 19)
+    context.windowManager:window():print("オコソトノホモヨロンォョゴゼドボポ", 0, 21)
+    --]]
 
     context.mapManager.onLoad = function (map)
         context.actorManager:clearActors()
@@ -215,6 +249,7 @@ love.update
             context.mapManager:update(dt)
             context.spriteManager:setOffset(ox, oy)
             context.spriteManager:update(dt)
+            context.windowManager:update(dt)
         end
     )
 
@@ -224,6 +259,7 @@ love.draw
             maid64.start()
             context.mapManager:draw()
             context.spriteManager:draw()
+            context.windowManager:draw()
             maid64.finish()
         end
     )
@@ -247,3 +283,35 @@ love.keypressed
 love.keypressed
     :filter(function (key) return key == 'f6' end)
     :subscribe(function () screenshot() end)
+
+love.keypressed
+    :filter(function (key) return key == 'pageup' end)
+    :subscribe(function () context.windowManager:window():vscroll(-1) end)
+
+love.keypressed
+    :filter(function (key) return key == 'pagedown' end)
+    :subscribe(function () context.windowManager:window():vscroll(1) end)
+
+love.keypressed
+    :filter(function (key) return key == 'home' end)
+    :subscribe(function () context.windowManager:window():hscroll(-1) end)
+
+love.keypressed
+    :filter(function (key) return key == 'end' end)
+    :subscribe(function () context.windowManager:window():hscroll(1) end)
+
+love.keypressed
+    :filter(function (key) return key == 'w' end)
+    :subscribe(function () context.windowManager:window():nextChoice(-1) end)
+
+love.keypressed
+    :filter(function (key) return key == 's' end)
+    :subscribe(function () context.windowManager:window():nextChoice(1) end)
+
+    love.keypressed
+    :filter(function (key) return key == 'a' end)
+    :subscribe(function () context.windowManager:window():selectChoice(-1) end)
+
+love.keypressed
+    :filter(function (key) return key == 'd' end)
+    :subscribe(function () context.windowManager:window():selectChoice(1) end)
