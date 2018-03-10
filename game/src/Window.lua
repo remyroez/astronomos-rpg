@@ -38,6 +38,7 @@ function Window:initialize(font, x, y, width, height, frame, background)
     self.frame = frame or false
     self.background = background or self.frame or false
 
+    self.title_message = nil
     self.messages = {}
     self.choices = {
         items = {},
@@ -88,6 +89,17 @@ function Window:message(id)
         end
         return target
     end
+end
+
+function Window:title(text, x, y)
+    self.title_message = {
+        text = text or "",
+        glyphs = self.font:getGlyphs(text),
+        x = x,
+        y = y,
+    }
+    self.dirty = true
+    return self
 end
 
 function Window:print(text, x, y, speed)
@@ -203,6 +215,7 @@ function Window:scroll(h, v)
 end
 
 function Window:clear()
+    self.title_message = nil
     self.messages = {}
     self.choices.items = {}
     self.choices.row = nil
@@ -433,20 +446,42 @@ function Window:flushButton()
     end
 end
 
+function Window:flushTitle()
+    local message = self.title_message
+    local x = message.x or 0
+    local y = message.y or 0
+
+    x = self:left() + math.floor((self.width - #message.glyphs) / 2) + x
+    y = self:top() + y
+
+    for i, glyph in ipairs(message.glyphs) do
+        self:putGlyph(glyph, x, y)
+        x = x + (glyph.advance or 1)
+    end
+end
+
 function Window:flush()
     self.batch:clear()
+
     if self.background then
         self:flushBackground()
     end
+
     local x, y = 0, self.font.line_height - 1
     for _, message in ipairs(self.messages) do
         x, y = self:flushMessage(message, x, y)
     end
+
     if self.frame then
         self:flushFrame()
     end
+
     if self.button.visible then
         self:flushButton()
+    end
+
+    if self.title_message then
+        self:flushTitle()
     end
 end
 
