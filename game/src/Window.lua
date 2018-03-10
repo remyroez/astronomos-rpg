@@ -39,7 +39,11 @@ function Window:initialize(font, x, y, width, height, frame, background)
     self.background = background or self.frame or false
 
     self.messages = {}
-    self.choices = {}
+    self.choices = {
+        items = {},
+        row = nil,
+        column = nil
+    }
     self.selected = nil
     self.frames = {}
     self.windows = {}
@@ -108,15 +112,21 @@ function Window:print(text, x, y, speed)
     return self
 end
 
+function Window:setupChoices(row, column)
+    self.choices.row = row
+    self.choices.column = column
+    return self
+end
+
 function Window:toChoice(selected)
     local message = self:message()
 
     if not message then
         -- no message
     else
-        table.insert(self.choices, message.id)
+        table.insert(self.choices.items, message.id)
         if selected then
-            self.selected = #self.choices
+            self.selected = #self.choices.items
         end
         self.dirty = true
     end
@@ -125,23 +135,40 @@ function Window:toChoice(selected)
 end
 
 function Window:isSelected(id)
-    return self.choices[self.selected] == id
+    return self.choices.items[self.selected] == id
 end
 
-function Window:moveSelect(offset)
-    self.selected = self.selected + offset
-    self:wrapSelect()
-    self.dirty = true
-end
+function Window:selectChoice(x, y)
+    x = x or 0
+    y = y or 0
 
-function Window:wrapSelect()
-    if self.selected < 1 then
-        self.selected = #self.choices
-        self.dirty = true
-    elseif self.selected > #self.choices then
-        self.selected = 1
+    local row = self.choices.row or #self.choices.items
+    local column = self.choices.column or 1
+
+    local sx = math.floor((self.selected - 1) / row) + x
+    local sy = ((self.selected - 1) % row) + y
+
+    if sx < 0 then
+        sx = column - 1
+    elseif sx >= column then
+        sx = 0
+    end
+    
+    if sy < 0 then
+        sy = row - 1
+    elseif sy >= row then
+        sy = 0
+    end
+
+    local selected = self.selected
+    self.selected = sx * row + sy + 1
+    if selected ~= self.selected then
         self.dirty = true
     end
+end
+
+function Window:nextChoice(n)
+    self:selectChoice(0, n or 1)
 end
 
 function Window:hscroll(h)
@@ -161,7 +188,9 @@ end
 
 function Window:clear()
     self.messages = {}
-    self.choices = {}
+    self.choices.items = {}
+    self.choices.row = nil
+    self.choices.column = nil
     self.selected = nil
     self.dirty = true
 end
