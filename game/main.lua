@@ -94,6 +94,7 @@ function love.load(arg)
         :resetButton(1 / 60 * 10)
         
     context.windowManager:push(2, 2, 12, 8, true)
+        :title("COMMAND")
         :setupChoices(3, 2)
         :print("はなす", 1, 1):toChoice(true)
         :print("くすり"):toChoice()
