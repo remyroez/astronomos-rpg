@@ -87,12 +87,20 @@ function love.load(arg)
     context.windowManager:mergeCharacters(assets.data.typography)
 
     context.windowManager:push(2, 18, 28, 10, true)
-    context.windowManager:window()
-        --:print("いろはにほへとちりぬるを　わかよたれそつねならむぺうゐのおくやまけふこえて　あさきゆめみしゑひもせす", 1, nil, 1 / 60 * 5)
-        :print("がざだばぱ　わかよたれそつねならむ", 1):toChoice(true)
-        :print("うゐのおくやまけふこえて"):toChoice()
-        :print("あさきゆめみしゑひもせす"):toChoice()
+        :print("いろはにほへとちりぬるを　わかよたれそつねならむぺうゐのおくやまけふこえて　あさきゆめみしゑひもせす", 1, nil, 1 / 60 * 5)
+        :print("がざだばぱ　わかよたれそつねならむ", 1)
+        :print("うゐのおくやまけふこえて")
+        :print("あさきゆめみしゑひもせす")
         :resetButton(1 / 60 * 10)
+        
+    context.windowManager:push(2, 2, 12, 8, true)
+        :setupChoices(3, 2)
+        :print("はなす", 1, 1):toChoice(true)
+        :print("くすり"):toChoice()
+        :print("ちから"):toChoice()
+        :print("ESP", 6, 1):toChoice()
+        :print("すてる"):toChoice()
+        :print("もちもの"):toChoice()
     --[[
     context.windowManager:window():print("Hello,World!...力、。")
     context.windowManager:window():print("あかさたなはまやらわぁゃがざだばぱ", 0, 3)
@@ -293,8 +301,16 @@ love.keypressed
 
 love.keypressed
     :filter(function (key) return key == 'w' end)
-    :subscribe(function () context.windowManager:window():moveSelect(-1) end)
+    :subscribe(function () context.windowManager:window():nextChoice(-1) end)
 
 love.keypressed
     :filter(function (key) return key == 's' end)
-    :subscribe(function () context.windowManager:window():moveSelect(1) end)
+    :subscribe(function () context.windowManager:window():nextChoice(1) end)
+
+    love.keypressed
+    :filter(function (key) return key == 'a' end)
+    :subscribe(function () context.windowManager:window():selectChoice(-1) end)
+
+love.keypressed
+    :filter(function (key) return key == 'd' end)
+    :subscribe(function () context.windowManager:window():selectChoice(1) end)
