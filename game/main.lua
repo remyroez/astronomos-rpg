@@ -60,10 +60,10 @@ end
 
 function love.load(arg)
     love.graphics.setDefaultFilter("nearest", "nearest")
-    local w, h = love.graphics.getDimensions()
+    local w, h = const.SCREEN.WIDTH, const.SCREEN.HEIGHT--
 
     maid64.setup(w, h)
-    resize(w, h)
+    resize(love.graphics.getDimensions())
 
     assets = cargo.init("assets")
 

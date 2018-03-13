@@ -1,6 +1,11 @@
 
 local const = {}
 
+const.SCREEN = {
+    WIDTH = 256,
+    HEIGHT = 240,
+}
+
 const.DIRECTION = {
     DOWN = "down",
     LEFT = "left",
