@@ -1,15 +1,7 @@
 
 local const = require 'const'
 
-local cargo = require "cargo"
-
-local BgmPlayer = require 'BgmPlayer'
-local MapManager = require 'MapManager'
-local SpriteManager = require 'SpriteManager'
-local SpriteSheet = require 'SpriteSheet'
-local ActorManager = require 'ActorManager'
-local WindowManager = require 'WindowManager'
-
+local ScreenManager = require 'ScreenManager'
 local Screen = require 'Screen'
 
 local RootScreen = {}
@@ -19,6 +11,8 @@ function RootScreen.new()
 
     function self:init(context)
         self.context = context
+
+        ScreenManager.push(const.SCREEN.MAP, context)
     end
 
     function self:draw()

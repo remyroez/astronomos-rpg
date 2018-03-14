@@ -61,7 +61,8 @@ end
 
 function love.load(arg)
     love.graphics.setDefaultFilter("nearest", "nearest")
-    local w, h = const.SCREEN.WIDTH, const.SCREEN.HEIGHT--
+
+    local w, h = const.SCREEN.WIDTH, const.SCREEN.HEIGHT
 
     maid64.setup(w, h)
     resize(love.graphics.getDimensions())
@@ -130,7 +131,7 @@ function love.load(arg)
             end
         end
         local x, y = map:convertTileToPixel(startx, starty)
-        createPlayer(x, y, "minami")
+        context.playerActor = createPlayer(x, y, "minami")
         context.spriteManager:updateSpriteBatch()
     end
 
@@ -158,6 +159,7 @@ function love.load(arg)
     ScreenManager.init(
         {
             [const.SCREEN.ROOT] = require 'screen.RootScreen',
+            [const.SCREEN.MAP] = require 'screen.MapScreen',
         },
         const.SCREEN.ROOT,
         context
@@ -170,7 +172,7 @@ function love.load(arg)
 end
 
 function createPlayer(x, y, sprite)
-    context.minami = context.actorManager:newActor {
+    local actor = context.actorManager:newActor {
         type = const.OBJECT.TYPE.PLAYER,
         x = x or 0,
         y = y or 0,
@@ -178,7 +180,7 @@ function createPlayer(x, y, sprite)
             [const.OBJECT.PROPERTY.SPRITE] = sprite or "minami"
         }
     }
-    context.minami.onArrival
+    actor.onArrival
         :subscribe(
             function (x, y)
                 if context.mapManager:inMapFromPixel(x, y) then
@@ -210,57 +212,19 @@ function createPlayer(x, y, sprite)
                 end
             end
         )
+    return actor
 end
 
 love.update
     :subscribe(
         function (dt)
             context.input:update()
-            local w, h = context.mapManager:getTileDimensions()
 
-            if context.minami then
-                if context.minami:state() == "ready" then
-                    local x, y = context.input:get 'move'
-                    local direction = "down"
-                    if x > 0 then
-                        direction = "right"
-                    elseif x < 0 then
-                        direction = "left"
-                    elseif y > 0 then
-                        direction = "down"
-                    elseif y < 0 then
-                        direction = "up"
-                    else
-                        direction = nil
-                    end
-
-                    if direction then
-                        local speed = 1 / 60 * 20
-                        if context.input:down 'cancel' then
-                            speed = speed / 2
-                        end
-                        context.actorManager:walkActor(
-                            context.minami,
-                            direction,
-                            speed,
-                            context.mapManager:properties()["outer_map"],
-                            context.input:down 'esp'
-                        )
-                    end
-                end
-                context.actorManager:update(dt)
-                
-                ofsx, ofsy = context.minami:getPosition()
-            end
-
-            local ox = -(ofsx - context.mapManager.width / 2 + w / 2)
-            local oy = -(ofsy - context.mapManager.height / 2 + h / 2)
-            context.mapManager:setOffset(ox, oy)
-            context.mapManager:update(dt)
-            context.spriteManager:setOffset(ox, oy)
-            context.spriteManager:update(dt)
             context.windowManager:update(dt)
 
+            if ScreenManager.peek() and ScreenManager.peek().current then
+                ScreenManager.peek():current(dt)
+            end
             ScreenManager.update(dt)
         end
     )
@@ -269,8 +233,6 @@ love.draw
     :subscribe(
         function ()
             maid64.start()
-            context.mapManager:draw()
-            context.spriteManager:draw()
             context.windowManager:draw()
             ScreenManager.draw()
             maid64.finish()
