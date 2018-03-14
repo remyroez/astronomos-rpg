@@ -7,7 +7,6 @@ local rx = require 'rx'
 require 'rxlove'
 
 local cargo = require "cargo"
-local assets = {}
 
 local BgmPlayer = require 'BgmPlayer'
 local MapManager = require 'MapManager'
@@ -15,6 +14,8 @@ local SpriteManager = require 'SpriteManager'
 local SpriteSheet = require 'SpriteSheet'
 local ActorManager = require 'ActorManager'
 local WindowManager = require 'WindowManager'
+
+local ScreenManager = require 'ScreenManager'
 
 local baton = require 'baton'
 local startx = 0
@@ -65,27 +66,28 @@ function love.load(arg)
     maid64.setup(w, h)
     resize(love.graphics.getDimensions())
 
-    assets = cargo.init("assets")
+    context.assets = cargo.init("assets")
 
-    context.bgmPlayer = BgmPlayer(assets.bgm)
+    context.bgmPlayer = BgmPlayer(context.assets.bgm)
     context.bgmPlayer:setVolume(const.MAP.BGM_VOLUME.DEFAULT)
 
     context.spriteManager = SpriteManager(
-        assets.images.spritesheet, 
+        context.assets.images.spritesheet, 
         const.TILE.WIDTH, const.TILE.HEIGHT,
         w, h
     )
     context.spriteSheet = SpriteSheet(context.spriteManager)
-    context.spriteSheet:registerSprites(assets.data.spritesheet)
+    context.spriteSheet:registerSprites(context.assets.data.spritesheet)
 
     context.mapManager = MapManager("assets/maps", w, h)
 
     context.actorManager = ActorManager(context.mapManager, context.spriteManager)
 
-    context.windowManager = WindowManager(assets.images.font, 8, 8, 2, w, h)
+    context.windowManager = WindowManager(context.assets.images.font, 8, 8, 2, w, h)
     context.windowManager:setupAsciiCharacters(" .!?:0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
-    context.windowManager:mergeCharacters(assets.data.typography)
+    context.windowManager:mergeCharacters(context.assets.data.typography)
 
+    --[[
     context.windowManager:push(2, 18, 28, 10, true)
         :print("いろはにほへとちりぬるを　わかよたれそつねならむぺうゐのおくやまけふこえて　あさきゆめみしゑひもせす", 1, nil, 1 / 60 * 5)
         :print("がざだばぱ　わかよたれそつねならむ", 1)
@@ -102,7 +104,6 @@ function love.load(arg)
         :print("ESP", 6, 1):toChoice()
         :print("すてる"):toChoice()
         :print("もちもの"):toChoice()
-    --[[
     context.windowManager:window():print("Hello,World!...力、。")
     context.windowManager:window():print("あかさたなはまやらわぁゃがざだばぱ", 0, 3)
     context.windowManager:window():print("いきしちにひみ　り　ぃ　ぎじぢびぴ", 0, 5)
@@ -153,6 +154,15 @@ function love.load(arg)
         },
         joystick = love.joystick.getJoysticks()[1],
     }
+
+    ScreenManager.init(
+        {
+            [const.SCREEN.ROOT] = require 'screen.RootScreen',
+        },
+        const.SCREEN.ROOT,
+        context
+    )
+
     --load_map("administrative_area", 0, 24)
     load_map("field", 11, 20)
     --load_map("arkcity", 24, 20)
@@ -250,6 +260,8 @@ love.update
             context.spriteManager:setOffset(ox, oy)
             context.spriteManager:update(dt)
             context.windowManager:update(dt)
+
+            ScreenManager.update(dt)
         end
     )
 
@@ -260,6 +272,7 @@ love.draw
             context.mapManager:draw()
             context.spriteManager:draw()
             context.windowManager:draw()
+            ScreenManager.draw()
             maid64.finish()
         end
     )

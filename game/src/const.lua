@@ -4,6 +4,17 @@ local const = {}
 const.SCREEN = {
     WIDTH = 256,
     HEIGHT = 240,
+    ROOT = 'root',
+    MAP = 'map',
+    TALK = 'talk',
+    MAP_COMMAND = 'map_command',
+    MEDICINE = 'medicine',
+    STATUS = 'status',
+    ESP = 'esp',
+    DISPOSE = 'dispose',
+    BELONGINGS = 'belongings',
+    ITEMS = 'items',
+    MATERIALS = 'materials',
 }
 
 const.DIRECTION = {
