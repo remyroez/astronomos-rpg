@@ -138,20 +138,20 @@ function love.load(arg)
     context.input = baton.new {
         controls = {
             -- move
-             left = {'key:left',  --[['axis:leftx-',]] 'button:dpleft'},
-            right = {'key:right', --[['axis:leftx+',]] 'button:dpright'},
-               up = {'key:up',    --[['axis:lefty-',]] 'button:dpup'},
-             down = {'key:down',  --[['axis:lefty+',]] 'button:dpdown'},
+            [const.INPUT.LEFT]  = {'key:left',  --[['axis:leftx-',]] 'button:dpleft'},
+            [const.INPUT.RIGHT] = {'key:right', --[['axis:leftx+',]] 'button:dpright'},
+            [const.INPUT.UP]    = {'key:up',    --[['axis:lefty-',]] 'button:dpup'},
+            [const.INPUT.DOWN]  = {'key:down',  --[['axis:lefty+',]] 'button:dpdown'},
             -- command
-            decide = {'key:z', 'button:a'},
-            cancel = {'key:x', 'button:b'},
-               esp = {'key:c', 'button:x'},
-              menu = {'key:space', 'button:start'},
+            [const.INPUT.DECIDE] = {'key:z', 'button:a'},
+            [const.INPUT.CANCEL] = {'key:x', 'button:b'},
+            [const.INPUT.ESP]    = {'key:c', 'button:x'},
+            [const.INPUT.MENU]   = {'key:space', 'button:start'},
             -- system
-            alt = {'key:ralt', 'key:lalt'},
+            [const.INPUT.ALT] = {'key:ralt', 'key:lalt'},
         },
         pairs = {
-            move = {'left', 'right', 'up', 'down'}
+            [const.INPUT.MOVE] = {'left', 'right', 'up', 'down'}
         },
         joystick = love.joystick.getJoysticks()[1],
     }
