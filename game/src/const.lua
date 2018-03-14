@@ -17,6 +17,22 @@ const.SCREEN = {
     MATERIALS = 'materials',
 }
 
+const.INPUT = {
+    DOWN = "down",
+    LEFT = "left",
+    UP = "up",
+    RIGHT = "right",
+    
+    DECIDE = "decide",
+    CANCEL = "cancel",
+    ESP = "esp",
+    MENU = "menu",
+    
+    ALT = "alt",
+    
+    MOVE = "move",
+}
+
 const.DIRECTION = {
     DOWN = "down",
     LEFT = "left",
