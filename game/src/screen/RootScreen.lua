@@ -19,6 +19,7 @@ function RootScreen.new()
     end
 
     function self:update(dt)
+        self.context.input:update()
     end
 
     return self

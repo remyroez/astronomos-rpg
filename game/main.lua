@@ -218,10 +218,6 @@ end
 love.update
     :subscribe(
         function (dt)
-            context.input:update()
-
-            context.windowManager:update(dt)
-
             if ScreenManager.peek() and ScreenManager.peek().current then
                 ScreenManager.peek():current(dt)
             end
@@ -233,7 +229,6 @@ love.draw
     :subscribe(
         function ()
             maid64.start()
-            context.windowManager:draw()
             ScreenManager.draw()
             maid64.finish()
         end
