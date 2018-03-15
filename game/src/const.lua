@@ -6,6 +6,7 @@ const.SCREEN = {
     HEIGHT = 240,
     ROOT = 'root',
     MAP = 'map',
+    WINDOW = 'window',
     TALK = 'talk',
     MAP_COMMAND = 'map_command',
     MEDICINE = 'medicine',

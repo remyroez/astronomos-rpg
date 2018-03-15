@@ -160,6 +160,8 @@ function love.load(arg)
         {
             [const.SCREEN.ROOT] = require 'screen.RootScreen',
             [const.SCREEN.MAP] = require 'screen.MapScreen',
+            [const.SCREEN.WINDOW] = require 'screen.WindowScreen',
+            [const.SCREEN.TALK] = require 'screen.TalkWindowScreen',
         },
         const.SCREEN.ROOT,
         context

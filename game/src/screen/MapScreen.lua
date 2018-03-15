@@ -51,6 +51,9 @@ function MapScreen.new()
                         context.mapManager:properties()[const.MAP.PROPERTY.OUTER_MAP],
                         context.input:down(const.INPUT.ESP)
                     )
+                elseif self.context.input:pressed(const.INPUT.DECIDE) then
+                    ScreenManager.push(const.SCREEN.WINDOW, self.context)
+                    ScreenManager.push(const.SCREEN.TALK, self.context, "TEST MESSAGE")
                 end
             end
         end
