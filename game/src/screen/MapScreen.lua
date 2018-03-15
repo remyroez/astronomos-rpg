@@ -1,5 +1,6 @@
 
 local const = require 'const'
+local util = require 'util'
 
 local Actor = require 'Actor'
 local ScreenManager = require 'ScreenManager'
@@ -25,19 +26,7 @@ function MapScreen.new()
 
         if context.playerActor then
             if context.playerActor:state() == Actor.STATE.READY then
-                local x, y = context.input:get(const.INPUT.MOVE)
-                local direction = const.DIRECTION.DOWN
-                if x > 0 then
-                    direction = const.DIRECTION.RIGHT
-                elseif x < 0 then
-                    direction = const.DIRECTION.LEFT
-                elseif y > 0 then
-                    direction = const.DIRECTION.DOWN
-                elseif y < 0 then
-                    direction = const.DIRECTION.UP
-                else
-                    direction = nil
-                end
+                local direction = util.toDirection(context.input:get(const.INPUT.MOVE))
 
                 if direction then
                     local speed = 1 / 60 * 20
@@ -54,6 +43,9 @@ function MapScreen.new()
                 elseif self.context.input:pressed(const.INPUT.DECIDE) then
                     ScreenManager.push(const.SCREEN.WINDOW, self.context)
                     ScreenManager.push(const.SCREEN.TALK, self.context, "TEST MESSAGE")
+                elseif self.context.input:pressed(const.INPUT.MENU) then
+                    ScreenManager.push(const.SCREEN.WINDOW, self.context)
+                    ScreenManager.push(const.SCREEN.MAP_COMMAND, self.context)
                 end
             end
         end

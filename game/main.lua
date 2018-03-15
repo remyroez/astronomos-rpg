@@ -1,7 +1,7 @@
 
 local const = require 'const'
 
-require 'util'
+local util = require 'util'
 
 local rx = require 'rx'
 require 'rxlove'
@@ -162,6 +162,7 @@ function love.load(arg)
             [const.SCREEN.MAP] = require 'screen.MapScreen',
             [const.SCREEN.WINDOW] = require 'screen.WindowScreen',
             [const.SCREEN.TALK] = require 'screen.TalkWindowScreen',
+            [const.SCREEN.MAP_COMMAND] = require 'screen.MapCommandWindowScreen',
         },
         const.SCREEN.ROOT,
         context
@@ -256,6 +257,8 @@ love.keypressed
     :filter(function (key) return key == 'f6' end)
     :subscribe(function () screenshot() end)
 
+--[[
+
 love.keypressed
     :filter(function (key) return key == 'pageup' end)
     :subscribe(function () context.windowManager:window():vscroll(-1) end)
@@ -272,18 +275,4 @@ love.keypressed
     :filter(function (key) return key == 'end' end)
     :subscribe(function () context.windowManager:window():hscroll(1) end)
 
-love.keypressed
-    :filter(function (key) return key == 'w' end)
-    :subscribe(function () context.windowManager:window():nextChoice(-1) end)
-
-love.keypressed
-    :filter(function (key) return key == 's' end)
-    :subscribe(function () context.windowManager:window():nextChoice(1) end)
-
-    love.keypressed
-    :filter(function (key) return key == 'a' end)
-    :subscribe(function () context.windowManager:window():selectChoice(-1) end)
-
-love.keypressed
-    :filter(function (key) return key == 'd' end)
-    :subscribe(function () context.windowManager:window():selectChoice(1) end)
+--]]
