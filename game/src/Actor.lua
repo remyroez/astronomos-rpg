@@ -222,4 +222,8 @@ function Actor:setAnimation(name)
     end
 end
 
+function Actor:getAnimation()
+    return self.sprite and self.sprite:getCurrentAnimationName() or nil
+end
+
 return Actor
