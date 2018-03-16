@@ -2,6 +2,8 @@
 local const = require 'const'
 local util = require 'util'
 
+local i18n = require "i18n"
+
 local Actor = require 'Actor'
 local ScreenManager = require 'ScreenManager'
 
@@ -42,7 +44,7 @@ function MapScreen.new()
                     )
                 elseif self.context.input:pressed(const.INPUT.DECIDE) then
                     ScreenManager.push(const.SCREEN.WINDOW, self.context)
-                    ScreenManager.push(const.SCREEN.TALK, self.context, "TEST MESSAGE")
+                    ScreenManager.push(const.SCREEN.TALK, self.context, i18n('mamusu/oldman-1'))
                 elseif self.context.input:pressed(const.INPUT.MENU) then
                     ScreenManager.push(const.SCREEN.WINDOW, self.context)
                     ScreenManager.push(const.SCREEN.MAP_COMMAND, self.context)

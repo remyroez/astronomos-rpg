@@ -7,6 +7,7 @@ local rx = require 'rx'
 require 'rxlove'
 
 local cargo = require "cargo"
+local i18n = require "i18n"
 
 local BgmPlayer = require 'BgmPlayer'
 local MapManager = require 'MapManager'
@@ -60,6 +61,9 @@ function load_map(path, x, y)
 end
 
 function love.load(arg)
+    i18n.setLocale('ja')
+    i18n.loadFile('assets/i18n/ja.lua')
+
     love.graphics.setDefaultFilter("nearest", "nearest")
 
     local w, h = const.SCREEN.WIDTH, const.SCREEN.HEIGHT
