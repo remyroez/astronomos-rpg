@@ -4,6 +4,7 @@ local ActorManager = class("ActorManager")
 local rx = require 'rx'
 
 local const = require 'const'
+local util = require 'util'
 
 local Actor = require "Actor"
 local SpriteSheet = require "SpriteSheet"
@@ -147,22 +148,40 @@ function ActorManager:subscribeWalk(actor, walk_type, walk_duration)
     end
 end
 
+function ActorManager:getForwardPosition(x, y, direction, count)
+    count = count or 1
+
+    local tilewidth, tileheight = self.mapManager:getTileDimensions()
+
+    if not direction then
+        -- no direction
+    elseif direction == const.DIRECTION.DOWN then
+        y = y + tileheight * count
+    elseif direction == const.DIRECTION.LEFT then
+        x = x - tilewidth * count
+    elseif direction == const.DIRECTION.UP then
+        y = y - tileheight * count
+    elseif direction == const.DIRECTION.RIGHT then
+        x = x + tilewidth * count
+    else
+        -- invalid direction
+    end
+
+    return x, y
+end
+
+function ActorManager:getForwardPositionFromActor(actor)
+    local x, y = actor:getPosition()
+    return self:getForwardPosition(x, y, self:getActorDirection(actor))
+end
+
 function ActorManager:walkActor(actor, direction, speed, can_move_out, through)
     if direction == const.DIRECTION.STAY then
         return
     end
     can_move_out = can_move_out or false
     local x, y = actor:getPosition()
-    local tilewidth, tileheight = self.mapManager:getTileDimensions()
-    if direction == const.DIRECTION.RIGHT then
-        x = x + tilewidth
-    elseif direction == const.DIRECTION.LEFT then
-        x = x - tilewidth
-    elseif direction == const.DIRECTION.DOWN then
-        y = y + tileheight
-    elseif direction == const.DIRECTION.UP then
-        y = y - tileheight
-    end
+    x, y = self:getForwardPosition(x, y, direction)
     self:setActorDirection(actor, direction)
     if not can_move_out and not self.mapManager:inMapFromPixel(x, y) then
         -- can not move out
@@ -187,6 +206,38 @@ function ActorManager:setActorDirection(actor, direction)
             -- invalid direction
         end
     end
+end
+
+function ActorManager:getActorDirection(actor)
+    local direction = nil
+    if not actor then 
+        -- no actor
+    elseif actor.type == const.OBJECT.TYPE.NPC or actor.type == const.OBJECT.TYPE.PLAYER then
+        local anim = actor:getAnimation()
+        if not anim then
+            -- no anim
+        elseif anim == SpriteSheet.ANIMATION.DOWN then
+            direction = const.DIRECTION.DOWN
+        elseif anim == SpriteSheet.ANIMATION.LEFT then
+            direction = const.DIRECTION.LEFT
+        elseif anim == SpriteSheet.ANIMATION.UP then
+            direction = const.DIRECTION.UP
+        elseif anim == SpriteSheet.ANIMATION.RIGHT then
+            direction = const.DIRECTION.RIGHT
+        else
+            -- invalid anim
+        end
+    end
+    return direction
+end
+
+function ActorManager:setActorDirectionToPosition(actor, x, y)
+    local ax, ay = actor:getPosition()
+    return self:setActorDirection(actor, util.toDirection(x - ax, y - ay))
+end
+
+function ActorManager:setActorDirectionToActor(actor, actor2)
+    return self:setActorDirectionToPosition(actor, actor2:getPosition())
 end
 
 function ActorManager:canPassThrough(x, y)
