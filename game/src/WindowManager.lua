@@ -69,7 +69,7 @@ function WindowManager:setAsciiTypographies(glyphs, lower_case)
         end
     end
 
-    typographies['\n'] = { control = 'linefeed' }
+    typographies['\n'] = { control = 'linefeed', advance = 0 }
 
     self:setTypographies(typographies)
 end

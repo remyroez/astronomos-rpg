@@ -388,8 +388,14 @@ function Window:flushMessage(message, cx, cy)
             end
     
             -- put
-            if visible then
+            if visible and glyph:drawable() then
                 self:putGlyph(glyph, x, y, left, top, right, bottom)
+            elseif glyph:controlable() then
+                for _, control in ipairs(glyph:controls()) do
+                    if control == 'linefeed' then
+                        x, y = beginx, y + self.font.line_height
+                    end
+                end
             end
     
             -- advance

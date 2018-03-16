@@ -19,7 +19,7 @@ function BitmapGlyph:registerCharacter(typography, quad)
     )
 
     -- update advance
-    if typography and typography.advance and typography.advance > self.advance then
+    if typography and typography.advance then
         self.advance = typography.advance
     end
 end
@@ -28,14 +28,16 @@ function BitmapGlyph:attributes(name)
     local attributes = {}
 
     for _, character in ipairs(self.characters) do
-        table.insert(attributes, character[name])
+        if character[name] then
+            table.insert(attributes, character[name])
+        end
     end
 
     return attributes
 end
 
 function BitmapGlyph:quads()
-    return self:attributes('quads')
+    return self:attributes('quad')
 end
 
 function BitmapGlyph:typographies()
@@ -53,6 +55,14 @@ function BitmapGlyph:controls()
     end
 
     return controls
+end
+
+function BitmapGlyph:drawable()
+    return #self:quads() > 0
+end
+
+function BitmapGlyph:controlable()
+    return #self:controls() > 0
 end
 
 return BitmapGlyph
