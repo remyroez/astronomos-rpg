@@ -276,7 +276,7 @@ function Window:putGlyph(glyph, x, y, left, top, right, bottom)
     if not glyph then
         -- no glyph
     else
-        for _, part in ipairs(glyph) do
+        for _, part in ipairs(glyph.characters) do
             local putx, puty = x, y
             if part.character then
                 putx = putx + (part.character.x or 0)

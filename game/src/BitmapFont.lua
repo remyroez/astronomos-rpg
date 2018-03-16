@@ -5,6 +5,8 @@ local gfx = love.graphics
 
 local utf8 = require 'utf8'
 
+local BitmapGlyph = require 'BitmapGlyph'
+
 function BitmapFont:initialize(image, fontWidth, fontHeight, line_height)
     self.image = image
     self.width = fontWidth or 8
@@ -14,9 +16,12 @@ function BitmapFont:initialize(image, fontWidth, fontHeight, line_height)
 
     self.quads = {}
     self.characters = {}
+    self.glyphs = {}
+    self.error_glyph = BitmapGlyph()
     
     if self.image then
         self:setupQuads()
+        self.error_glyph:registerCharacter(nil, self.quads[#self.quads])
     end
 end
 
@@ -55,64 +60,83 @@ function BitmapFont:setupQuads(image, fontWidth, fontHeight, line_height)
     end
 end
 
-function BitmapFont:getGlyph(name)
-    local glyph = {}
+function BitmapFont:setupGlyphs()
+    self.glyphs = {}
 
-    local character = self.characters[name]
-
-    if not character then
-        -- no character
-    elseif not character.index then
-        -- any characters
-        for _, c in ipairs(character) do
-            if not self.quads[c.index + 1] then
-                -- no quad
+    for key, typography in pairs(self.characters) do
+        local glyph = BitmapGlyph(key)
+            
+        if not typography then
+            -- no typography
+            glyph:registerCharacter(nil, self.quads[#self.quads])
+        elseif not typography.index then
+            -- any parts
+            if #typography > 0 then
+                for _, part in ipairs(typography) do
+                    if not self.quads[part.index + 1] then
+                        -- no quad
+                        glyph:registerCharacter(part, self.quads[#self.quads])
+                    else
+                        glyph:registerCharacter(part, self.quads[part.index + 1])
+                    end
+                end
             else
-                table.insert(
-                    glyph,
-                    {
-                        quad = self.quads[c.index + 1],
-                        character = c
-                    }
-                )
+                -- other
+                glyph:registerCharacter(typography)
             end
+        else
+            -- single part
+            glyph:registerCharacter(typography, self.quads[typography.index + 1])
         end
-    else
-        glyph = {
-            {
-                quad = self.quads[character.index + 1],
-                character = character
-            }
-        }
-    end
 
-    if #glyph == 0 then
-        glyph = {
-            {
-                quad = self.quads[#self.quads],
-            }
-        }
+        self.glyphs[key] = glyph
     end
-
-    return glyph
 end
 
-function BitmapFont:getGlyphs(character_names)
+function BitmapFont:getGlyph(name)
+    return self.glyphs[name] or self.error_glyph
+end
+
+function BitmapFont:getGlyphs(codes)
     local glyphs = {}
 
-    if type(character_names) == "string" then
-        local codes = {}
-        for p, c in utf8.codes(character_names) do
-            table.insert(codes, utf8.char(c))
-        end
-        character_names = codes
+    if type(codes) == "string" then
+        codes = self:toCodes(codes)
     end
 
-    for _, name in ipairs(character_names) do
+    for _, name in ipairs(codes) do
         table.insert(glyphs, self:getGlyph(name))
     end
 
     return glyphs
+end
+
+function BitmapFont:toCodes(text)
+    local codes = {}
+    local mode = nil
+    local word = ""
+    for p, c in utf8.codes(text) do
+        local char = utf8.char(c)
+        if mode == 'escape' then
+            table.insert(codes, char)
+            mode = nil
+        elseif mode == 'word' then
+            if char == '>' then
+                table.insert(codes, word)
+                word = ""
+                mode = nil
+            else
+                word = word .. char
+            end
+        elseif char == '\\' then
+            mode = 'escape'
+        elseif char == '<' then
+            mode = 'word'
+        else
+            table.insert(codes, char)
+        end
+    end
+    return codes
 end
 
 return BitmapFont

@@ -12,7 +12,7 @@ function WindowManager:initialize(image, fontWidth, fontHeight, lineHeight, widt
 
     self.windows = {}
 
-    self:setupFont()
+    self:setupFontQuads()
 end
 
 function WindowManager:resize(width, height)
@@ -22,8 +22,16 @@ function WindowManager:resize(width, height)
     self.canvas:setFilter("nearest", "nearest")
 end
 
-function WindowManager:setupFont(image, fontWidth, fontHeight)
+function WindowManager:setupFontQuads(image, fontWidth, fontHeight)
     self.font:setupQuads(image, fontWidth, fontHeight)
+end
+
+function WindowManager:setupFontGlyphs()
+    self.font:setupGlyphs()
+end
+
+function WindowManager:setupFont()
+    self:setupFontGlyphs()
 end
 
 function WindowManager:characters()
@@ -60,6 +68,8 @@ function WindowManager:setupAsciiCharacters(glyphs, lower_case)
             characters[c] = { { index = string.byte(lower_case and c or string.upper(c)) } }
         end
     end
+
+    characters['\n'] = { control = 'linefeed' }
 
     self:setupCharacters(characters)
 end
