@@ -1,14 +1,14 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "1.1.2",
+  tiledversion = "1.1.3",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 32,
   height = 30,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 3,
+  nextobjectid = 4,
   properties = {
     ["background_tile"] = 2,
     ["bgm"] = "town",
@@ -180,6 +180,24 @@ return {
             ["transfer_map"] = "space_tower",
             ["transfer_x"] = 44,
             ["transfer_y"] = 4
+          }
+        },
+        {
+          id = 3,
+          name = "oldman-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 224,
+          y = 32,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "mamusu/oldman-1",
+            ["sprite"] = "oldman"
           }
         }
       }
