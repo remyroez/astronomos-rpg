@@ -43,8 +43,23 @@ function MapScreen.new()
                         context.input:down(const.INPUT.ESP)
                     )
                 elseif self.context.input:pressed(const.INPUT.DECIDE) then
-                    ScreenManager.push(const.SCREEN.WINDOW, self.context)
-                    ScreenManager.push(const.SCREEN.TALK, self.context, i18n('mamusu/oldman-1'))
+                    local x, y = context.actorManager:getForwardPositionFromActor(context.playerActor)
+                    local npc = context.actorManager:getActorFromPixel(x, y, const.OBJECT.TYPE.NPC)
+                    if not npc then
+                        -- no npc
+                    elseif npc:state() ~= Actor.STATE.READY then
+                        -- no ready
+                    elseif not npc.properties['message'] then
+                        -- no message
+                    elseif not i18n(npc.properties['message']) then
+                        -- no message
+                        ScreenManager.push(const.SCREEN.WINDOW, self.context)
+                        ScreenManager.push(const.SCREEN.TALK, self.context, "NO MESSAGE")
+                    else
+                        ScreenManager.push(const.SCREEN.WINDOW, self.context)
+                        ScreenManager.push(const.SCREEN.TALK, self.context, i18n(npc.properties['message']))
+                        context.actorManager:setActorDirectionToActor(npc, context.playerActor)
+                    end
                 elseif self.context.input:pressed(const.INPUT.MENU) then
                     ScreenManager.push(const.SCREEN.WINDOW, self.context)
                     ScreenManager.push(const.SCREEN.MAP_COMMAND, self.context)
