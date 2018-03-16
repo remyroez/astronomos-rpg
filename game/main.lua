@@ -89,8 +89,8 @@ function love.load(arg)
     context.actorManager = ActorManager(context.mapManager, context.spriteManager)
 
     context.windowManager = WindowManager(context.assets.images.font, 8, 8, 2, w, h)
-    context.windowManager:setupAsciiCharacters(" .!?:0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
-    context.windowManager:mergeCharacters(context.assets.data.typography)
+    context.windowManager:setAsciiTypographies(" .!?:0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+    context.windowManager:mergeTypographies(context.assets.data.typography)
     context.windowManager:setupFont()
 
     --[[

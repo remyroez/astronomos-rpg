@@ -15,7 +15,7 @@ function BitmapFont:initialize(image, fontWidth, fontHeight, line_height)
     self.line_height = line_height or 1
 
     self.quads = {}
-    self.characters = {}
+    self.typographies = {}
     self.glyphs = {}
     self.error_glyph = BitmapGlyph()
     
@@ -63,7 +63,7 @@ end
 function BitmapFont:setupGlyphs()
     self.glyphs = {}
 
-    for key, typography in pairs(self.characters) do
+    for key, typography in pairs(self.typographies) do
         local glyph = BitmapGlyph(key)
             
         if not typography then

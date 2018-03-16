@@ -34,44 +34,44 @@ function WindowManager:setupFont()
     self:setupFontGlyphs()
 end
 
-function WindowManager:characters()
-    return self.font.characters
+function WindowManager:typographies()
+    return self.font.typographies
 end
 
-function WindowManager:mergeCharacters(characters)
-    for key, character in pairs(characters) do
-        self.font.characters[key] = characters[key]
+function WindowManager:mergeTypographies(typographies)
+    for key, typography in pairs(typographies) do
+        self.font.typographies[key] = typography
     end
 end
 
-function WindowManager:setupCharacters(characters)
-    self.font.characters = characters
+function WindowManager:setTypographies(typographies)
+    self.font.typographies = typographies
 end
 
-function WindowManager:setupAsciiCharacters(glyphs, lower_case)
+function WindowManager:setAsciiTypographies(glyphs, lower_case)
     lower_case = lower_case or false
     if type(glyphs) == 'boolean' then
         lower_case = glyphs
         glyphs = nil
     end
-    local characters = {}
+    local typographies = {}
 
     if not glyphs then
         -- all ascii
         for i = 32, 126 do
             local c = string.char(i)
-            characters[c] = { { index = string.byte(lower_case and c or string.upper(c)) } }
+            typographies[c] = { { index = string.byte(lower_case and c or string.upper(c)) } }
         end
     elseif type(glyphs) == 'string' then
         for i = 1, #glyphs do
             local c = string.sub(glyphs, i, i)
-            characters[c] = { { index = string.byte(lower_case and c or string.upper(c)) } }
+            typographies[c] = { { index = string.byte(lower_case and c or string.upper(c)) } }
         end
     end
 
-    characters['\n'] = { control = 'linefeed' }
+    typographies['\n'] = { control = 'linefeed' }
 
-    self:setupCharacters(characters)
+    self:setTypographies(typographies)
 end
 
 function WindowManager:push(...)
