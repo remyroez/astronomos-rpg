@@ -84,6 +84,17 @@ function SpriteInstance:set(name)
     end
 end
 
+function SpriteInstance:getCurrentAnimationName()
+    local name = nil
+    for key, animation in pairs(self.animations) do
+        if animation == self.current_animation then
+            name = key
+            break
+        end
+    end
+    return name
+end
+
 function SpriteInstance:gotoFrame(frame)
     if not self.current_animation then
         -- no animation
