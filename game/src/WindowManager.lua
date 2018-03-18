@@ -54,6 +54,7 @@ function WindowManager:setAsciiTypographies(glyphs, lower_case)
         lower_case = glyphs
         glyphs = nil
     end
+    
     local typographies = {}
 
     if not glyphs then
@@ -68,10 +69,10 @@ function WindowManager:setAsciiTypographies(glyphs, lower_case)
             typographies[c] = { { index = string.byte(lower_case and c or string.upper(c)) } }
         end
     end
-
+    
     typographies['\n'] = { control = 'linefeed', advance = 0 }
 
-    self:setTypographies(typographies)
+    self:mergeTypographies(typographies)
 end
 
 function WindowManager:push(...)

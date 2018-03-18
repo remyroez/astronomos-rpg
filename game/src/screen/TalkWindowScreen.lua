@@ -11,12 +11,14 @@ function TalkWindowScreen.new()
 
     function self:init(context, messages)
         self.context = context
-        self.window = self.context.windowManager:push(2, 18, 28, 10, true)
-        self.counter = 0
         self.messages = messages
         if type(self.messages) ~= 'table' then
             self.messages = { self.messages }
         end
+
+        self.counter = 0
+        self.window = self.context.windowManager:push(2, 18, 28, 10, true)
+        self.window.margin = self.window:getLineHeight()
 
         self.window.onComplete
             :subscribe(
@@ -24,8 +26,8 @@ function TalkWindowScreen.new()
                     if self:isLastMessage() then
                         -- no button
                     else
+                        window:vscroll(-window:getLineHeight())
                         window:resetButton(1 / 60 * 10)
-                        print('resetButton')
                     end
                 end
             )
@@ -62,16 +64,22 @@ function TalkWindowScreen.new()
 
     function self:current(dt)
         if self.context.input:pressed(const.INPUT.DECIDE) then
+            -- decide
             if self.window:isCompleted() then
+                -- completed message
                 if self:isLastMessage() then
+                    -- finish
                     ScreenManager.pop()
                 else
+                    -- next message
                     self:printNextMessage()
                 end
             else
+                -- message skip
                 self.window:skip()
             end
         elseif self.context.input:pressed(const.INPUT.CANCEL) then
+            -- cancel
             ScreenManager.pop()
         end
     end
