@@ -4,6 +4,7 @@ local Window = class("Window")
 local gfx = love.graphics
 
 local tween = require 'tween'
+local rx = require 'rx'
 
 Window.DEFAULT_FRAMES = {
     background = "background",
@@ -55,6 +56,8 @@ function Window:initialize(font, x, y, width, height, frame, background)
     
     self.batch = self.font:newBatch()
 
+    self.onComplete = rx.Subject.create()
+
     if self.frame then
         self:setupFrames()
     end
@@ -74,6 +77,37 @@ end
 
 function Window:bottom()
     return self.y + self.height
+end
+
+function Window:skip()
+    local has_tween = false
+
+    for _, message in ipairs(self.messages) do
+        if message.tween then
+            has_tween = true
+            if message.tween:set(message.tween.duration) then
+                message.tween = nil
+            end
+        end
+    end
+
+    if has_tween then
+        self:onComplete()
+        self.dirty = true
+    end
+end
+
+function Window:isCompleted()
+    local completed = true
+
+    for _, message in ipairs(self.messages) do
+        if message.tween then
+            completed = false
+            break
+        end
+    end
+
+    return completed
 end
 
 function Window:message(id)
@@ -221,6 +255,9 @@ function Window:clear()
     self.choices.row = nil
     self.choices.column = nil
     self.selected = nil
+    self.onComplete:unsubscribe()
+    self:clearButton()
+
     self.dirty = true
 end
 
@@ -256,6 +293,11 @@ function Window:resetButton(second, visible)
         )
     end
     self.dirty = true
+end
+
+function Window:clearButton()
+    self.button.seconds = nil
+    self:resetButton()
 end
 
 function Window:setupFrames(frames)
@@ -500,18 +542,28 @@ function Window:update(dt)
     end
 
     -- messages
+    local has_tween = false
+    local complete = false
     for _, message in ipairs(self.messages) do
         if not message.tween then
             -- no tween
         else
+            has_tween = true
+            complete = true
             local counter = math.floor(message.counter)
             if message.tween:update(dt) then
                 message.tween = nil
+            else
+                complete = false
             end
             if counter ~= math.floor(message.counter) then
                 self.dirty = true
             end
         end
+    end
+
+    if complete then
+        self:onComplete()
     end
 
     -- flush
