@@ -54,7 +54,7 @@ function TalkWindowScreen.new()
     
     function self:printMessage(message)
         self.window
-            :print(message, 1, nil, 1 / 60 * 5)
+            :print(message, 1, nil, 1 / 60 * 3)
             :clearButton()
     end
 
