@@ -180,10 +180,13 @@ function love.load(arg)
 end
 
 function createPlayer(x, y, sprite)
+    local tilewidth, tileheight = context.mapManager:getTileDimensions()
     local actor = context.actorManager:newActor {
         type = const.OBJECT.TYPE.PLAYER,
         x = x or 0,
         y = y or 0,
+        width = tilewidth or 0,
+        height = tileheight or 0,
         properties = {
             [const.OBJECT.PROPERTY.SPRITE] = sprite or "minami"
         }

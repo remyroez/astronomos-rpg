@@ -2,6 +2,7 @@ local class = require 'middleclass'
 local ActorManager = class("ActorManager")
 
 local rx = require 'rx'
+local lume = require "lume"
 
 local const = require 'const'
 local util = require 'util'
@@ -20,6 +21,11 @@ ActorManager.DEFAULT_WALK_TYPE = const.OBJECT.WALK_TYPE.DEFAULT
 ActorManager.DEFAULT_WALK_DURATION = (1 / 60 * 20 * 10)
 
 ActorManager.DEFAULT_RANDOM_WALK_SPEED = 1 / 60 * 10
+
+ActorManager.static.OBSTACLES = {
+    [const.OBJECT.TYPE.NPC] = { const.OBJECT.TYPE.NPC, const.OBJECT.TYPE.PLAYER, const.OBJECT.TYPE.TRANSFER },
+    [const.OBJECT.TYPE.PLAYER] = { const.OBJECT.TYPE.NPC },
+}
 
 local function isTweenableType(type)
     local result = false
@@ -57,6 +63,7 @@ function ActorManager:newActor(object)
     local actor = Actor(object)
     local properties = object.properties
     local hasTween = false
+
     if actor.type == const.OBJECT.TYPE.NPC then
         actor.sprite = self.spriteManager:newSpriteInstance(
             properties[const.OBJECT.PROPERTY.SPRITE] or ActorManager.DEFAULT_SPRITE
@@ -179,13 +186,17 @@ function ActorManager:walkActor(actor, direction, speed, can_move_out, through)
     if direction == const.DIRECTION.STAY then
         return
     end
+
     can_move_out = can_move_out or false
+
     local x, y = actor:getPosition()
     x, y = self:getForwardPosition(x, y, direction)
+
     self:setActorDirection(actor, direction)
+
     if not can_move_out and not self.mapManager:inMapFromPixel(x, y) then
         -- can not move out
-    elseif through or self:canPassThrough(x, y) then
+    elseif through or self:canPassThrough(actor, x, y) then
         actor:move(x, y, speed or 1)
     end
 end
@@ -240,25 +251,33 @@ function ActorManager:setActorDirectionToActor(actor, actor2)
     return self:setActorDirectionToPosition(actor, actor2:getPosition())
 end
 
-function ActorManager:canPassThrough(x, y)
+function ActorManager:canPassThrough(actor, x, y)
     local result = true
+
     if not self.mapManager:canPassThrough(x, y) then
         -- can not pass through
         result = false
-    elseif self:getActorFromPixel(x, y, const.OBJECT.TYPE.NPC) then
+    elseif self:getActorFromPixel(x, y, ActorManager.static.OBSTACLES[actor.type]) then
         -- actor
         result = false
     end
+
     return result
 end
 
-function ActorManager:getActorFromPixel(x, y, type)
+function ActorManager:getActorFromPixel(x, y, otype)
     local result = nil
+
+    if not otype then
+        -- no type
+    elseif type(otype) ~= 'table' then
+        otype = { otype }
+    end
 
     for _, actor in ipairs(self.actors) do
         if not actor:inObject(x, y) then
             -- position not match
-        elseif type and type ~= actor.type then
+        elseif otype and not lume.find(otype, actor.type) then
             -- type not match
         else
             result = actor
