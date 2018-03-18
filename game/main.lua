@@ -93,37 +93,6 @@ function love.load(arg)
     context.windowManager:mergeTypographies(context.assets.data.typography)
     context.windowManager:setupFont()
 
-    --[[
-    context.windowManager:push(2, 18, 28, 10, true)
-        :print("いろはにほへとちりぬるを　わかよたれそつねならむぺうゐのおくやまけふこえて　あさきゆめみしゑひもせす", 1, nil, 1 / 60 * 5)
-        :print("がざだばぱ　わかよたれそつねならむ", 1)
-        :print("うゐのおくやまけふこえて")
-        :print("あさきゆめみしゑひもせす")
-        :resetButton(1 / 60 * 10)
-        
-    context.windowManager:push(2, 2, 12, 8, true)
-        :title("COMMAND")
-        :setupChoices(3, 2)
-        :print("はなす", 1, 1):toChoice(true)
-        :print("くすり"):toChoice()
-        :print("ちから"):toChoice()
-        :print("ESP", 6, 1):toChoice()
-        :print("すてる"):toChoice()
-        :print("もちもの"):toChoice()
-    context.windowManager:window():print("Hello,World!...力、。")
-    context.windowManager:window():print("あかさたなはまやらわぁゃがざだばぱ", 0, 3)
-    context.windowManager:window():print("いきしちにひみ　り　ぃ　ぎじぢびぴ", 0, 5)
-    context.windowManager:window():print("うくすつぬふむゆるをぅゅぐずづぶぴ", 0, 7)
-    context.windowManager:window():print("えけせてねへめ　れっぇ　げぜでべぺ", 0, 9)
-    context.windowManager:window():print("おこそとのほもよろんぉょごぜどぼぽ", 0, 11)
-
-    context.windowManager:window():print("アカサタナハマヤラワァャガザダバパ", 0, 13)
-    context.windowManager:window():print("イキシチニヒミ　リ　ィ　ギジヂビピ", 0, 15)
-    context.windowManager:window():print("ウクスツヌフムユルヲゥュグズヅブピ", 0, 17)
-    context.windowManager:window():print("エケセテネヘメ　レッェ　ゲゼデベペ", 0, 19)
-    context.windowManager:window():print("オコソトノホモヨロンォョゴゼドボポ", 0, 21)
-    --]]
-
     context.mapManager.onLoad = function (map)
         context.actorManager:clearActors()
         context.spriteManager:clearSpriteInstances()
@@ -264,23 +233,3 @@ love.keypressed
 love.keypressed
     :filter(function (key) return key == 'f6' end)
     :subscribe(function () screenshot() end)
-
---[[
-
-love.keypressed
-    :filter(function (key) return key == 'pageup' end)
-    :subscribe(function () context.windowManager:window():vscroll(-1) end)
-
-love.keypressed
-    :filter(function (key) return key == 'pagedown' end)
-    :subscribe(function () context.windowManager:window():vscroll(1) end)
-
-love.keypressed
-    :filter(function (key) return key == 'home' end)
-    :subscribe(function () context.windowManager:window():hscroll(-1) end)
-
-love.keypressed
-    :filter(function (key) return key == 'end' end)
-    :subscribe(function () context.windowManager:window():hscroll(1) end)
-
---]]
