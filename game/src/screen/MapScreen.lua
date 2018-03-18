@@ -45,7 +45,7 @@ function MapScreen.new()
                 elseif self.context.input:pressed(const.INPUT.DECIDE) then
                     self:talk('message')
                 elseif self.context.input:pressed(const.INPUT.ESP) then
-                    self:talk('telepathy')
+                    self:talk('telepathy', false)
                 elseif self.context.input:pressed(const.INPUT.MENU) then
                     ScreenManager.push(const.SCREEN.WINDOW, self.context)
                     ScreenManager.push(const.SCREEN.MAP_COMMAND, self.context)
@@ -58,7 +58,6 @@ function MapScreen.new()
         local context = self.context
         
         type = type or 'message'
-        turn = turn or true
 
         local x, y = context.actorManager:getForwardPositionFromActor(context.playerActor)
         local npc = context.actorManager:getActorFromPixel(x, y, const.OBJECT.TYPE.NPC)
