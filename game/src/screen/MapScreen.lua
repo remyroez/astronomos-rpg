@@ -54,10 +54,13 @@ function MapScreen.new()
         end
     end
 
-    function self:talk(type, turn)
+    function self:talk(property, turn)
         local context = self.context
         
-        type = type or 'message'
+        property = property or 'message'
+        if type(turn) ~= 'boolean' then
+            turn = true
+        end
 
         local x, y = context.actorManager:getForwardPositionFromActor(context.playerActor)
         local npc = context.actorManager:getActorFromPixel(x, y, const.OBJECT.TYPE.NPC)
@@ -66,15 +69,15 @@ function MapScreen.new()
             -- no npc
         elseif npc:state() ~= Actor.STATE.READY then
             -- no ready
-        elseif not npc.properties[type] then
+        elseif not npc.properties[property] then
             -- no message
-        elseif not i18n(npc.properties[type]) then
+        elseif not i18n(npc.properties[property]) then
             -- no message
             ScreenManager.push(const.SCREEN.WINDOW, self.context)
             ScreenManager.push(const.SCREEN.TALK, self.context, "NO MESSAGE")
         else
             ScreenManager.push(const.SCREEN.WINDOW, self.context)
-            ScreenManager.push(const.SCREEN.TALK, self.context, i18n(npc.properties[type], { player_name = 'みなみ' }))
+            ScreenManager.push(const.SCREEN.TALK, self.context, i18n(npc.properties[property], { player_name = 'みなみ' }))
 
             -- turn to player
             if turn then
