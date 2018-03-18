@@ -1,6 +1,39 @@
 
 local const = {}
 
+const.SCREEN = {
+    WIDTH = 256,
+    HEIGHT = 240,
+    ROOT = 'root',
+    MAP = 'map',
+    WINDOW = 'window',
+    TALK = 'talk',
+    MAP_COMMAND = 'map_command',
+    MEDICINE = 'medicine',
+    STATUS = 'status',
+    ESP = 'esp',
+    DISPOSE = 'dispose',
+    BELONGINGS = 'belongings',
+    ITEMS = 'items',
+    MATERIALS = 'materials',
+}
+
+const.INPUT = {
+    DOWN = "down",
+    LEFT = "left",
+    UP = "up",
+    RIGHT = "right",
+    
+    DECIDE = "decide",
+    CANCEL = "cancel",
+    ESP = "esp",
+    MENU = "menu",
+    
+    ALT = "alt",
+    
+    MOVE = "move",
+}
+
 const.DIRECTION = {
     DOWN = "down",
     LEFT = "left",

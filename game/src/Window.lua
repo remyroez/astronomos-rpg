@@ -4,6 +4,7 @@ local Window = class("Window")
 local gfx = love.graphics
 
 local tween = require 'tween'
+local rx = require 'rx'
 
 Window.DEFAULT_FRAMES = {
     background = "background",
@@ -50,10 +51,15 @@ function Window:initialize(font, x, y, width, height, frame, background)
     self.windows = {}
     self.overflow = Window.OVERFLOW.DEFAULT
     self.scrolls = { h = 0, v = 0 }
+    self.margin = 0
+    self.printed_position = { x = 0, y = 0 }
+    self.need_scrolls = nil
     self.button = { visible = false, tween = nil, value = 0 }
     self.dirty = true
     
     self.batch = self.font:newBatch()
+
+    self.onComplete = rx.Subject.create()
 
     if self.frame then
         self:setupFrames()
@@ -74,6 +80,41 @@ end
 
 function Window:bottom()
     return self.y + self.height
+end
+
+function Window:getLineHeight()
+    return self.font.line_height
+end
+
+function Window:skip()
+    local has_tween = false
+
+    for _, message in ipairs(self.messages) do
+        if message.tween then
+            has_tween = true
+            if message.tween:set(message.tween.duration) then
+                message.tween = nil
+            end
+        end
+    end
+
+    if has_tween then
+        self:onComplete()
+        self.dirty = true
+    end
+end
+
+function Window:isCompleted()
+    local completed = true
+
+    for _, message in ipairs(self.messages) do
+        if message.tween then
+            completed = false
+            break
+        end
+    end
+
+    return completed
 end
 
 function Window:message(id)
@@ -210,7 +251,7 @@ function Window:vscroll(v)
 end
 
 function Window:scroll(h, v)
-    self.hscroll(h)
+    self:hscroll(h)
     self:vscroll(v)
 end
 
@@ -221,6 +262,9 @@ function Window:clear()
     self.choices.row = nil
     self.choices.column = nil
     self.selected = nil
+    self.onComplete:unsubscribe()
+    self:clearButton()
+
     self.dirty = true
 end
 
@@ -258,6 +302,11 @@ function Window:resetButton(second, visible)
     self.dirty = true
 end
 
+function Window:clearButton()
+    self.button.seconds = nil
+    self:resetButton()
+end
+
 function Window:setupFrames(frames)
     frames = frames or Window.DEFAULT_FRAMES
     self.frames = {}
@@ -276,7 +325,7 @@ function Window:putGlyph(glyph, x, y, left, top, right, bottom)
     if not glyph then
         -- no glyph
     else
-        for _, part in ipairs(glyph) do
+        for _, part in ipairs(glyph.characters) do
             local putx, puty = x, y
             if part.character then
                 putx = putx + (part.character.x or 0)
@@ -322,7 +371,7 @@ function Window:flushBackground()
     end
 end
 
-function Window:flushMessage(message, cx, cy)
+function Window:flushMessage(message, cx, cy, need_scrolls)
     local glyphs = message.glyphs
     if not glyphs then
         message.glyphs = self.font:getGlyphs(message.text)
@@ -355,6 +404,8 @@ function Window:flushMessage(message, cx, cy)
         self:flushCursor(x - 1, y, left, top, right, bottom)
     end
 
+    local scrolled_y = y - self:getLineHeight()
+
     local visible = true
     for i, glyph in ipairs(glyphs) do
         if i > counter then
@@ -370,7 +421,7 @@ function Window:flushMessage(message, cx, cy)
             elseif self.overflow == Window.OVERFLOW.HIDDEN then
                 visible = false
             elseif self.overflow == Window.OVERFLOW.LINEFEED then
-                x, y = beginx, y + self.font.line_height
+                x, y = beginx, y + self:getLineHeight()
                 visible = true
             end
     
@@ -385,11 +436,21 @@ function Window:flushMessage(message, cx, cy)
                 visible = false
             elseif self.overflow == Window.OVERFLOW.LINEFEED then
                 visible = false
+                if scrolled_y ~= y then
+                    need_scrolls.v = need_scrolls.v - self:getLineHeight()
+                    scrolled_y = y
+                end
             end
     
             -- put
-            if visible then
+            if visible and glyph:drawable() then
                 self:putGlyph(glyph, x, y, left, top, right, bottom)
+            elseif glyph:controlable() then
+                for _, control in ipairs(glyph:controls()) do
+                    if control == 'linefeed' then
+                        x, y = beginx, y + self:getLineHeight()
+                    end
+                end
             end
     
             -- advance
@@ -397,7 +458,7 @@ function Window:flushMessage(message, cx, cy)
         end
     end
     
-    x, y = beginx - ofsx, y + self.font.line_height - ofsy
+    x, y = beginx - ofsx, y + self:getLineHeight() - ofsy
     
     return x, y
 end
@@ -463,14 +524,26 @@ end
 function Window:flush()
     self.batch:clear()
 
+    if self.need_scrolls then
+        self:scroll(self.need_scrolls.h, self.need_scrolls.v)
+        self.need_scrolls = nil
+    end
+
     if self.background then
         self:flushBackground()
     end
 
-    local x, y = 0, self.font.line_height - 1
+    local x, y = 0, self:getLineHeight() - 1
+    local need_scrolls = { h = 0, v = 0 }
     for _, message in ipairs(self.messages) do
-        x, y = self:flushMessage(message, x, y)
+        x, y = self:flushMessage(message, x, y, need_scrolls)
+        y = y + self.margin
     end
+    if need_scrolls.h ~= 0 or need_scrolls.v ~= 0 then
+        self.need_scrolls = need_scrolls
+    end
+    self.printed_position.x = x
+    self.printed_position.y = y
 
     if self.frame then
         self:flushFrame()
@@ -494,18 +567,28 @@ function Window:update(dt)
     end
 
     -- messages
+    local has_tween = false
+    local complete = false
     for _, message in ipairs(self.messages) do
         if not message.tween then
             -- no tween
         else
+            has_tween = true
+            complete = true
             local counter = math.floor(message.counter)
             if message.tween:update(dt) then
                 message.tween = nil
+            else
+                complete = false
             end
             if counter ~= math.floor(message.counter) then
                 self.dirty = true
             end
         end
+    end
+
+    if complete then
+        self:onComplete()
     end
 
     -- flush

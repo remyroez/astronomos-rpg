@@ -1,13 +1,13 @@
 
 local const = require 'const'
 
-require 'util'
+local util = require 'util'
 
 local rx = require 'rx'
 require 'rxlove'
 
 local cargo = require "cargo"
-local assets = {}
+local i18n = require "i18n"
 
 local BgmPlayer = require 'BgmPlayer'
 local MapManager = require 'MapManager'
@@ -15,6 +15,8 @@ local SpriteManager = require 'SpriteManager'
 local SpriteSheet = require 'SpriteSheet'
 local ActorManager = require 'ActorManager'
 local WindowManager = require 'WindowManager'
+
+local ScreenManager = require 'ScreenManager'
 
 local baton = require 'baton'
 local startx = 0
@@ -59,63 +61,37 @@ function load_map(path, x, y)
 end
 
 function love.load(arg)
+    i18n.setLocale('ja')
+    i18n.loadFile('assets/i18n/ja.lua')
+
     love.graphics.setDefaultFilter("nearest", "nearest")
-    local w, h = love.graphics.getDimensions()
+
+    local w, h = const.SCREEN.WIDTH, const.SCREEN.HEIGHT
 
     maid64.setup(w, h)
-    resize(w, h)
+    resize(love.graphics.getDimensions())
 
-    assets = cargo.init("assets")
+    context.assets = cargo.init("assets")
 
-    context.bgmPlayer = BgmPlayer(assets.bgm)
+    context.bgmPlayer = BgmPlayer(context.assets.bgm)
     context.bgmPlayer:setVolume(const.MAP.BGM_VOLUME.DEFAULT)
 
     context.spriteManager = SpriteManager(
-        assets.images.spritesheet, 
+        context.assets.images.spritesheet, 
         const.TILE.WIDTH, const.TILE.HEIGHT,
         w, h
     )
     context.spriteSheet = SpriteSheet(context.spriteManager)
-    context.spriteSheet:registerSprites(assets.data.spritesheet)
+    context.spriteSheet:registerSprites(context.assets.data.spritesheet)
 
     context.mapManager = MapManager("assets/maps", w, h)
 
     context.actorManager = ActorManager(context.mapManager, context.spriteManager)
 
-    context.windowManager = WindowManager(assets.images.font, 8, 8, 2, w, h)
-    context.windowManager:setupAsciiCharacters(" .!?:0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
-    context.windowManager:mergeCharacters(assets.data.typography)
-
-    context.windowManager:push(2, 18, 28, 10, true)
-        :print("いろはにほへとちりぬるを　わかよたれそつねならむぺうゐのおくやまけふこえて　あさきゆめみしゑひもせす", 1, nil, 1 / 60 * 5)
-        :print("がざだばぱ　わかよたれそつねならむ", 1)
-        :print("うゐのおくやまけふこえて")
-        :print("あさきゆめみしゑひもせす")
-        :resetButton(1 / 60 * 10)
-        
-    context.windowManager:push(2, 2, 12, 8, true)
-        :title("COMMAND")
-        :setupChoices(3, 2)
-        :print("はなす", 1, 1):toChoice(true)
-        :print("くすり"):toChoice()
-        :print("ちから"):toChoice()
-        :print("ESP", 6, 1):toChoice()
-        :print("すてる"):toChoice()
-        :print("もちもの"):toChoice()
-    --[[
-    context.windowManager:window():print("Hello,World!...力、。")
-    context.windowManager:window():print("あかさたなはまやらわぁゃがざだばぱ", 0, 3)
-    context.windowManager:window():print("いきしちにひみ　り　ぃ　ぎじぢびぴ", 0, 5)
-    context.windowManager:window():print("うくすつぬふむゆるをぅゅぐずづぶぴ", 0, 7)
-    context.windowManager:window():print("えけせてねへめ　れっぇ　げぜでべぺ", 0, 9)
-    context.windowManager:window():print("おこそとのほもよろんぉょごぜどぼぽ", 0, 11)
-
-    context.windowManager:window():print("アカサタナハマヤラワァャガザダバパ", 0, 13)
-    context.windowManager:window():print("イキシチニヒミ　リ　ィ　ギジヂビピ", 0, 15)
-    context.windowManager:window():print("ウクスツヌフムユルヲゥュグズヅブピ", 0, 17)
-    context.windowManager:window():print("エケセテネヘメ　レッェ　ゲゼデベペ", 0, 19)
-    context.windowManager:window():print("オコソトノホモヨロンォョゴゼドボポ", 0, 21)
-    --]]
+    context.windowManager = WindowManager(context.assets.images.font, 8, 8, 2, w, h)
+    context.windowManager:setAsciiTypographies(" .!?:0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+    context.windowManager:mergeTypographies(context.assets.data.typography)
+    context.windowManager:setupFont()
 
     context.mapManager.onLoad = function (map)
         context.actorManager:clearActors()
@@ -129,30 +105,43 @@ function love.load(arg)
             end
         end
         local x, y = map:convertTileToPixel(startx, starty)
-        createPlayer(x, y, "minami")
+        context.playerActor = createPlayer(x, y, "minami")
         context.spriteManager:updateSpriteBatch()
     end
 
     context.input = baton.new {
         controls = {
             -- move
-             left = {'key:left',  --[['axis:leftx-',]] 'button:dpleft'},
-            right = {'key:right', --[['axis:leftx+',]] 'button:dpright'},
-               up = {'key:up',    --[['axis:lefty-',]] 'button:dpup'},
-             down = {'key:down',  --[['axis:lefty+',]] 'button:dpdown'},
+            [const.INPUT.LEFT]  = {'key:left',  --[['axis:leftx-',]] 'button:dpleft'},
+            [const.INPUT.RIGHT] = {'key:right', --[['axis:leftx+',]] 'button:dpright'},
+            [const.INPUT.UP]    = {'key:up',    --[['axis:lefty-',]] 'button:dpup'},
+            [const.INPUT.DOWN]  = {'key:down',  --[['axis:lefty+',]] 'button:dpdown'},
             -- command
-            decide = {'key:z', 'button:a'},
-            cancel = {'key:x', 'button:b'},
-               esp = {'key:c', 'button:x'},
-              menu = {'key:space', 'button:start'},
+            [const.INPUT.DECIDE] = {'key:z', 'button:a'},
+            [const.INPUT.CANCEL] = {'key:x', 'button:b'},
+            [const.INPUT.ESP]    = {'key:c', 'button:x'},
+            [const.INPUT.MENU]   = {'key:space', 'button:start'},
             -- system
-            alt = {'key:ralt', 'key:lalt'},
+            [const.INPUT.ALT] = {'key:ralt', 'key:lalt'},
         },
         pairs = {
-            move = {'left', 'right', 'up', 'down'}
+            [const.INPUT.MOVE] = {'left', 'right', 'up', 'down'}
         },
         joystick = love.joystick.getJoysticks()[1],
     }
+
+    ScreenManager.init(
+        {
+            [const.SCREEN.ROOT] = require 'screen.RootScreen',
+            [const.SCREEN.MAP] = require 'screen.MapScreen',
+            [const.SCREEN.WINDOW] = require 'screen.WindowScreen',
+            [const.SCREEN.TALK] = require 'screen.TalkWindowScreen',
+            [const.SCREEN.MAP_COMMAND] = require 'screen.MapCommandWindowScreen',
+        },
+        const.SCREEN.ROOT,
+        context
+    )
+
     --load_map("administrative_area", 0, 24)
     load_map("field", 11, 20)
     --load_map("arkcity", 24, 20)
@@ -160,15 +149,18 @@ function love.load(arg)
 end
 
 function createPlayer(x, y, sprite)
-    context.minami = context.actorManager:newActor {
+    local tilewidth, tileheight = context.mapManager:getTileDimensions()
+    local actor = context.actorManager:newActor {
         type = const.OBJECT.TYPE.PLAYER,
         x = x or 0,
         y = y or 0,
+        width = tilewidth or 0,
+        height = tileheight or 0,
         properties = {
             [const.OBJECT.PROPERTY.SPRITE] = sprite or "minami"
         }
     }
-    context.minami.onArrival
+    actor.onArrival
         :subscribe(
             function (x, y)
                 if context.mapManager:inMapFromPixel(x, y) then
@@ -200,56 +192,16 @@ function createPlayer(x, y, sprite)
                 end
             end
         )
+    return actor
 end
 
 love.update
     :subscribe(
         function (dt)
-            context.input:update()
-            local w, h = context.mapManager:getTileDimensions()
-
-            if context.minami then
-                if context.minami:state() == "ready" then
-                    local x, y = context.input:get 'move'
-                    local direction = "down"
-                    if x > 0 then
-                        direction = "right"
-                    elseif x < 0 then
-                        direction = "left"
-                    elseif y > 0 then
-                        direction = "down"
-                    elseif y < 0 then
-                        direction = "up"
-                    else
-                        direction = nil
-                    end
-
-                    if direction then
-                        local speed = 1 / 60 * 20
-                        if context.input:down 'cancel' then
-                            speed = speed / 2
-                        end
-                        context.actorManager:walkActor(
-                            context.minami,
-                            direction,
-                            speed,
-                            context.mapManager:properties()["outer_map"],
-                            context.input:down 'esp'
-                        )
-                    end
-                end
-                context.actorManager:update(dt)
-                
-                ofsx, ofsy = context.minami:getPosition()
+            if ScreenManager.peek() and ScreenManager.peek().current then
+                ScreenManager.peek():current(dt)
             end
-
-            local ox = -(ofsx - context.mapManager.width / 2 + w / 2)
-            local oy = -(ofsy - context.mapManager.height / 2 + h / 2)
-            context.mapManager:setOffset(ox, oy)
-            context.mapManager:update(dt)
-            context.spriteManager:setOffset(ox, oy)
-            context.spriteManager:update(dt)
-            context.windowManager:update(dt)
+            ScreenManager.update(dt)
         end
     )
 
@@ -257,9 +209,7 @@ love.draw
     :subscribe(
         function ()
             maid64.start()
-            context.mapManager:draw()
-            context.spriteManager:draw()
-            context.windowManager:draw()
+            ScreenManager.draw()
             maid64.finish()
         end
     )
@@ -283,35 +233,3 @@ love.keypressed
 love.keypressed
     :filter(function (key) return key == 'f6' end)
     :subscribe(function () screenshot() end)
-
-love.keypressed
-    :filter(function (key) return key == 'pageup' end)
-    :subscribe(function () context.windowManager:window():vscroll(-1) end)
-
-love.keypressed
-    :filter(function (key) return key == 'pagedown' end)
-    :subscribe(function () context.windowManager:window():vscroll(1) end)
-
-love.keypressed
-    :filter(function (key) return key == 'home' end)
-    :subscribe(function () context.windowManager:window():hscroll(-1) end)
-
-love.keypressed
-    :filter(function (key) return key == 'end' end)
-    :subscribe(function () context.windowManager:window():hscroll(1) end)
-
-love.keypressed
-    :filter(function (key) return key == 'w' end)
-    :subscribe(function () context.windowManager:window():nextChoice(-1) end)
-
-love.keypressed
-    :filter(function (key) return key == 's' end)
-    :subscribe(function () context.windowManager:window():nextChoice(1) end)
-
-    love.keypressed
-    :filter(function (key) return key == 'a' end)
-    :subscribe(function () context.windowManager:window():selectChoice(-1) end)
-
-love.keypressed
-    :filter(function (key) return key == 'd' end)
-    :subscribe(function () context.windowManager:window():selectChoice(1) end)

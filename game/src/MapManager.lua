@@ -4,6 +4,7 @@ local MapManager = class("MapManager")
 local sti = require 'sti'
 
 local const = require 'const'
+local util = require 'util'
 
 function MapManager:initialize(basepath, width, height)
     self.basepath = basepath
@@ -29,8 +30,8 @@ function MapManager:addBackgroundLayer(map, tile_gid)
         layer.image,
         (layer.width + 2) * (layer.height + 2)
     )
-    for i in range(-1, layer.height, 1) do
-        for j in range(-1, layer.width, 1) do
+    for i in util.range(-1, layer.height, 1) do
+        for j in util.range(-1, layer.width, 1) do
             layer.batch:add(
                 layer.tile.quad,
                 layer.tile.width * j,

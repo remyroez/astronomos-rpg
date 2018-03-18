@@ -1,14 +1,14 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "1.1.2",
+  tiledversion = "1.1.3",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 32,
   height = 30,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 3,
+  nextobjectid = 13,
   properties = {
     ["background_tile"] = 2,
     ["bgm"] = "town",
@@ -180,6 +180,196 @@ return {
             ["transfer_map"] = "space_tower",
             ["transfer_x"] = 44,
             ["transfer_y"] = 4
+          }
+        },
+        {
+          id = 3,
+          name = "oldman-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 224,
+          y = 32,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "mamusu/oldman-1",
+            ["sprite"] = "oldman",
+            ["telepathy"] = "mamusu/oldman/telepathy"
+          }
+        },
+        {
+          id = 4,
+          name = "oldman-2",
+          type = "npc",
+          shape = "rectangle",
+          x = 208,
+          y = 48,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "mamusu/oldman-2",
+            ["sprite"] = "oldman",
+            ["telepathy"] = "mamusu/oldman/telepathy"
+          }
+        },
+        {
+          id = 5,
+          name = "oldman-3",
+          type = "npc",
+          shape = "rectangle",
+          x = 32,
+          y = 272,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "mamusu/oldman-3",
+            ["sprite"] = "oldman",
+            ["telepathy"] = "mamusu/oldman-3/telepathy"
+          }
+        },
+        {
+          id = 6,
+          name = "oldman-4",
+          type = "npc",
+          shape = "rectangle",
+          x = 448,
+          y = 448,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "mamusu/oldman-4",
+            ["sprite"] = "oldman",
+            ["telepathy"] = "mamusu/oldman-4/telepathy"
+          }
+        },
+        {
+          id = 7,
+          name = "female-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 272,
+          y = 432,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "mamusu/female-1",
+            ["sprite"] = "female",
+            ["telepathy"] = "mamusu/female-1/telepathy"
+          }
+        },
+        {
+          id = 8,
+          name = "shop-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 32,
+          y = 48,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "mamusu/shop-1",
+            ["sprite"] = "shop",
+            ["telepathy"] = "mamusu/shop-1/telepathy"
+          }
+        },
+        {
+          id = 9,
+          name = "shop-2",
+          type = "npc",
+          shape = "rectangle",
+          x = 32,
+          y = 128,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "mamusu/shop-2",
+            ["sprite"] = "shop",
+            ["telepathy"] = "mamusu/shop-2/telepathy"
+          }
+        },
+        {
+          id = 10,
+          name = "doctor-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 208,
+          y = 176,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "mamusu/doctor-1",
+            ["sprite"] = "doctor",
+            ["telepathy"] = "mamusu/doctor-1/telepathy"
+          }
+        },
+        {
+          id = 11,
+          name = "healer-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 144,
+          y = 448,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "mamusu/healer-1",
+            ["sprite"] = "female",
+            ["telepathy"] = "mamusu/healer-1/telepathy"
+          }
+        },
+        {
+          id = 12,
+          name = "healer-2",
+          type = "npc",
+          shape = "rectangle",
+          x = 32,
+          y = 384,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "mamusu/healer-2",
+            ["sprite"] = "male",
+            ["telepathy"] = "mamusu/healer-2/telepathy"
           }
         }
       }

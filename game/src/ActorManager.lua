@@ -2,8 +2,10 @@ local class = require 'middleclass'
 local ActorManager = class("ActorManager")
 
 local rx = require 'rx'
+local lume = require "lume"
 
 local const = require 'const'
+local util = require 'util'
 
 local Actor = require "Actor"
 local SpriteSheet = require "SpriteSheet"
@@ -19,6 +21,11 @@ ActorManager.DEFAULT_WALK_TYPE = const.OBJECT.WALK_TYPE.DEFAULT
 ActorManager.DEFAULT_WALK_DURATION = (1 / 60 * 20 * 10)
 
 ActorManager.DEFAULT_RANDOM_WALK_SPEED = 1 / 60 * 10
+
+ActorManager.static.OBSTACLES = {
+    [const.OBJECT.TYPE.NPC] = { const.OBJECT.TYPE.NPC, const.OBJECT.TYPE.PLAYER, const.OBJECT.TYPE.TRANSFER },
+    [const.OBJECT.TYPE.PLAYER] = { const.OBJECT.TYPE.NPC },
+}
 
 local function isTweenableType(type)
     local result = false
@@ -56,6 +63,7 @@ function ActorManager:newActor(object)
     local actor = Actor(object)
     local properties = object.properties
     local hasTween = false
+
     if actor.type == const.OBJECT.TYPE.NPC then
         actor.sprite = self.spriteManager:newSpriteInstance(
             properties[const.OBJECT.PROPERTY.SPRITE] or ActorManager.DEFAULT_SPRITE
@@ -147,26 +155,48 @@ function ActorManager:subscribeWalk(actor, walk_type, walk_duration)
     end
 end
 
+function ActorManager:getForwardPosition(x, y, direction, count)
+    count = count or 1
+
+    local tilewidth, tileheight = self.mapManager:getTileDimensions()
+
+    if not direction then
+        -- no direction
+    elseif direction == const.DIRECTION.DOWN then
+        y = y + tileheight * count
+    elseif direction == const.DIRECTION.LEFT then
+        x = x - tilewidth * count
+    elseif direction == const.DIRECTION.UP then
+        y = y - tileheight * count
+    elseif direction == const.DIRECTION.RIGHT then
+        x = x + tilewidth * count
+    else
+        -- invalid direction
+    end
+
+    return x, y
+end
+
+function ActorManager:getForwardPositionFromActor(actor)
+    local x, y = actor:getPosition()
+    return self:getForwardPosition(x, y, self:getActorDirection(actor))
+end
+
 function ActorManager:walkActor(actor, direction, speed, can_move_out, through)
     if direction == const.DIRECTION.STAY then
         return
     end
+
     can_move_out = can_move_out or false
+
     local x, y = actor:getPosition()
-    local tilewidth, tileheight = self.mapManager:getTileDimensions()
-    if direction == const.DIRECTION.RIGHT then
-        x = x + tilewidth
-    elseif direction == const.DIRECTION.LEFT then
-        x = x - tilewidth
-    elseif direction == const.DIRECTION.DOWN then
-        y = y + tileheight
-    elseif direction == const.DIRECTION.UP then
-        y = y - tileheight
-    end
+    x, y = self:getForwardPosition(x, y, direction)
+
     self:setActorDirection(actor, direction)
+
     if not can_move_out and not self.mapManager:inMapFromPixel(x, y) then
         -- can not move out
-    elseif through or self:canPassThrough(x, y) then
+    elseif through or self:canPassThrough(actor, x, y) then
         actor:move(x, y, speed or 1)
     end
 end
@@ -189,25 +219,65 @@ function ActorManager:setActorDirection(actor, direction)
     end
 end
 
-function ActorManager:canPassThrough(x, y)
+function ActorManager:getActorDirection(actor)
+    local direction = nil
+    if not actor then 
+        -- no actor
+    elseif actor.type == const.OBJECT.TYPE.NPC or actor.type == const.OBJECT.TYPE.PLAYER then
+        local anim = actor:getAnimation()
+        if not anim then
+            -- no anim
+        elseif anim == SpriteSheet.ANIMATION.DOWN then
+            direction = const.DIRECTION.DOWN
+        elseif anim == SpriteSheet.ANIMATION.LEFT then
+            direction = const.DIRECTION.LEFT
+        elseif anim == SpriteSheet.ANIMATION.UP then
+            direction = const.DIRECTION.UP
+        elseif anim == SpriteSheet.ANIMATION.RIGHT then
+            direction = const.DIRECTION.RIGHT
+        else
+            -- invalid anim
+        end
+    end
+    return direction
+end
+
+function ActorManager:setActorDirectionToPosition(actor, x, y)
+    local ax, ay = actor:getPosition()
+    return self:setActorDirection(actor, util.toDirection(x - ax, y - ay))
+end
+
+function ActorManager:setActorDirectionToActor(actor, actor2)
+    return self:setActorDirectionToPosition(actor, actor2:getPosition())
+end
+
+function ActorManager:canPassThrough(actor, x, y)
     local result = true
+
     if not self.mapManager:canPassThrough(x, y) then
         -- can not pass through
         result = false
-    elseif self:getActorFromPixel(x, y, const.OBJECT.TYPE.NPC) then
+    elseif self:getActorFromPixel(x, y, ActorManager.static.OBSTACLES[actor.type]) then
         -- actor
         result = false
     end
+
     return result
 end
 
-function ActorManager:getActorFromPixel(x, y, type)
+function ActorManager:getActorFromPixel(x, y, otype)
     local result = nil
+
+    if not otype then
+        -- no type
+    elseif type(otype) ~= 'table' then
+        otype = { otype }
+    end
 
     for _, actor in ipairs(self.actors) do
         if not actor:inObject(x, y) then
             -- position not match
-        elseif type and type ~= actor.type then
+        elseif otype and not lume.find(otype, actor.type) then
             -- type not match
         else
             result = actor

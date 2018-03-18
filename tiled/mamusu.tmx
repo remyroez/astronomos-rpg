@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="32" height="30" tilewidth="16" tileheight="16" infinite="0" nextobjectid="3">
+<map version="1.0" tiledversion="1.1.3" orientation="orthogonal" renderorder="right-down" width="32" height="30" tilewidth="16" tileheight="16" infinite="0" nextobjectid="13">
  <properties>
   <property name="background_tile" type="int" value="2"/>
   <property name="bgm" value="town"/>
@@ -89,6 +89,86 @@
     <property name="transfer_map" value="space_tower"/>
     <property name="transfer_x" type="int" value="44"/>
     <property name="transfer_y" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="3" name="oldman-1" type="npc" gid="241" x="224" y="32" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="mamusu/oldman-1"/>
+    <property name="sprite" value="oldman"/>
+    <property name="telepathy" value="mamusu/oldman/telepathy"/>
+   </properties>
+  </object>
+  <object id="4" name="oldman-2" type="npc" gid="241" x="208" y="48" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="mamusu/oldman-2"/>
+    <property name="sprite" value="oldman"/>
+    <property name="telepathy" value="mamusu/oldman/telepathy"/>
+   </properties>
+  </object>
+  <object id="5" name="oldman-3" type="npc" gid="241" x="32" y="272" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="mamusu/oldman-3"/>
+    <property name="sprite" value="oldman"/>
+    <property name="telepathy" value="mamusu/oldman-3/telepathy"/>
+   </properties>
+  </object>
+  <object id="6" name="oldman-4" type="npc" gid="241" x="448" y="448" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="mamusu/oldman-4"/>
+    <property name="sprite" value="oldman"/>
+    <property name="telepathy" value="mamusu/oldman-4/telepathy"/>
+   </properties>
+  </object>
+  <object id="7" name="female-1" type="npc" gid="241" x="272" y="432" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="mamusu/female-1"/>
+    <property name="sprite" value="female"/>
+    <property name="telepathy" value="mamusu/female-1/telepathy"/>
+   </properties>
+  </object>
+  <object id="8" name="shop-1" type="npc" gid="241" x="32" y="48" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="mamusu/shop-1"/>
+    <property name="sprite" value="shop"/>
+    <property name="telepathy" value="mamusu/shop-1/telepathy"/>
+   </properties>
+  </object>
+  <object id="9" name="shop-2" type="npc" gid="241" x="32" y="128" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="mamusu/shop-2"/>
+    <property name="sprite" value="shop"/>
+    <property name="telepathy" value="mamusu/shop-2/telepathy"/>
+   </properties>
+  </object>
+  <object id="10" name="doctor-1" type="npc" gid="241" x="208" y="176" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="mamusu/doctor-1"/>
+    <property name="sprite" value="doctor"/>
+    <property name="telepathy" value="mamusu/doctor-1/telepathy"/>
+   </properties>
+  </object>
+  <object id="11" name="healer-1" type="npc" gid="241" x="144" y="448" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="mamusu/healer-1"/>
+    <property name="sprite" value="female"/>
+    <property name="telepathy" value="mamusu/healer-1/telepathy"/>
+   </properties>
+  </object>
+  <object id="12" name="healer-2" type="npc" gid="241" x="32" y="384" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="mamusu/healer-2"/>
+    <property name="sprite" value="male"/>
+    <property name="telepathy" value="mamusu/healer-2/telepathy"/>
    </properties>
   </object>
  </objectgroup>
