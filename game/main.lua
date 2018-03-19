@@ -6,6 +6,7 @@ local util = require 'util'
 local rx = require 'rx'
 require 'rxlove'
 
+local lume = require "lume"
 local cargo = require "cargo"
 local i18n = require "i18n"
 
@@ -28,17 +29,17 @@ local maid64 = require 'maid64'
 
 local context = {}
 
-function screenshot(path)
+local function screenshot(path)
     path = path or tostring(os.time())
     local ss = love.graphics.newScreenshot();
     ss:encode('png', path .. '.png');
 end
 
-function toggleFullscreen()
+local function toggleFullscreen()
     return love.window.setFullscreen(not love.window.getFullscreen())
 end
 
-function resize(width, height)
+local function resize(width, height)
     local w, h = love.graphics.getDimensions()
     width = math.max(maid64.sizeX, math.floor((width or w) / maid64.sizeX) * maid64.sizeX)
     height = math.max(maid64.sizeY, math.floor((height or h) / maid64.sizeY) * maid64.sizeY)
@@ -51,7 +52,7 @@ function resize(width, height)
     maid64.y = h / 2 - (maid64.scaler * (maid64.sizeY / 2))
 end
 
-function load_map(path, x, y)
+local function load_map(path, x, y)
     startx = x or 0
     starty = y or 0
     context.mapManager:setMap(path)
@@ -60,9 +61,18 @@ function load_map(path, x, y)
     end
 end
 
+local function load_i18n(dir)
+    dir = dir .. (string.sub(dir, #dir) == '/' and '' or '/') .. i18n.getLocale()
+    local files = love.filesystem.getDirectoryItems(dir)
+
+    for _, file in ipairs(files) do
+        i18n.loadFile(dir .. "/" .. file)
+    end
+end
+
 function love.load(arg)
     i18n.setLocale('ja')
-    i18n.loadFile('assets/i18n/ja.lua')
+    load_i18n('assets/i18n')
 
     love.graphics.setDefaultFilter("nearest", "nearest")
 
