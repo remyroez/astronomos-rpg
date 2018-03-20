@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="12" height="12" tilewidth="16" tileheight="16" infinite="0" nextobjectid="2">
+<map version="1.0" tiledversion="1.1.3" orientation="orthogonal" renderorder="right-down" width="12" height="12" tilewidth="16" tileheight="16" infinite="0" nextobjectid="4">
  <properties>
   <property name="background_tile" type="int" value="19"/>
   <property name="bgm" value="town"/>
@@ -43,6 +43,13 @@
     <property name="transfer_map" value="powerplant"/>
     <property name="transfer_x" type="int" value="19"/>
     <property name="transfer_y" type="int" value="3"/>
+   </properties>
+  </object>
+  <object id="3" name="siba" type="npc" gid="241" x="96" y="48" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="powerplant/siba"/>
+    <property name="sprite" value="siba"/>
    </properties>
   </object>
  </objectgroup>
