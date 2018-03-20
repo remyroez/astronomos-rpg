@@ -1,14 +1,14 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "1.1.2",
+  tiledversion = "1.1.3",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 12,
   height = 12,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 2,
+  nextobjectid = 3,
   properties = {
     ["background_tile"] = 9,
     ["bgm"] = "town"
@@ -123,6 +123,25 @@ return {
             ["transfer_map"] = "road_to_arkcity",
             ["transfer_x"] = 48,
             ["transfer_y"] = 11
+          }
+        },
+        {
+          id = 2,
+          name = "oldman-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 96,
+          y = 64,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "road_to_arkcity/oldman-1",
+            ["sprite"] = "oldman",
+            ["telepathy"] = "road_to_arkcity/oldman-1/telepathy"
           }
         }
       }
