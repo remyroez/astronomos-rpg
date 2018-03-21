@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="32" height="30" tilewidth="16" tileheight="16" infinite="0" nextobjectid="1">
+<map version="1.0" tiledversion="1.1.3" orientation="orthogonal" renderorder="right-down" width="32" height="30" tilewidth="16" tileheight="16" infinite="0" nextobjectid="17">
  <properties>
   <property name="background_tile" type="int" value="45"/>
   <property name="bgm" value="town"/>
@@ -76,4 +76,134 @@
 0,0,0,256,256,256,256,256,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
+ <objectgroup name="object">
+  <object id="1" name="shop-1" type="npc" gid="241" x="48" y="64" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="residential_area/shop-1"/>
+    <property name="sprite" value="citizen"/>
+    <property name="telepathy" value="residential_area/shop-1/telepathy"/>
+   </properties>
+  </object>
+  <object id="2" name="shop-2" type="npc" gid="241" x="64" y="256" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="residential_area/shop-2"/>
+    <property name="sprite" value="citizen"/>
+    <property name="telepathy" value="residential_area/shop-2/telepathy"/>
+   </properties>
+  </object>
+  <object id="3" name="robot-1" type="npc" gid="241" x="128" y="64" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="residential_area/robot-1"/>
+    <property name="sprite" value="robot"/>
+    <property name="telepathy" value="residential_area/robot-1/telepathy"/>
+   </properties>
+  </object>
+  <object id="4" name="guy-1" type="npc" gid="241" x="192" y="336" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="residential_area/guy-1"/>
+    <property name="sprite" value="guy"/>
+    <property name="telepathy" value="residential_area/guy-1/telepathy"/>
+   </properties>
+  </object>
+  <object id="5" name="guy-2" type="npc" gid="241" x="224" y="128" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="residential_area/guy-2"/>
+    <property name="sprite" value="guy"/>
+    <property name="telepathy" value="residential_area/guy-2/telepathy"/>
+   </properties>
+  </object>
+  <object id="6" name="guard-1" type="npc" gid="241" x="256" y="192" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="residential_area/guard-1"/>
+    <property name="sprite" value="guard"/>
+    <property name="telepathy" value="residential_area/guard-1/telepathy"/>
+   </properties>
+  </object>
+  <object id="7" name="guard-2" type="npc" gid="241" x="400" y="384" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="residential_area/guard-2"/>
+    <property name="sprite" value="guy"/>
+    <property name="telepathy" value="residential_area/guard-2/telepathy"/>
+   </properties>
+  </object>
+  <object id="8" name="citizen-1" type="npc" gid="241" x="208" y="272" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="residential_area/citizen-1"/>
+    <property name="sprite" value="citizen"/>
+    <property name="telepathy" value="residential_area/citizen-1/telepathy"/>
+   </properties>
+  </object>
+  <object id="9" name="guy-3" type="npc" gid="241" x="320" y="48" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="residential_area/guy-3"/>
+    <property name="sprite" value="guy"/>
+    <property name="telepathy" value="residential_area/guy-3/telepathy"/>
+   </properties>
+  </object>
+  <object id="10" name="guy-4" type="npc" gid="241" x="320" y="128" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="residential_area/guy-4"/>
+    <property name="sprite" value="guy"/>
+    <property name="telepathy" value="residential_area/guy-4/telepathy"/>
+   </properties>
+  </object>
+  <object id="11" name="citizen-2" type="npc" gid="241" x="80" y="464" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="residential_area/citizen-2"/>
+    <property name="sprite" value="citizen"/>
+    <property name="telepathy" value="residential_area/citizen-2/telepathy"/>
+   </properties>
+  </object>
+  <object id="12" name="guard-3" type="npc" gid="241" x="336" y="288" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="residential_area/guard-3"/>
+    <property name="sprite" value="guard"/>
+    <property name="telepathy" value="residential_area/guard-3/telepathy"/>
+   </properties>
+  </object>
+  <object id="13" name="guy-5" type="npc" gid="241" x="464" y="272" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="residential_area/guy-5"/>
+    <property name="sprite" value="guy"/>
+    <property name="telepathy" value="residential_area/guy-5/telepathy"/>
+   </properties>
+  </object>
+  <object id="14" name="keyman-1" type="npc" gid="241" x="304" y="432" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="residential_area/keyman-1"/>
+    <property name="sprite" value="citizen"/>
+    <property name="telepathy" value="residential_area/keyman-1/telepathy"/>
+   </properties>
+  </object>
+  <object id="15" name="keyman-2" type="npc" gid="241" x="448" y="48" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="residential_area/keyman-2"/>
+    <property name="sprite" value="guard"/>
+    <property name="telepathy" value="residential_area/keyman-2/telepathy"/>
+   </properties>
+  </object>
+  <object id="16" name="aine" type="npc" gid="241" x="32" y="320" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="message" value="residential_area/aine"/>
+    <property name="sprite" value="aine"/>
+    <property name="telepathy" value="residential_area/aine/telepathy"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>
