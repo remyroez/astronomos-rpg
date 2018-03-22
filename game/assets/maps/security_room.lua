@@ -1,14 +1,14 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "1.1.2",
+  tiledversion = "1.1.3",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 16,
   height = 15,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 2,
+  nextobjectid = 7,
   properties = {
     ["background_tile"] = 40,
     ["bgm"] = "town"
@@ -129,6 +129,91 @@ return {
             ["transfer_map"] = "administrative_area",
             ["transfer_x"] = 24,
             ["transfer_y"] = 23
+          }
+        },
+        {
+          id = 2,
+          name = "guard-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 224,
+          y = 192,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "guard"
+          }
+        },
+        {
+          id = 3,
+          name = "citizen-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 32,
+          y = 224,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "citizen"
+          }
+        },
+        {
+          id = 4,
+          name = "citizen-2",
+          type = "npc",
+          shape = "rectangle",
+          x = 32,
+          y = 112,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "citizen"
+          }
+        },
+        {
+          id = 5,
+          name = "citizen-3",
+          type = "npc",
+          shape = "rectangle",
+          x = 128,
+          y = 48,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "citizen"
+          }
+        },
+        {
+          id = 6,
+          name = "misa",
+          type = "npc",
+          shape = "rectangle",
+          x = 208,
+          y = 48,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "misa"
           }
         }
       }
