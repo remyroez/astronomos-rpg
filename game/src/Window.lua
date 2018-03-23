@@ -412,7 +412,9 @@ function Window:flushMessage(message, cx, cy, need_scrolls)
             -- before counter
         else
             -- x check
-            if x < left then
+            if glyph.advance and glyph.advance < 1 then
+                -- zero advance
+            elseif x < left then
                 visible = false
             elseif x < wordwrap then
                 visible = true
