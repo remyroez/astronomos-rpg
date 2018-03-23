@@ -152,10 +152,13 @@ function love.load(arg)
         context
     )
 
-    --load_map("administrative_area", 0, 24)
     load_map("field", 11, 20)
+    --load_map("administrative_area", 0, 24)
     --load_map("arkcity", 24, 20)
     --load_map("space_tower", 8, 3)
+    --load_map("residential_area", 8, 9)
+    --load_map("cockpit", 2, 14)
+    --load_map("laboratory", 7, 8)
 end
 
 function createPlayer(x, y, sprite)
