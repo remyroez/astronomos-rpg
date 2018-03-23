@@ -1,14 +1,14 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "1.1.2",
+  tiledversion = "1.1.3",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 16,
   height = 15,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 2,
+  nextobjectid = 4,
   properties = {
     ["background_tile"] = 92,
     ["bgm"] = "town"
@@ -129,6 +129,40 @@ return {
             ["transfer_map"] = "underground_passage",
             ["transfer_x"] = 14,
             ["transfer_y"] = 28
+          }
+        },
+        {
+          id = 2,
+          name = "guy-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 32,
+          y = 48,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "guy"
+          }
+        },
+        {
+          id = 3,
+          name = "guy-2",
+          type = "npc",
+          shape = "rectangle",
+          x = 208,
+          y = 48,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "guy"
           }
         }
       }
