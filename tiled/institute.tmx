@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="16" height="15" tilewidth="16" tileheight="16" infinite="0" nextobjectid="2">
+<map version="1.0" tiledversion="1.1.3" orientation="orthogonal" renderorder="right-down" width="16" height="15" tilewidth="16" tileheight="16" infinite="0" nextobjectid="7">
  <properties>
   <property name="background_tile" type="int" value="40"/>
   <property name="bgm" value="town"/>
@@ -49,6 +49,36 @@
     <property name="transfer_map" value="administrative_area"/>
     <property name="transfer_x" type="int" value="5"/>
     <property name="transfer_y" type="int" value="19"/>
+   </properties>
+  </object>
+  <object id="2" name="guy-1" type="npc" gid="241" x="48" y="48" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="sprite" value="guy"/>
+   </properties>
+  </object>
+  <object id="3" name="guy-2" type="npc" gid="241" x="192" y="48" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="sprite" value="guy"/>
+   </properties>
+  </object>
+  <object id="4" name="guy-3" type="npc" gid="241" x="48" y="208" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="sprite" value="guy"/>
+   </properties>
+  </object>
+  <object id="5" name="guy-4" type="npc" gid="241" x="192" y="208" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="sprite" value="guy"/>
+   </properties>
+  </object>
+  <object id="6" name="guy-5" type="npc" gid="241" x="208" y="112" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="sprite" value="guy"/>
    </properties>
   </object>
  </objectgroup>
