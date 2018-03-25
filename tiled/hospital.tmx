@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="18" height="17" tilewidth="16" tileheight="16" infinite="0" nextobjectid="2">
+<map version="1.0" tiledversion="1.1.3" orientation="orthogonal" renderorder="right-down" width="18" height="17" tilewidth="16" tileheight="16" infinite="0" nextobjectid="9">
  <properties>
   <property name="background_tile" type="int" value="40"/>
   <property name="bgm" value="town"/>
@@ -53,6 +53,48 @@
     <property name="transfer_map" value="administrative_area"/>
     <property name="transfer_x" type="int" value="20"/>
     <property name="transfer_y" type="int" value="4"/>
+   </properties>
+  </object>
+  <object id="2" name="nurse-1" type="npc" gid="241" x="176" y="160" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="sprite" value="nurse"/>
+   </properties>
+  </object>
+  <object id="3" name="nurse-2" type="npc" gid="241" x="144" y="240" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="sprite" value="nurse"/>
+   </properties>
+  </object>
+  <object id="4" name="robot-1" type="npc" gid="241" x="112" y="128" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="sprite" value="robot"/>
+   </properties>
+  </object>
+  <object id="5" name="guy-1" type="npc" gid="241" x="48" y="64" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="sprite" value="guy"/>
+   </properties>
+  </object>
+  <object id="6" name="guy-2" type="npc" gid="241" x="48" y="224" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="sprite" value="guy"/>
+   </properties>
+  </object>
+  <object id="7" name="citizen-1" type="npc" gid="241" x="240" y="64" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="sprite" value="citizen"/>
+   </properties>
+  </object>
+  <object id="8" name="citizen-2" type="npc" gid="241" x="240" y="208" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="sprite" value="citizen"/>
    </properties>
   </object>
  </objectgroup>

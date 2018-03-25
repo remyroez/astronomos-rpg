@@ -1,14 +1,14 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "1.1.2",
+  tiledversion = "1.1.3",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 18,
   height = 17,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 2,
+  nextobjectid = 9,
   properties = {
     ["background_tile"] = 40,
     ["bgm"] = "town"
@@ -133,6 +133,125 @@ return {
             ["transfer_map"] = "administrative_area",
             ["transfer_x"] = 20,
             ["transfer_y"] = 4
+          }
+        },
+        {
+          id = 2,
+          name = "nurse-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 176,
+          y = 160,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "nurse"
+          }
+        },
+        {
+          id = 3,
+          name = "nurse-2",
+          type = "npc",
+          shape = "rectangle",
+          x = 144,
+          y = 240,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "nurse"
+          }
+        },
+        {
+          id = 4,
+          name = "robot-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 112,
+          y = 128,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "robot"
+          }
+        },
+        {
+          id = 5,
+          name = "guy-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 48,
+          y = 64,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "guy"
+          }
+        },
+        {
+          id = 6,
+          name = "guy-2",
+          type = "npc",
+          shape = "rectangle",
+          x = 48,
+          y = 224,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "guy"
+          }
+        },
+        {
+          id = 7,
+          name = "citizen-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 240,
+          y = 64,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "citizen"
+          }
+        },
+        {
+          id = 8,
+          name = "citizen-2",
+          type = "npc",
+          shape = "rectangle",
+          x = 240,
+          y = 208,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "citizen"
           }
         }
       }

@@ -1,14 +1,14 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "1.1.2",
+  tiledversion = "1.1.3",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 48,
   height = 45,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 5,
+  nextobjectid = 9,
   properties = {
     ["background_tile"] = 64,
     ["bgm"] = "town"
@@ -243,6 +243,74 @@ return {
             ["transfer_map"] = "mamusu",
             ["transfer_x"] = 16,
             ["transfer_y"] = 15
+          }
+        },
+        {
+          id = 5,
+          name = "astronaut-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 736,
+          y = 176,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "astronaut"
+          }
+        },
+        {
+          id = 6,
+          name = "astronaut-2",
+          type = "npc",
+          shape = "rectangle",
+          x = 48,
+          y = 64,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "astronaut"
+          }
+        },
+        {
+          id = 7,
+          name = "astronaut-3",
+          type = "npc",
+          shape = "rectangle",
+          x = 320,
+          y = 464,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "astronaut"
+          }
+        },
+        {
+          id = 8,
+          name = "skeleton-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 544,
+          y = 48,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "skeleton"
           }
         }
       }

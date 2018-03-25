@@ -1,14 +1,14 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "1.1.2",
+  tiledversion = "1.1.3",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 12,
   height = 12,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 2,
+  nextobjectid = 4,
   properties = {
     ["background_tile"] = 19,
     ["bgm"] = "town"
@@ -123,6 +123,24 @@ return {
             ["transfer_map"] = "powerplant",
             ["transfer_x"] = 19,
             ["transfer_y"] = 3
+          }
+        },
+        {
+          id = 3,
+          name = "siba",
+          type = "npc",
+          shape = "rectangle",
+          x = 96,
+          y = 48,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "powerplant/siba",
+            ["sprite"] = "siba"
           }
         }
       }

@@ -1,7 +1,7 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "1.1.2",
+  tiledversion = "1.1.3",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 32,
@@ -148,7 +148,7 @@ return {
       objects = {
         {
           id = 1,
-          name = "shoper",
+          name = "shop",
           type = "npc",
           shape = "rectangle",
           x = 112,
@@ -216,7 +216,7 @@ return {
         },
         {
           id = 12,
-          name = "thief_1",
+          name = "thief-1",
           type = "npc",
           shape = "rectangle",
           x = 176,
@@ -250,7 +250,7 @@ return {
         },
         {
           id = 14,
-          name = "thief_2",
+          name = "thief-2",
           type = "npc",
           shape = "rectangle",
           x = 384,

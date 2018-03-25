@@ -65,6 +65,14 @@ function Actor:finalize()
     self:deregisterSubscriptions()
 end
 
+function Actor:getName()
+    if not self.object then
+        return "unknown"
+    else
+        return self.object.name
+    end
+end
+
 function Actor:registerSubscription(name, subscribe)
     self:deregisterSubscription(name)
     self.subscriptions[name] = subscribe

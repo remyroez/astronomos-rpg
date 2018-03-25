@@ -1,14 +1,14 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "1.1.2",
+  tiledversion = "1.1.3",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 32,
   height = 30,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 1,
+  nextobjectid = 8,
   properties = {
     ["background_tile"] = 2,
     ["bgm"] = "town",
@@ -145,7 +145,141 @@ return {
       offsety = 0,
       draworder = "topdown",
       properties = {},
-      objects = {}
+      objects = {
+        {
+          id = 1,
+          name = "female-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 288,
+          y = 160,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "deusu/female-1",
+            ["sprite"] = "female",
+            ["telepathy"] = "deusu/female-1/telepathy"
+          }
+        },
+        {
+          id = 2,
+          name = "female-2",
+          type = "npc",
+          shape = "rectangle",
+          x = 64,
+          y = 384,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "deusu/female-2",
+            ["sprite"] = "female",
+            ["telepathy"] = "deusu/female-2/telepathy"
+          }
+        },
+        {
+          id = 3,
+          name = "oldman-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 64,
+          y = 272,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "deusu/oldman-1",
+            ["sprite"] = "oldman",
+            ["telepathy"] = "deusu/oldman-1/telepathy"
+          }
+        },
+        {
+          id = 4,
+          name = "oldman-2",
+          type = "npc",
+          shape = "rectangle",
+          x = 320,
+          y = 384,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "deusu/oldman-2",
+            ["sprite"] = "oldman",
+            ["telepathy"] = "deusu/oldman-2/telepathy"
+          }
+        },
+        {
+          id = 5,
+          name = "oldman-3",
+          type = "npc",
+          shape = "rectangle",
+          x = 448,
+          y = 272,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "deusu/oldman-3",
+            ["sprite"] = "oldman",
+            ["telepathy"] = "deusu/oldman-3/telepathy"
+          }
+        },
+        {
+          id = 6,
+          name = "keyman-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 192,
+          y = 320,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "deusu/keyman-1",
+            ["sprite"] = "male",
+            ["telepathy"] = "deusu/keyman-1/telepathy"
+          }
+        },
+        {
+          id = 7,
+          name = "shop-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 208,
+          y = 128,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["message"] = "deusu/shop-1",
+            ["sprite"] = "shop",
+            ["telepathy"] = "deusu/shop-1/telepathy"
+          }
+        }
+      }
     }
   }
 }

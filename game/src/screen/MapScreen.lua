@@ -69,15 +69,41 @@ function MapScreen.new()
             -- no npc
         elseif npc:state() ~= Actor.STATE.READY then
             -- no ready
-        elseif not npc.properties[property] then
-            -- no message
-        elseif not i18n(npc.properties[property]) then
-            -- no message
-            ScreenManager.push(const.SCREEN.WINDOW, self.context)
-            ScreenManager.push(const.SCREEN.TALK, self.context, "NO MESSAGE")
         else
-            ScreenManager.push(const.SCREEN.WINDOW, self.context)
-            ScreenManager.push(const.SCREEN.TALK, self.context, i18n(npc.properties[property], { player_name = 'みなみ' }))
+            local messages = {}
+            local words = { player_name = 'みなみ' }
+
+            if not npc.properties[property] then
+                -- no property
+                local message = nil
+                local count = 1
+                while true do
+                    message = i18n(
+                        self.context.mapManager.current_map_name .. '/' .. npc:getName() .. '/' .. property .. (count > 1 and ('/' .. count) or ''),
+                        words
+                    )
+                    if not message then
+                        break
+                    else
+                        table.insert(messages, message)
+                    end
+                    count = count + 1
+                end
+            else
+                local message = i18n(npc.properties[property], words)
+                if not message then
+                    -- no message
+                else
+                    table.insert(messages, message)
+                end
+            end
+            
+            if #messages == 0 then
+                -- no message
+            else
+                ScreenManager.push(const.SCREEN.WINDOW, self.context)
+                ScreenManager.push(const.SCREEN.TALK, self.context, messages)
+            end
 
             -- turn to player
             if turn then

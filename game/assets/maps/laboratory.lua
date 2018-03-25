@@ -1,14 +1,14 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "1.1.2",
+  tiledversion = "1.1.3",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 18,
   height = 17,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 2,
+  nextobjectid = 8,
   properties = {
     ["background_tile"] = 80,
     ["bgm"] = "town"
@@ -133,6 +133,108 @@ return {
             ["transfer_map"] = "road_to_laboratory_4",
             ["transfer_x"] = 26,
             ["transfer_y"] = 2
+          }
+        },
+        {
+          id = 2,
+          name = "skeleton-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 112,
+          y = 192,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "skeleton"
+          }
+        },
+        {
+          id = 3,
+          name = "skeleton-2",
+          type = "npc",
+          shape = "rectangle",
+          x = 160,
+          y = 256,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "skeleton"
+          }
+        },
+        {
+          id = 4,
+          name = "dolphin-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 64,
+          y = 80,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "dolphin"
+          }
+        },
+        {
+          id = 5,
+          name = "dolphin-2",
+          type = "npc",
+          shape = "rectangle",
+          x = 64,
+          y = 208,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "dolphin"
+          }
+        },
+        {
+          id = 6,
+          name = "orca-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 192,
+          y = 80,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "orca"
+          }
+        },
+        {
+          id = 7,
+          name = "orca-2",
+          type = "npc",
+          shape = "rectangle",
+          x = 192,
+          y = 208,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "orca"
           }
         }
       }

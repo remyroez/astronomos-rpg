@@ -11,6 +11,7 @@ function MapManager:initialize(basepath, width, height)
     --self.files = files
     self.maps = {}
     self.current_map = nil
+    self.current_map_name = nil
 
     self.width = width or love.graphics.getWidth()
     self.height = height or love.graphics.getHeight()
@@ -81,11 +82,14 @@ function MapManager:setMap(name)
         -- map not loaded
         self:load(name)
         self.current_map = self.maps[name]
+        self.current_map_name = name
     elseif self.maps[name] == self.current_map then
         -- equal current map
     else
         self.current_map = self.maps[name]
+        self.current_map_name = name
     end
+
     if self.current_map and self.onLoad then
         self.onLoad(self.current_map)
     end

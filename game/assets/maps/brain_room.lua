@@ -1,14 +1,14 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "1.1.2",
+  tiledversion = "1.1.3",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 16,
   height = 14,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 2,
+  nextobjectid = 3,
   properties = {
     ["background_tile"] = 41,
     ["bgm"] = "town"
@@ -127,6 +127,23 @@ return {
             ["transfer_map"] = "road_to_brain_room",
             ["transfer_x"] = 30,
             ["transfer_y"] = 1
+          }
+        },
+        {
+          id = 2,
+          name = "guy-1",
+          type = "npc",
+          shape = "rectangle",
+          x = 96,
+          y = 112,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          gid = 241,
+          visible = true,
+          properties = {
+            ["animation"] = "down",
+            ["sprite"] = "guy"
           }
         }
       }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="48" height="45" tilewidth="16" tileheight="16" infinite="0" nextobjectid="5">
+<map version="1.0" tiledversion="1.1.3" orientation="orthogonal" renderorder="right-down" width="48" height="45" tilewidth="16" tileheight="16" infinite="0" nextobjectid="9">
  <properties>
   <property name="background_tile" type="int" value="64"/>
   <property name="bgm" value="town"/>
@@ -130,6 +130,30 @@
     <property name="transfer_map" value="mamusu"/>
     <property name="transfer_x" type="int" value="16"/>
     <property name="transfer_y" type="int" value="15"/>
+   </properties>
+  </object>
+  <object id="5" name="astronaut-1" type="npc" gid="241" x="736" y="176" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="sprite" value="astronaut"/>
+   </properties>
+  </object>
+  <object id="6" name="astronaut-2" type="npc" gid="241" x="48" y="64" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="sprite" value="astronaut"/>
+   </properties>
+  </object>
+  <object id="7" name="astronaut-3" type="npc" gid="241" x="320" y="464" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="sprite" value="astronaut"/>
+   </properties>
+  </object>
+  <object id="8" name="skeleton-1" type="npc" gid="241" x="544" y="48" width="16" height="16">
+   <properties>
+    <property name="animation" value="down"/>
+    <property name="sprite" value="skeleton"/>
    </properties>
   </object>
  </objectgroup>
