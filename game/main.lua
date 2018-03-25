@@ -66,7 +66,7 @@ local function load_i18n(dir)
     local files = love.filesystem.getDirectoryItems(dir)
 
     for _, file in ipairs(files) do
-        i18n.loadFile(dir .. "/" .. file)
+        i18n.load(love.filesystem.load(dir .. "/" .. file)())
     end
 end
 
