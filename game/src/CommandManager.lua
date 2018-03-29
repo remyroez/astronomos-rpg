@@ -1,0 +1,88 @@
+local class = require 'middleclass'
+local CommandManager = class("CommandManager")
+
+local const = require 'const'
+local util = require 'util'
+
+local i18n = require "i18n"
+
+local ScreenManager = require 'ScreenManager'
+
+function CommandManager:initialize(actorManager, mapManager)
+    self.actorManager = actorManager
+    self.mapManager = mapManager
+end
+
+function CommandManager:talk(context, playerActor, property, turn)
+    if not context then
+        return
+    elseif not playerActor then
+        return
+    end
+
+    property = property or 'message'
+    if type(turn) ~= 'boolean' then
+        turn = true
+    end
+
+    local x, y = self.actorManager:getForwardPositionFromActor(playerActor)
+    local npc = self.actorManager:getActorFromPixel(x, y, const.OBJECT.TYPE.NPC)
+
+    if not npc then
+        -- no npc
+    elseif not npc:isReady() then
+        -- no ready
+    else
+        local messages = {}
+        local words = { player_name = 'みなみ' }
+
+        if not npc.properties[property] then
+            -- no property
+            local message = nil
+            local count = 1
+            while true do
+                message = i18n(
+                    self.mapManager.current_map_name .. '/' .. npc:getName() .. '/' .. property .. (count > 1 and ('/' .. count) or ''),
+                    words
+                )
+                if not message then
+                    break
+                else
+                    table.insert(messages, message)
+                end
+                count = count + 1
+            end
+        else
+            local message = i18n(npc.properties[property], words)
+            if not message then
+                -- no message
+            else
+                table.insert(messages, message)
+            end
+        end
+        
+        if #messages == 0 then
+            -- no message
+        else
+            self:openTalkWindow(context, messages)
+        end
+
+        -- turn to player
+        if turn then
+            self.actorManager:setActorDirectionToActor(npc, playerActor)
+        end
+    end
+end
+
+function CommandManager:openTalkWindow(context, messages)
+    ScreenManager.push(const.SCREEN.WINDOW, context)
+    ScreenManager.push(const.SCREEN.TALK, context, messages)
+end
+
+function CommandManager:openMapCommandWindow(...)
+    ScreenManager.push(const.SCREEN.WINDOW, ...)
+    ScreenManager.push(const.SCREEN.MAP_COMMAND, ...)
+end
+
+
+return CommandManager
