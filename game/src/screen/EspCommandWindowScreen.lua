@@ -51,13 +51,13 @@ function EspCommandWindowScreen.new()
         local context = self.context
 
         if index == EspCommandWindowScreen.COMMAND.BREAK then
-            --context.commandManager:talk(context, context.playerActor, 'message', true, true)
+            context.commandManager:openTalkWindow(context, i18n('command/map/esp/cant-use'))
         elseif index == EspCommandWindowScreen.COMMAND.JUMP then
-            --context.commandManager:talk(context, context.playerActor, 'message', true, true)
+            context.commandManager:openTalkWindow(context, i18n('command/map/esp/cant-use'))
         elseif index == EspCommandWindowScreen.COMMAND.TELEPATHY then
             context.commandManager:talk(context, context.playerActor, 'telepathy', false, true)
         elseif index == EspCommandWindowScreen.COMMAND.SAVE then
-            --context.commandManager:talk(context, context.playerActor, 'message', true, true)
+            context.commandManager:openTalkWindow(context, i18n('command/map/esp/save/message'))
         else
             -- no command
         end
