@@ -61,15 +61,15 @@ function MapCommandWindowScreen.new()
         if index == MapCommandWindowScreen.COMMAND.TALK then
             context.commandManager:talk(context, context.playerActor, 'message', true, true)
         elseif index == MapCommandWindowScreen.COMMAND.MEDICINE then
-            --context.commandManager:talk(context, context.playerActor, 'message', true, true)
+            --context.commandManager:openEspCommandWindow(context)
         elseif index == MapCommandWindowScreen.COMMAND.STRENGTH then
-            --context.commandManager:talk(context, context.playerActor, 'message', true, true)
+            --context.commandManager:openEspCommandWindow(context)
         elseif index == MapCommandWindowScreen.COMMAND.ESP then
-            --context.commandManager:talk(context, context.playerActor, 'message', true, true)
+            context.commandManager:openEspCommandWindow(context)
         elseif index == MapCommandWindowScreen.COMMAND.DISCARD then
-            --context.commandManager:talk(context, context.playerActor, 'message', true, true)
+            --context.commandManager:openEspCommandWindow(context)
         elseif index == MapCommandWindowScreen.COMMAND.ITEMS then
-            --context.commandManager:talk(context, context.playerActor, 'message', true, true)
+            --context.commandManager:openEspCommandWindow(context)
         else
             -- no command
         end

@@ -83,5 +83,9 @@ function CommandManager:openMapCommandWindow(...)
     ScreenManager.push(const.SCREEN.MAP_COMMAND, ...)
 end
 
+function CommandManager:openEspCommandWindow(...)
+    ScreenManager.push(const.SCREEN.ESP, ...)
+end
+
 
 return CommandManager
