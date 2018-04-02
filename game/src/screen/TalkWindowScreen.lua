@@ -9,12 +9,16 @@ local TalkWindowScreen = {}
 function TalkWindowScreen.new()
     local self = Screen.new()
 
-    function self:init(context, messages)
+    function self:init(context, messages, closeAllWindow)
+        self.closing = false
+
         self.context = context
         self.messages = messages
         if type(self.messages) ~= 'table' then
             self.messages = { self.messages }
         end
+        self.closeAllWindow = closeAllWindow
+        if type(self.closeAllWindow) ~= 'boolean' then self.closeAllWindow = false end
 
         self.counter = 0
         self.window = self.context.windowManager:push(2, 18, 28, 10, true)
@@ -63,13 +67,15 @@ function TalkWindowScreen.new()
     end
 
     function self:current(dt)
-        if self.context.input:pressed(const.INPUT.DECIDE) then
+        if self.closing then
+            ScreenManager.pop()
+        elseif self.context.input:pressed(const.INPUT.DECIDE) then
             -- decide
             if self.window:isCompleted() then
                 -- completed message
                 if self:isLastMessage() then
                     -- finish
-                    ScreenManager.pop()
+                    self:popWindow()
                 else
                     -- next message
                     self:printNextMessage()
@@ -80,7 +86,21 @@ function TalkWindowScreen.new()
             end
         elseif self.context.input:pressed(const.INPUT.CANCEL) then
             -- cancel
+            self:popWindow()
+        end
+    end
+
+    function self:popWindow()
+        if self.closeAllWindow then
+            ScreenManager.publish("close_window")
+        else
             ScreenManager.pop()
+        end
+    end
+
+    function self:receive(event)
+        if event == 'close_window' then
+            self.closing = true
         end
     end
 
