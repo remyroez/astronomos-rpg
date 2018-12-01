@@ -87,5 +87,29 @@ function CommandManager:openEspCommandWindow(...)
     ScreenManager.push(const.SCREEN.ESP, ...)
 end
 
+function CommandManager:openMedicineWindow(...)
+    ScreenManager.push(const.SCREEN.MEDICINE, ...)
+end
+
+function CommandManager:openStrengthWindow(...)
+    --ScreenManager.push(const.SCREEN.STATUS, ...)
+end
+
+function CommandManager:openDiscardWindow(...)
+    --ScreenManager.push(const.SCREEN.DISPOSE, ...)
+end
+
+function CommandManager:openItemsWindow(...)
+    --ScreenManager.push(const.SCREEN.BELONGINGS, ...)
+end
+
+function CommandManager:openItemWindow(...)
+    --ScreenManager.push(const.SCREEN.ITEMS, ...)
+end
+
+function CommandManager:openIngredientWindow(...)
+    --ScreenManager.push(const.SCREEN.MATERIALS, ...)
+end
+
 
 return CommandManager

@@ -151,6 +151,7 @@ function love.load(arg)
             [const.SCREEN.TALK] = require 'screen.TalkWindowScreen',
             [const.SCREEN.MAP_COMMAND] = require 'screen.MapCommandWindowScreen',
             [const.SCREEN.ESP] = require 'screen.EspCommandWindowScreen',
+            [const.SCREEN.MEDICINE] = require 'screen.MedicineWindowScreen',
         },
         const.SCREEN.ROOT,
         context

@@ -10,6 +10,7 @@ return {
         
         ['command/map/talk/no-npc'] = "だれも　いません。",
         
+        ['command/map/medicine/select'] = "どれをつかう?",
         ['command/map/medicine/no-medicine'] = "くすりを、もっていません。",
 
         ['command/map/esp/title'] = "ESP",
