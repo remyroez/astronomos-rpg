@@ -104,6 +104,10 @@ function Actor:state()
     end
 end
 
+function Actor:isReady()
+    return self:state() == Actor.STATE.READY
+end
+
 function Actor:move(x, y, seconds)
     if self.target then
         self:setPosition(self:getTargetPosition())

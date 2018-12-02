@@ -27,19 +27,6 @@ function WindowScreen.new()
         end
     end
 
-    function self:receive(event)
-        if event == 'close_window' then
-            self:closeWindow()
-        end
-    end
-
-    function self:closeWindow()
-        while ScreenManager.peek() ~= self do
-            ScreenManager.pop()
-        end
-        ScreenManager.pop()
-    end
-
     return self
 end
 
